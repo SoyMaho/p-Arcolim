@@ -1,0 +1,79 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body{
+}
+
+.contenedorP{
+  display: flex;
+  flex-direction: column;
+  margin: 0% 5%;
+}
+
+.login{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+}
+
+form{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: auto;
+  width: 60%;
+  max-width: 500px;
+  padding: 20px;
+}
+
+
+input{
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+}
+
+button{
+  margin-top: 5px;
+}
+
+header{
+  width: 100%;
+  background-color: white;
+  display: flex;
+}
+
+.user{
+    flex-grow: 4;
+    margin-left: 75%;
+}
+
+#logo_index{
+  width: 16.2rem;
+}
+
+#logo_Home{
+  width: 5rem;
+}
+
+#user_Pic{
+  width: 4.5rem;
+  margin-left: 80%;
+}
+
+.work_Section{
+  display: flex;
+}
+
+.side_Bar{
+  flex-grow: 1;
+}
+
+.main_Content{
+  flex-grow: 9;
+}
