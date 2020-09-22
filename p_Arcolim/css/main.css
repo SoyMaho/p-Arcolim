@@ -1,0 +1,121 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body{
+}
+
+.contenedorP{
+  display: flex;
+  flex-direction: column;
+  margin: 0% 5%;
+}
+
+.login{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+}
+
+form{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: auto;
+  width: 60%;
+  max-width: 500px;
+  padding: 20px;
+}
+
+
+input{
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+}
+
+button{
+  margin-top: 5px;
+}
+
+header{
+  width: 100%;
+  background-color: white;
+  display: flex;
+}
+
+.user{
+    flex-grow: 4;
+    margin-left: 75%;
+}
+
+#logo_index{
+  width: 16.2rem;
+}
+
+#logo_Home{
+  width: 5rem;
+}
+
+#user_Pic{
+  width: 4.5rem;
+  margin-left: 80%;
+}
+
+.work_Section{
+
+}
+
+.side_Bar{
+
+}
+
+.main_Content{
+}
+
+/* Estilos Barra Nav */
+nav a{
+      text-decoration:none;
+      color:inherit;
+      font-size:14px;
+      }
+
+nav li{
+      display:inline-block;
+      width:150px;
+      height:30px;
+      padding:5px 10px;
+      margin: 10px 3%;
+      background-color:#40e1fb;
+      border:1px solid #fff;
+      text-align:center;
+      color:#020000;
+      position:relative;
+}
+
+nav li:hover{
+      background-color:#fff;
+      color:#000;
+      border:1px solid #000;
+      }
+
+nav li>ul{
+      display:none;
+      }
+
+nav li:hover>ul{
+      display:block;
+      position:absolute;
+      top:30px;
+      left:0px;
+}
+
+.NavBar{
+  background-color: #40e1fb;
+}
+
+/* Fin estilos barra nav */
