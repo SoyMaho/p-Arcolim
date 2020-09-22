@@ -45,17 +45,43 @@ $currentUser = $sesion->getCurrentUser();
     </header>
 
     <div class="work_Section">
-      <div class="Menu">
-        <h1>Side Bar</h1>
-        <ul>
-          <li> <a href="#">Opcion1</a></li>
-          <li> <a href="#">Opcion2</a></li>
-        </ul>
+      <div class="NavBar">
+        <nav>
+          <ul>
+            <li> <a href="/listadoproducts.php">Productos</a>
+                <ul>
+                  <li><a href="/nproducts.php">Registrar Producto</a></li>
+                  <li><a href="/modproducts.php">Modificar Productos</a></li>
+                </ul>
+            </li>
+            <li> <a href="/listadoproducts.php">Clientes</a>
+              <ul>
+                <li><a href="/nproducts.php">Registrar Cliente</a></li>
+                <li><a href="/modproducts.php">Modificar Clientes</a></li>
+              </ul>
+            </li>
+            <li> <a href="/listadoproducts.php">Proveedores</a>
+              <ul>
+                <li><a href="/nproducts.php">Registrar Proveedor</a></li>
+                <li><a href="/modproducts.php">Modificar Proveedor</a></li>
+              </ul>
+            </li>
+            <li> <a href="/nproducts.php">Clientes</a>
+              <ul>
+                <li><a href="/listadoproducts.php">Registrar Cliente</a></li>
+                <li><a href="/modproducts.php">Modificar Clientes</a></li>
+              </ul>
+            </li>
+            <li> <a href="/nproducts.php">Reportes</a></li>
+            <li> <a href="#">Panel de control</a></li>
+          </ul>
+        </nav>
       </div>
 
-      <div class="main_Content">
-        <h1>Main Content</h1>
+      <div class="Main">
+        <h1>Main Section</h1>
       </div>
+
     </div>
   </body>
 </html>
