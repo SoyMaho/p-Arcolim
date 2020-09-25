@@ -41,6 +41,8 @@ $currentUser = $sesion->getCurrentUser();
            echo 'Error: ' . $e->getMessage();
          }
          ?>
+
+         <a href="logout.php"> Salir</a>
       </div>
     </header>
 
@@ -50,7 +52,7 @@ $currentUser = $sesion->getCurrentUser();
           <ul>
             <li> <a href="/listadoproducts.php">Productos</a>
                 <ul>
-                  <li><a href="/nproducts.php">Registrar Producto</a></li>
+                  <li><a href="nproducts.php">Registrar Producto</a></li>
                   <li><a href="/modproducts.php">Modificar Productos</a></li>
                 </ul>
             </li>

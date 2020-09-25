@@ -31,6 +31,7 @@ include("sesion.php");
                      $sesion = new sesion ();
                      $sesion -> setCurrentUser($_POST["campoUsuario"]);
                      header('Location: home.php');
+                     die();
                 }
                 else
                 {
