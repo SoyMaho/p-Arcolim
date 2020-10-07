@@ -5,6 +5,10 @@ include("conexion.php");
 include("sesion.php");
  try
  {
+      if (isset($_SESSION['user'])){
+         header('Location: home.php');
+       }
+
       $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
       $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
       if(isset($_POST["botonLogin"]))
@@ -15,18 +19,18 @@ include("sesion.php");
            }
            else
            {
-                $query = "SELECT * FROM users WHERE id_user = :id_u AND password_Usuario = :upass";
+                $query = "SELECT * FROM users WHERE nombre_Usuario = :n_Usuario AND password_Usuario = :upass";
                 $statement = $connect->prepare($query);
                 $statement->execute(
                      array(
-                          'id_u'     =>     $_POST["campoUsuario"],
+                          'n_Usuario'     =>     $_POST["campoUsuario"],
                           'upass'     =>     $_POST["campoContraseña"]
                      )
                 );
                 $count = $statement->rowCount();
                 if($count > 0)
                 {
-                     $_SESSION["user"] = $_POST["campoUsuario"];
+                     //Se elimina por que la linea de codigo era redundante.=  $_SESSION["user"] = $_POST["campoUsuario"];
                      $message = "Exito";
                      $sesion = new sesion ();
                      $sesion -> setCurrentUser($_POST["campoUsuario"]);
