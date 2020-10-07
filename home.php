@@ -19,24 +19,14 @@ $currentUser = $sesion->getCurrentUser();
       <img src="img/arcolim_Logo.jpg" id="logo_Home" alt="">
       <div class="user">
         <?php  try {
-           $con = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
-           $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-           $stmt = $con->prepare('SELECT *  FROM users WHERE id_user = :id_u');
-           $stmt->execute(
-             array(
-             'id_u' =>  $currentUser)
-           );
-
-           while( $datos = $stmt->fetch()){
-
-             echo '<h2> Bienvenido </h2>' . $datos[3] ;
-             echo  "&nbsp;" . $datos[4] ;
-           }
-
-
-
-
+          //Si hay sesion , entonces se muestra la pagina y el usuario ingresado, de lo contrario retorna a index
+          if (!isset($_SESSION['user'])){
+            header('Location: index.php');
+          }
+          else {
+            echo '<h2> Bienvenido </h2>' .$currentUser ;
+          }
          } catch(PDOException $e) {
            echo 'Error: ' . $e->getMessage();
          }
