@@ -22,7 +22,7 @@ $currentUser = $sesion->getCurrentUser();
   </head>
   <body>
     <header>
-      <img src="img/arcolim_Logo.jpg" id="logo_Home" alt="">
+      <a href="home.php"><img src="img/arcolim_Logo.jpg" id="logo_Home" alt=""></a>
       <div class="user">
 
         <?php
@@ -37,9 +37,15 @@ $currentUser = $sesion->getCurrentUser();
 
                   $id_p = trim($_POST['id_p']);
                   $pname = trim($_POST['name_product']);
+                  $descP = trim($_POST['descripcion_Producto']);
+                  $costoP = trim($_POST['costo_Producto']);
+                  $precioP = trim($_POST['precio_Producto']);
+                  $unidadP = trim($_POST['unidad_Producto']);
+                  $existenciaP = trim($_POST['existencia_Producto']);
+
                   $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
                   $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                    $query = "SELECT * FROM prueba_productos WHERE id_Products = :id_p";
+                    $query = "SELECT * FROM cat_producto WHERE id_Producto = :id_p";
                     $statement = $connect->prepare($query);
                     $statement->execute(
                       [
@@ -55,7 +61,7 @@ $currentUser = $sesion->getCurrentUser();
                     if($count > 0)
                     {
                       echo '<script language="javascript">';
-                      echo 'alert("El producto ya existe")';
+                      echo 'alert("El id de este producto ya existe")';
                       echo '</script>';
                     }
                     else
@@ -63,12 +69,17 @@ $currentUser = $sesion->getCurrentUser();
                       $message = "Exito";
                       $data = [
                       'id_p' => $id_p,
-                      'name_product' => $pname
+                      'name_product' => $pname,
+                      'descripcion_Producto' => $descP,
+                      'costo_Producto' => $costoP,
+                      'precio_Producto' => $precioP,
+                      'unidad_Producto' => $unidadP,
+                      'existencia_Producto' => $existenciaP
                       ,];
 
                       $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
                       $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                      $query = "INSERT INTO prueba_productos (id_Products, nombre_Producto) VALUES (:id_p, :name_product)";
+                      $query = "INSERT INTO cat_producto (id_Producto, nombre_Producto, descripcion_Producto, costo_Producto, precio_Producto, unidad_Producto, existencia_Producto) VALUES (:id_p, :name_product, :descripcion_Producto, :costo_Producto, :precio_Producto, :unidad_Producto, :existencia_Producto)";
                       $statement = $connect->prepare($query);
                       $statement->execute($data);
 
@@ -103,17 +114,31 @@ $currentUser = $sesion->getCurrentUser();
       <div class="NavBar">
         <nav>
           <ul>
-            <li> <a href="#">Productos y Servicios</a>
+            <li> <a href="listadoproducts.php">Productos</a>
                 <ul>
-                  <li><a href="#">Nuevo Producto</a></li>
-                  <li><a href="#">Listado de productos</a></li>
-                  <li><a href="#">Modificar Productos</a></li>
+                  <li><a href="nproducts.php">Registrar Producto</a></li>
+                  <li><a href="/modproducts.php">Modificar Productos</a></li>
                 </ul>
             </li>
-            <li> <a href="#">Clientes</a></li>
-            <li> <a href="#">Proveedores</a></li>
-            <li> <a href="#">Ventas</a></li>
-            <li> <a href="#">Reportes</a></li>
+            <li> <a href="/listadoproducts.php">Venta</a>
+              <ul>
+                <li><a href="/nproducts.php">Registrar Cliente</a></li>
+                <li><a href="/modproducts.php">Modificar Clientes</a></li>
+              </ul>
+            </li>
+            <li> <a href="/listadoproducts.php">Proveedores</a>
+              <ul>
+                <li><a href="/nproducts.php">Registrar Proveedor</a></li>
+                <li><a href="/modproducts.php">Modificar Proveedor</a></li>
+              </ul>
+            </li>
+            <li> <a href="/nproducts.php">Clientes</a>
+              <ul>
+                <li><a href="/listadoproducts.php">Registrar Cliente</a></li>
+                <li><a href="/modproducts.php">Modificar Clientes</a></li>
+              </ul>
+            </li>
+            <li> <a href="/nproducts.php">Reportes</a></li>
             <li> <a href="#">Panel de control</a></li>
           </ul>
         </nav>
@@ -132,22 +157,22 @@ $currentUser = $sesion->getCurrentUser();
           <td><input type="text" name="name_product" placeholder="Nombre del producto" value="<?php if(isset($pname)){echo $pname;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> /></td>
           </tr>
           <tr>
-          <td><input type="text" name="descripcion_Producto" placeholder="Descripcion del producto" value="<?php if(isset($pname)){echo $pname;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> /></td>
+          <td><input type="text" name="descripcion_Producto" placeholder="Descripcion del producto" value="<?php if(isset($descP)){echo $descP;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> /></td>
           </tr>
           <tr>
-          <td><input type="text" name="costo_Producto" placeholder="Costo del producto" value="<?php if(isset($pname)){echo $pname;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> /></td>
+          <td><input type="text" name="costo_Producto" placeholder="Costo del producto" value="<?php if(isset($costoP)){echo $costoP;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> /></td>
           </tr>
           <tr>
-          <td><input type="text" name="precio_Producto" placeholder="Precio del producto" value="<?php if(isset($pname)){echo $pname;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> /></td>
+          <td><input type="text" name="precio_Producto" placeholder="Precio del producto" value="<?php if(isset($precioP)){echo $precioP;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> /></td>
           </tr>
           <tr>
-          <td><input type="text" name="unidad_Producto" placeholder="Unidad del producto" value="<?php if(isset($pname)){echo $pname;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> /></td>
+          <td><input type="text" name="unidad_Producto" placeholder="Unidad del producto" value="<?php if(isset($unidadP)){echo $unidadP;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> /></td>
           </tr>
           <tr>
-          <td><input type="text" name="existencia_Producto" placeholder="Existencia del producto" value="<?php if(isset($pname)){echo $pname;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> /></td>
+          <td><input type="text" name="existencia_Producto" placeholder="Existencia del producto" value="<?php if(isset($existenciaP)){echo $existenciaP;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> /></td>
           </tr>
           <tr>
-            <td><button type="submit" name="btn-signup">Registrarme</button></td>
+            <td><button type="submit" name="btn-signup">Registrar Producto</button></td>
           </tr>
         </form>
 

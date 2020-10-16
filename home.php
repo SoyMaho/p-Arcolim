@@ -16,7 +16,7 @@ $currentUser = $sesion->getCurrentUser();
   </head>
   <body>
     <header>
-      <img src="img/arcolim_Logo.jpg" id="logo_Home" alt="">
+      <a href="home.php"><img src="img/arcolim_Logo.jpg" id="logo_Home" alt=""></a>
       <div class="user">
         <?php  try {
 
@@ -40,13 +40,13 @@ $currentUser = $sesion->getCurrentUser();
       <div class="NavBar">
         <nav>
           <ul>
-            <li> <a href="/listadoproducts.php">Productos</a>
+            <li> <a href="listadoproducts.php">Productos</a>
                 <ul>
                   <li><a href="nproducts.php">Registrar Producto</a></li>
                   <li><a href="/modproducts.php">Modificar Productos</a></li>
                 </ul>
             </li>
-            <li> <a href="/listadoproducts.php">Clientes</a>
+            <li> <a href="/listadoproducts.php">Venta</a>
               <ul>
                 <li><a href="/nproducts.php">Registrar Cliente</a></li>
                 <li><a href="/modproducts.php">Modificar Clientes</a></li>

@@ -17,7 +17,10 @@ class sesion
       }
 
       public function closeSession(){
-             session_unset();
+        // Se elimina la funcion session_unset , debido a que ya no esta soportada.
+        // Se limpian las variables de sesion.
+            $_SESSION = array();
+        // Se destruye la sesion
              session_destroy();
          }
 
