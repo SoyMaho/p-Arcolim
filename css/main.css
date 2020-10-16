@@ -67,13 +67,55 @@ header{
 }
 
 .work_Section{
-  display: flex;
+
 }
 
 .side_Bar{
-  flex-grow: 1;
+
 }
 
 .main_Content{
-  flex-grow: 9;
 }
+
+/* Estilos Barra Nav */
+nav a{
+      text-decoration:none;
+      color:inherit;
+      font-size:14px;
+      }
+
+nav li{
+      display:inline-block;
+      width:150px;
+      height:30px;
+      padding:5px 10px;
+      margin: 10px 3%;
+      background-color:#40e1fb;
+      border:1px solid #fff;
+      text-align:center;
+      color:#020000;
+      position:relative;
+}
+
+nav li:hover{
+      background-color:#fff;
+      color:#000;
+      border:1px solid #000;
+      }
+
+nav li>ul{
+      display:none;
+      }
+
+nav li:hover>ul{
+      display:block;
+      position:absolute;
+      top:30px;
+      left:0px;
+}
+
+.NavBar{
+  background-color: #40e1fb;
+}
+
+/* Fin estilos barra nav */
