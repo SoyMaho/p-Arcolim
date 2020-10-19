@@ -96,45 +96,92 @@ $currentUser = $sesion->getCurrentUser();
 
                   $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
                   $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                  $query = "DELETE FROM cat_producto WHERE id_Producto = :id_p";
+                  $query = "SELECT * FROM cat_producto WHERE id_Producto = :id_p";
                   $statement = $connect->prepare($query);
                   $statement->execute($data);
-                  echo '<script language="javascript">';
-                  echo 'alert("Producto Eliminado")';
-                  echo '</script>';
+
+                  $count = $statement->rowCount();
+                  if($count == 0)
+                  {
+                    echo '<script language="javascript">';
+                    echo 'alert("El producto no existe")';
+                    echo '</script>';
+                    // $id_p = '';
+                    // $pname = '';
+                    // $descP = '';
+                    // $costoP = '';
+                    // $precioP = '';
+                    // $unidadP = '';
+                    // $existenciaP = '';
 
 
+                  }else {
+                    $id_p = trim($_POST['id_p']);
+                    $data = [
+                    'id_p' => $id_p
+                    ,];
+
+                        $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
+                        $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                        $query = "DELETE FROM cat_producto WHERE id_Producto = :id_p";
+                        $statement = $connect->prepare($query);
+                        $statement->execute($data);
+                        echo '<script language="javascript">';
+                        echo 'alert("Producto Eliminado")';
+                        echo '</script>';
+                  }
 
             }
 
             if (isset($_POST["btn-modif"])){
+
               $id_p = trim($_POST['id_p']);
-              $pname = trim($_POST['name_product']);
-              $descP = trim($_POST['descripcion_Producto']);
-              $costoP = trim($_POST['costo_Producto']);
-              $precioP = trim($_POST['precio_Producto']);
-              $unidadP = trim($_POST['unidad_Producto']);
-              $existenciaP = trim($_POST['existencia_Producto']);
-
               $data = [
-              'name_product' => $pname,
-              'descripcion_Producto' => $descP,
-              'costo_Producto' => $costoP,
-              'precio_Producto' => $precioP,
-              'unidad_Producto' => $unidadP,
-              'existencia_Producto' => $existenciaP
-              ,'id_p' => $id_p,];
+              'id_p' => $id_p
+              ,];
 
-              $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
-              $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-              $query = "UPDATE cat_producto SET nombre_Producto = :name_product, descripcion_Producto = :descripcion_Producto, costo_Producto = :costo_Producto, precio_Producto = :precio_Producto, unidad_Producto = :unidad_Producto, existencia_Producto = :existencia_Producto WHERE id_Producto = :id_p";
-              $statement = $connect->prepare($query);
-              $statement->execute($data);
+                  $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
+                  $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                  $query = "SELECT * FROM cat_producto WHERE id_Producto = :id_p";
+                  $statement = $connect->prepare($query);
+                  $statement->execute($data);
 
-              echo '<script language="javascript">';
-              echo 'alert("Producto Modificado Exitosamente")';
-              echo '</script>';
+                  $count = $statement->rowCount();
+                  if($count == 0)
+                  {
+                    echo '<script language="javascript">';
+                    echo 'alert("El producto no existe")';
+                    echo '</script>';
 
+
+                  }else {
+                    $id_p = trim($_POST['id_p']);
+                    $pname = trim($_POST['name_product']);
+                    $descP = trim($_POST['descripcion_Producto']);
+                    $costoP = trim($_POST['costo_Producto']);
+                    $precioP = trim($_POST['precio_Producto']);
+                    $unidadP = trim($_POST['unidad_Producto']);
+                    $existenciaP = trim($_POST['existencia_Producto']);
+
+                    $data = [
+                    'name_product' => $pname,
+                    'descripcion_Producto' => $descP,
+                    'costo_Producto' => $costoP,
+                    'precio_Producto' => $precioP,
+                    'unidad_Producto' => $unidadP,
+                    'existencia_Producto' => $existenciaP
+                    ,'id_p' => $id_p,];
+
+                    $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
+                    $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                    $query = "UPDATE cat_producto SET nombre_Producto = :name_product, descripcion_Producto = :descripcion_Producto, costo_Producto = :costo_Producto, precio_Producto = :precio_Producto, unidad_Producto = :unidad_Producto, existencia_Producto = :existencia_Producto WHERE id_Producto = :id_p";
+                    $statement = $connect->prepare($query);
+                    $statement->execute($data);
+
+                    echo '<script language="javascript">';
+                    echo 'alert("Producto Modificado Exitosamente")';
+                    echo '</script>';
+                  }
 
             }
 
@@ -161,16 +208,17 @@ $currentUser = $sesion->getCurrentUser();
       <div class="NavBar">
         <nav>
           <ul>
-            <li> <a href="listadoproducts.php">Productos</a>
+            <li> <a>Productos</a>
                 <ul>
+
+                  <li><a href="listadoproducts.php">Lista</a></li>
                   <li><a href="nproducts.php">Registrar Producto</a></li>
-                  <li><a href="/modproducts.php">Modificar Productos</a></li>
+
                 </ul>
             </li>
-            <li> <a href="/listadoproducts.php">Clientes</a>
+            <li> <a href="/listadoproducts.php">Venta</a>
               <ul>
-                <li><a href="/nproducts.php">Registrar Cliente</a></li>
-                <li><a href="/modproducts.php">Modificar Clientes</a></li>
+                <li><a href="/ncliente.php">Registrar Venta</a></li>
               </ul>
             </li>
             <li> <a href="/listadoproducts.php">Proveedores</a>
@@ -179,10 +227,10 @@ $currentUser = $sesion->getCurrentUser();
                 <li><a href="/modproducts.php">Modificar Proveedor</a></li>
               </ul>
             </li>
-            <li> <a href="/nproducts.php">Clientes</a>
+            <li> <a>Clientes</a>
               <ul>
-                <li><a href="/listadoproducts.php">Registrar Cliente</a></li>
-                <li><a href="/modproducts.php">Modificar Clientes</a></li>
+                <li><a href="listadoclientes.php">Lista</a></li>
+                <li><a href="ncliente.php">Registrar Clientes</a></li>
               </ul>
             </li>
             <li> <a href="/nproducts.php">Reportes</a></li>

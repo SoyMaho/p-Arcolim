@@ -40,16 +40,17 @@ $currentUser = $sesion->getCurrentUser();
       <div class="NavBar">
         <nav>
           <ul>
-            <li> <a href="listadoproducts.php">Productos</a>
+            <li> <a>Productos</a>
                 <ul>
+
+                  <li><a href="listadoproducts.php">Lista</a></li>
                   <li><a href="nproducts.php">Registrar Producto</a></li>
-                  <li><a href="/modproducts.php">Modificar Productos</a></li>
+
                 </ul>
             </li>
             <li> <a href="/listadoproducts.php">Venta</a>
               <ul>
-                <li><a href="/nproducts.php">Registrar Cliente</a></li>
-                <li><a href="/modproducts.php">Modificar Clientes</a></li>
+                <li><a href="/ncliente.php">Registrar Venta</a></li>
               </ul>
             </li>
             <li> <a href="/listadoproducts.php">Proveedores</a>
@@ -58,10 +59,10 @@ $currentUser = $sesion->getCurrentUser();
                 <li><a href="/modproducts.php">Modificar Proveedor</a></li>
               </ul>
             </li>
-            <li> <a href="/nproducts.php">Clientes</a>
+            <li> <a>Clientes</a>
               <ul>
-                <li><a href="/listadoproducts.php">Registrar Cliente</a></li>
-                <li><a href="/modproducts.php">Modificar Clientes</a></li>
+                <li><a href="listadoclientes.php">Lista</a></li>
+                <li><a href="ncliente.php">Registrar Clientes</a></li>
               </ul>
             </li>
             <li> <a href="/nproducts.php">Reportes</a></li>
