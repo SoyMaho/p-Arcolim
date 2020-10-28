@@ -41,7 +41,7 @@ try {
           }
            else if(empty($name_Cliente))
            {
-            $error = "Ingresa tu nombre";
+            $error = "Ingresa un nombre";
             $code = 2;
            }
            else if(!ctype_alpha($name_Cliente))
@@ -51,7 +51,7 @@ try {
            }
            else if(empty($apellido_Paterno))
            {
-            $error = "Ingresa tu apellido Paterno";
+            $error = "Ingresa el apellido Paterno";
             $code = 3;
            }
            else if(!ctype_alpha($apellido_Paterno))
@@ -71,7 +71,7 @@ try {
             }
            else if(empty($email_Cliente))
            {
-            $error = "Ingresa tu Correo electronico";
+            $error = "Ingresa el Correo electronico";
             $code = 6;
            }
            else if(!preg_match("/^[_.0-9a-zA-Z-]+@([0-9a-zA-Z][0-9a-zA-Z-]+.)+[a-zA-Z]{2,6}$/i", $email_Cliente))
@@ -81,7 +81,7 @@ try {
            }
            else if(empty($tel_Cliente))
            {
-            $error = "Ingresa tu numero telefonico";
+            $error = "Ingresa el numero telefonico";
             $code = 7;
            }
            else if(!is_numeric($tel_Cliente))
