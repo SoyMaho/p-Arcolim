@@ -7,42 +7,46 @@ include("sesion.php");
  {
       if (isset($_SESSION['user'])){
          header('Location: home.php');
+       } else {
+         $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
+         $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+         if(isset($_POST["botonLogin"]))
+         {
+              if(empty($_POST["campoUsuario"]) || empty($_POST["campoContraseña"]))
+              {
+                   $message = '<label>Todos los campos son requeridos</label>';
+              }
+              else
+              {
+                   $query = "SELECT * FROM users WHERE nombre_Usuario = :n_Usuario AND password_Usuario = :upass";
+                   $statement = $connect->prepare($query);
+                   $statement->execute(
+                        array(
+                             'n_Usuario'     =>     $_POST["campoUsuario"],
+                             'upass'     =>     $_POST["campoContraseña"]
+                        )
+                   );
+                   $count = $statement->rowCount();
+                   if($count > 0)
+                   {
+
+                        $message = "Exito";
+                        $sesion = new sesion ();
+                        $sesion -> setCurrentUser($_POST["campoUsuario"]);
+                        //Se borra la linea por que era redundante.
+                        //$_SESSION["user"] = $_POST["campoUsuario"];
+                        header('Location: home.php');
+                        die();
+                   }
+                   else
+                   {
+                        $message = '<label>Usuario y/o Contraseña incorrecta</label>';
+                   }
+              }
+         }
        }
 
-      $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
-      $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-      if(isset($_POST["botonLogin"]))
-      {
-           if(empty($_POST["campoUsuario"]) || empty($_POST["campoContraseña"]))
-           {
-                $message = '<label>Todos los campos son requeridos</label>';
-           }
-           else
-           {
-                $query = "SELECT * FROM users WHERE nombre_Usuario = :n_Usuario AND password_Usuario = :upass";
-                $statement = $connect->prepare($query);
-                $statement->execute(
-                     array(
-                          'n_Usuario'     =>     $_POST["campoUsuario"],
-                          'upass'     =>     $_POST["campoContraseña"]
-                     )
-                );
-                $count = $statement->rowCount();
-                if($count > 0)
-                {
-                     //Se elimina por que la linea de codigo era redundante.=  $_SESSION["user"] = $_POST["campoUsuario"];
-                     $message = "Exito";
-                     $sesion = new sesion ();
-                     $sesion -> setCurrentUser($_POST["campoUsuario"]);
-                     header('Location: home.php');
-                     die();
-                }
-                else
-                {
-                     $message = '<label>Usuario y/o Contraseña incorrecta</label>';
-                }
-           }
-      }
+
  }
  catch(PDOException $error)
  {

@@ -31,7 +31,6 @@ try {
     if(isset($_POST["btn-search"])){
 
           $id_Cliente = trim($_POST['id_Cliente']);
-
           if(empty($id_Cliente))
           {
            $error = "Por favor ingresa un ID";
@@ -48,7 +47,7 @@ try {
 
                $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
                $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-               $query = "SELECT cat_clientes.id_Cliente, cat_clientes.nombre_Cliente, cat_clientes.pApellido_Cliente, cat_clientes.razonSocial_Cliente, cat_clientes.rfc_Cliente, cat_clientes.correo_Cliente, cat_clientes.tel_Cliente, cat_direccionclientes.calle_Cliente, cat_direccionclientes.numeroEx_Cliente, cat_direccionclientes.numeroInt_Cliente, cat_direccionclientes.colonia_Cliente, cat_direccionclientes.ciudad_Cliente, cat_direccionclientes.estado_Cliente FROM cat_clientes INNER JOIN cat_direccionclientes ON cat_clientes.id_Cliente = cat_direccionclientes.id_Direccion WHERE cat_clientes.id_Cliente = :id_Cliente AND cat_clientes.tipo_Entidad=1";
+               $query = "SELECT cat_clientes.id_Cliente, cat_clientes.nombre_Cliente, cat_clientes.pApellido_Cliente, cat_clientes.razonSocial_Cliente, cat_clientes.rfc_Cliente, cat_clientes.correo_Cliente, cat_clientes.tel_Cliente, cat_direccionclientes.calle_Cliente, cat_direccionclientes.numeroEx_Cliente, cat_direccionclientes.numeroInt_Cliente, cat_direccionclientes.colonia_Cliente, cat_direccionclientes.ciudad_Cliente, cat_direccionclientes.estado_Cliente FROM cat_clientes INNER JOIN cat_direccionclientes ON cat_clientes.id_Cliente = cat_direccionclientes.id_Direccion WHERE cat_clientes.id_Cliente = :id_Cliente AND cat_clientes.tipo_Entidad=2";
                $statement = $connect->prepare($query);
                $statement->execute($data);
 
@@ -56,7 +55,7 @@ try {
                if($count == 0)
                {
                  echo '<script language="javascript">';
-                 echo 'alert("El cliente no existe")';
+                 echo 'alert("El Proveedor no existe")';
                  echo '</script>';
                }
                else {
@@ -101,7 +100,7 @@ try {
 
            $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
            $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-           $query = "SELECT * FROM cat_clientes WHERE id_Cliente = :id_Cliente AND tipo_Entidad=1";
+           $query = "SELECT * FROM cat_clientes WHERE id_Cliente = :id_Cliente AND tipo_Entidad=2";
            $statement = $connect->prepare($query);
            $statement->execute($data);
 
@@ -109,7 +108,7 @@ try {
            if($count == 0)
            {
              echo '<script language="javascript">';
-             echo 'alert("El cliente no existe")';
+             echo 'alert("El proveedor no existe")';
              echo '</script>';
            }else {
              $id_Cliente = trim($_POST['id_Cliente']);
@@ -140,7 +139,7 @@ try {
 
 
                  echo '<script language="javascript">';
-                 echo 'alert("Cliente Eliminado")';
+                 echo 'alert("Proveedor Eliminado")';
                  echo '</script>';
            }
      }
@@ -167,7 +166,7 @@ try {
 
            $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
            $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-           $query = "SELECT * FROM cat_clientes WHERE id_Cliente = :id_Cliente AND tipo_Entidad=1";
+           $query = "SELECT * FROM cat_clientes WHERE id_Cliente = :id_Cliente AND tipo_Entidad=2";
            $statement = $connect->prepare($query);
            $statement->execute($data);
 
@@ -175,7 +174,7 @@ try {
            if($count == 0)
            {
              echo '<script language="javascript">';
-             echo 'alert("El cliente no existe")';
+             echo 'alert("El proveedor no existe")';
              echo '</script>';
 
 
@@ -236,13 +235,13 @@ try {
 
 
              echo '<script language="javascript">';
-             echo 'alert("Cliente Modificado Exitosamente")';
+             echo 'alert("Proveedor Modificado Exitosamente")';
              echo '</script>';
            }
+
+     }
      }
 
-
-    }
 
   }
 
@@ -325,7 +324,7 @@ try {
       </div>
 
       <div class="Main">
-        <h1>Listado de Clientes</h1>
+        <h1>Listado de Proveedores</h1>
       </div>
 
       <div class="">
@@ -341,11 +340,11 @@ try {
           }
           ?>
           <tr>
-            <h3>Datos del cliente</h3>
-          <td><input type="text" name="id_Cliente" placeholder="ID Cliente" value="<?php if(isset($id_Cliente)){echo $id_Cliente;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> /></td>
+            <h3>Datos del Proveedor</h3>
+          <td><input type="text" name="id_Cliente" placeholder="ID " value="<?php if(isset($id_Cliente)){echo $id_Cliente;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> /></td>
           </tr>
           <tr>
-          <td><input type="text" name="name_Cliente" placeholder="Nombre del cliente" value="<?php if(isset($name_Cliente)){echo $name_Cliente;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> /></td>
+          <td><input type="text" name="name_Cliente" placeholder="Nombre del Proveedor" value="<?php if(isset($name_Cliente)){echo $name_Cliente;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> /></td>
           </tr>
           <tr>
           <td><input type="text" name="apellido_Paterno" placeholder="Apellido Paterno" value="<?php if(isset($apellido_Paterno)){echo $apellido_Paterno;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> /></td>
@@ -382,9 +381,9 @@ try {
           <td><input type="text" name="estado_Cliente" placeholder="Estado" value="<?php if(isset($estado_Cliente)){echo $estado_Cliente;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> /></td>
           </tr>
           <tr>
-            <td><button type="submit" name="btn-search">Buscar Cliente</button></td>
-            <td> <button type="submit" name="btn-delete">Eliminar Cliente</button></td>
-            <td> <button type="submit" name="btn-modif">Modificar Cliente</button></td>
+            <td><button type="submit" name="btn-search">Buscar Proveedor</button></td>
+            <td> <button type="submit" name="btn-delete">Eliminar Proveedor</button></td>
+            <td> <button type="submit" name="btn-modif">Modificar Proveedor</button></td>
           </tr>
 
         </form>
