@@ -1,12 +1,23 @@
 <?php
 session_start();
 include("conexion.php");
-include_once 'sesion.php';
+include("sesion.php");
 $sesion = new sesion ();
-
-$currentUser = $sesion->getCurrentUser();
-
+try {
+  if (!isset($_SESSION['user'])){
+    header('Location: index.php');
+  }
+  else {
+    $currentUser = $sesion->getCurrentUser();
+    echo '<h2> Bienvenido </h2>' .$currentUser;
+  }
+ } catch(PDOException $e) {
+   echo 'Error: ' . $e->getMessage();
+ }
  ?>
+
+
+
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
@@ -18,19 +29,7 @@ $currentUser = $sesion->getCurrentUser();
     <header>
       <a href="home.php"><img src="img/arcolim_Logo.jpg" id="logo_Home" alt=""></a>
       <div class="user">
-        <?php  try {
 
-          //Si hay sesion , entonces se muestra la pagina y el usuario ingresado, de lo contrario retorna a index
-          if (!isset($_SESSION['user'])){
-            header('Location: index.php');
-          }
-          else {
-            echo '<h2> Bienvenido </h2>' .$currentUser ;
-          }
-         } catch(PDOException $e) {
-           echo 'Error: ' . $e->getMessage();
-         }
-         ?>
 
          <a href="logout.php"> Salir</a>
       </div>
@@ -43,20 +42,20 @@ $currentUser = $sesion->getCurrentUser();
             <li> <a>Productos</a>
                 <ul>
 
-                  <li><a href="listadoproducts.php">Lista</a></li>
+                  <li><a href="listadoproducts.php">Listado</a></li>
                   <li><a href="nproducts.php">Registrar Producto</a></li>
 
                 </ul>
             </li>
             <li> <a href="/listadoproducts.php">Venta</a>
               <ul>
-                <li><a href="/ncliente.php">Registrar Venta</a></li>
+                <li><a href="#">Registrar Venta</a></li>
               </ul>
             </li>
             <li> <a href="/listadoproducts.php">Proveedores</a>
               <ul>
-                <li><a href="/nproducts.php">Registrar Proveedor</a></li>
-                <li><a href="/modproducts.php">Modificar Proveedor</a></li>
+                <li><a href="listadoproveedores.php">Listado</a></li>
+                <li><a href="nproveedor.php">Registrar Proveedor</a></li>
               </ul>
             </li>
             <li> <a>Clientes</a>

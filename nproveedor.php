@@ -41,7 +41,7 @@ try {
           }
            else if(empty($name_Cliente))
            {
-            $error = "Ingresa tu nombre";
+            $error = "Ingresa un nombre";
             $code = 2;
            }
            else if(!ctype_alpha($name_Cliente))
@@ -51,7 +51,7 @@ try {
            }
            else if(empty($apellido_Paterno))
            {
-            $error = "Ingresa tu apellido Paterno";
+            $error = "Ingresa el apellido Paterno";
             $code = 3;
            }
            else if(!ctype_alpha($apellido_Paterno))
@@ -71,7 +71,7 @@ try {
             }
            else if(empty($email_Cliente))
            {
-            $error = "Ingresa tu Correo electronico";
+            $error = "Ingresa el Correo electronico";
             $code = 6;
            }
            else if(!preg_match("/^[_.0-9a-zA-Z-]+@([0-9a-zA-Z][0-9a-zA-Z-]+.)+[a-zA-Z]{2,6}$/i", $email_Cliente))
@@ -81,7 +81,7 @@ try {
            }
            else if(empty($tel_Cliente))
            {
-            $error = "Ingresa tu numero telefonico";
+            $error = "Ingresa el numero telefonico";
             $code = 7;
            }
            else if(!is_numeric($tel_Cliente))
@@ -123,68 +123,67 @@ try {
                {
                $error = "Ingresa el estado";
                $code = 13;
-               }
-           else {
-             $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
-             $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-             $query = "SELECT * FROM cat_clientes WHERE id_Cliente = :id_Cliente";
-             $statement = $connect->prepare($query);
-             $statement->execute(
-                 [
+             }else {
+               $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
+               $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+               $query = "SELECT * FROM cat_clientes WHERE id_Cliente = :id_Cliente";
+               $statement = $connect->prepare($query);
+               $statement->execute(
+                   [
+                     'id_Cliente' => $id_Cliente,
+                   ]
+                  );
+                 $count = $statement->rowCount();
+                 if($count > 0)
+                 {
+                   echo '<script language="javascript">';
+                   echo 'alert("Ya existe un registro con este ID")';
+                   echo '</script>';
+                 }
+                 else
+                 {
+                   $message = "Exito";
+                   $data=[
+                   'id_Direccion'=>$id_Cliente,
+                   'calle_Cliente' => $calle_Cliente,
+                   'numeroExt_Cliente'=>$numeroExt_Cliente,
+                   'numeroInt_Cliente'=>$numeroInt_Cliente,
+                   'colonia_Cliente'=>$colonia_Cliente,
+                   'ciudad_Cliente'=>$ciudad_Cliente,
+                   'estado_Cliente'=>$estado_Cliente,
+                   ];
+                   $data1 = [
                    'id_Cliente' => $id_Cliente,
-                 ]
-                );
-               $count = $statement->rowCount();
-               if($count > 0)
-               {
-                 echo '<script language="javascript">';
-                 echo 'alert("El id de este cliente ya existe")';
-                 echo '</script>';
-               }
-               else
-               {
-                 $message = "Exito";
-                 $data=[
-                 'id_Direccion'=>$id_Cliente,
-                 'calle_Cliente' => $calle_Cliente,
-                 'numeroExt_Cliente'=>$numeroExt_Cliente,
-                 'numeroInt_Cliente'=>$numeroInt_Cliente,
-                 'colonia_Cliente'=>$colonia_Cliente,
-                 'ciudad_Cliente'=>$ciudad_Cliente,
-                 'estado_Cliente'=>$estado_Cliente,
-                 ];
-                 $data1 = [
-                 'id_Cliente' => $id_Cliente,
-                 'name_Cliente' => $name_Cliente,
-                 'apellido_Paterno' => $apellido_Paterno,
-                 'razonSocial_Cliente' => $razonSocial_Cliente,
-                 'rfc_Cliente' => $rfc_Cliente,
-                 'direccion_Cliente'=>$id_Cliente,
-                 'email_Cliente' => $email_Cliente,
-                 'tel_Cliente'=>$tel_Cliente,
-                 'tipo_Entidad' => '1',
-                 ];
+                   'name_Cliente' => $name_Cliente,
+                   'apellido_Paterno' => $apellido_Paterno,
+                   'razonSocial_Cliente' => $razonSocial_Cliente,
+                   'rfc_Cliente' => $rfc_Cliente,
+                   'direccion_Cliente'=>$id_Cliente,
+                   'email_Cliente' => $email_Cliente,
+                   'tel_Cliente'=>$tel_Cliente,
+                   'tipo_Entidad' => '2',
+                   ];
 
 
 
-                 $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
-                 $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                 $query = "INSERT INTO cat_direccionclientes(id_Direccion, calle_Cliente, numeroEx_Cliente, numeroInt_Cliente, colonia_Cliente, ciudad_Cliente, estado_Cliente) VALUES (:id_Direccion, :calle_Cliente, :numeroExt_Cliente, :numeroInt_Cliente, :colonia_Cliente, :ciudad_Cliente, :estado_Cliente)";
-                 $statement = $connect->prepare($query);
-                 $statement->execute($data);
+                   $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
+                   $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                   $query = "INSERT INTO cat_direccionclientes(id_Direccion, calle_Cliente, numeroEx_Cliente, numeroInt_Cliente, colonia_Cliente, ciudad_Cliente, estado_Cliente) VALUES (:id_Direccion, :calle_Cliente, :numeroExt_Cliente, :numeroInt_Cliente, :colonia_Cliente, :ciudad_Cliente, :estado_Cliente)";
+                   $statement = $connect->prepare($query);
+                   $statement->execute($data);
 
-                 $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
-                 $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                 $query = "INSERT INTO cat_clientes (id_Cliente, nombre_Cliente, pApellido_Cliente, razonSocial_Cliente, rfc_Cliente, direccion_Cliente, correo_Cliente, tel_Cliente, tipo_Entidad) VALUES (:id_Cliente, :name_Cliente, :apellido_Paterno, :razonSocial_Cliente, :rfc_Cliente, :direccion_Cliente, :email_Cliente,:tel_Cliente,:tipo_Entidad)";
-                 $statement = $connect->prepare($query);
-                 $statement->execute($data1);
+                   $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
+                   $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                   $query = "INSERT INTO cat_clientes (id_Cliente, nombre_Cliente, pApellido_Cliente, razonSocial_Cliente, rfc_Cliente, direccion_Cliente, correo_Cliente, tel_Cliente, tipo_Entidad) VALUES (:id_Cliente, :name_Cliente, :apellido_Paterno, :razonSocial_Cliente, :rfc_Cliente, :direccion_Cliente, :email_Cliente,:tel_Cliente,:tipo_Entidad)";
+                   $statement = $connect->prepare($query);
+                   $statement->execute($data1);
 
-                 echo '<script language="javascript">';
-                 echo 'alert("Cliente Registrado Exitosamente")';
-                 echo '</script>';
+                   echo '<script language="javascript">';
+                   echo 'alert("Proveedor Registrado Exitosamente")';
+                   echo '</script>';
 
-               }
-           }
+                 }
+             }
 
 
     }
@@ -219,7 +218,6 @@ try {
     }
     ?>
     </style>
-
   </head>
   <body>
     <header>
@@ -272,12 +270,11 @@ try {
       </div>
 
       <div class="Main">
-        <h1>Registrar Cliente</h1>
+        <h1>Registrar Proveedor</h1>
       </div>
 
       <div class="">
         <form class="" action="" method="post">
-
           <?php
           if(isset($error))
           {
@@ -290,10 +287,10 @@ try {
           ?>
           <tr>
             <h3>Datos del cliente</h3>
-          <td><input type="text" name="id_Cliente" placeholder="ID Cliente" value="<?php if(isset($id_Cliente)){echo $id_Cliente;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> /></td>
+          <td><input type="text" name="id_Cliente" placeholder="ID " value="<?php if(isset($id_Cliente)){echo $id_Cliente;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> /></td>
           </tr>
           <tr>
-          <td><input type="text" name="name_Cliente" placeholder="Nombre del cliente" value="<?php if(isset($name_Cliente)){echo $name_Cliente;} ?>"  <?php if(isset($code) && $code == 2){ echo "autofocus"; }  ?> /></td>
+          <td><input type="text" name="name_Cliente" placeholder="Nombre del Proveedor" value="<?php if(isset($name_Cliente)){echo $name_Cliente;} ?>"  <?php if(isset($code) && $code == 2){ echo "autofocus"; }  ?> /></td>
           </tr>
           <tr>
           <td><input type="text" name="apellido_Paterno" placeholder="Apellido Paterno" value="<?php if(isset($apellido_Paterno)){echo $apellido_Paterno;} ?>"  <?php if(isset($code) && $code == 3){ echo "autofocus"; }  ?> /></td>
@@ -330,7 +327,7 @@ try {
           <td><input type="text" name="estado_Cliente" placeholder="Estado" value="<?php if(isset($estado_Cliente)){echo $estado_Cliente;} ?>"  <?php if(isset($code) && $code == 13){ echo "autofocus"; }  ?> /></td>
           </tr>
           <tr>
-            <td><button type="submit" name="btn-regCliente">Registrar Cliente</button></td>
+            <td><button type="submit" name="btn-regCliente">Registrar Proveedor</button></td>
           </tr>
         </form>
 
