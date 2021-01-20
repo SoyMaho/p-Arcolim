@@ -250,7 +250,7 @@ try {
             </li>
             <li> <a href="/listadoproducts.php">Venta</a>
               <ul>
-                <li><a href="#">Registrar Venta</a></li>
+                <li><a href="/registroventa.php">Registrar Venta</a></li>
               </ul>
             </li>
             <li> <a href="/listadoproducts.php">Proveedores</a>
