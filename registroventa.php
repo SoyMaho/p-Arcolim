@@ -2,7 +2,9 @@
 session_start();
 include("conexion.php");
 include("sesion.php");
+include("funcsql.php");
 $sesion = new sesion ();
+$funcsql = new funcionSQL ();
 try {
   if (!isset($_SESSION['user'])){
     header('Location: index.php');
@@ -10,9 +12,139 @@ try {
   else {
     $currentUser = $sesion->getCurrentUser();
     echo '<h2> Bienvenido </h2>' .$currentUser;
-    $fechaVenta= trim(date('d/m/Y'));
+    $fechaVenta= trim(date('Y-m-d H:i:s'));
+    $nMovimientoVenta=0;
+
+    //Ultima Venta
+    $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
+    $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    $query1 = "SELECT MAX(idVenta) AS id FROM listado_venta";
+
+    $statement = $connect->prepare($query1);
+    $statement->execute();
+    $count = $statement->rowCount();
+
+    while( $datos = $statement->fetch()){
+    $id = $datos[0];
+    }
+    $numeroVenta=$id;
+
+        $data = [
+      'numero_Venta' => $numeroVenta
+      ,];
+
+      $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
+      $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+      $query = "SELECT id_ClienteVenta, subtotalVenta, ivaVenta, totalVenta, numeroVenta FROM listado_venta WHERE numeroVenta = :numero_Venta";
+      $statement = $connect->prepare($query);
+      $statement->execute($data);
+
+      while( $datos = $statement->fetch()){
+      $id_Cliente = $datos[0];
+      $subtotalVenta = $datos[1];
+      $ivaVenta = $datos[2];
+      $totalVenta = $datos[3];
+      $numeroVenta = $datos[4];
+    }
+
+    $query1 = "SELECT MAX(idVenta) AS id FROM listado_venta";
+
+    $statement = $connect->prepare($query1);
+    $statement->execute();
+    $count = $statement->rowCount();
+
+    while( $datos = $statement->fetch()){
+    $id = $datos[0];
+    }
+    $numeroVenta=$id;
+
+        $data = [
+      'numero_Venta' => $numeroVenta
+      ,];
+
+    $query = "SELECT SUM(precioTotalProducto) as subtotal FROM listadomovimientos WHERE idDocumentoVenta = :numero_Venta";
+    $statement = $connect->prepare($query);
+    $statement->execute($data);
+    while( $subtotal = $statement->fetch()){
+    $subtotalVenta = $subtotal[0];
+     }
+    $ivaVenta = $subtotalVenta * .16;
+    $totalVenta = $subtotalVenta + $ivaVenta;
+
+    //Ultimo Movimiento
+    $query1 = "SELECT MAX(idMovimiento) AS id FROM listadomovimientos";
+
+    $statement = $connect->prepare($query1);
+    $statement->execute();
+    $count = $statement->rowCount();
+
+    while( $datos = $statement->fetch()){
+    $id = $datos[0];
+    }
+    $numeroidMovimiento=$id;
+
+        $data = [
+      'numero_idmovimiento' => $numeroidMovimiento
+      ,];
+
+      $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
+      $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+      $query = "SELECT claveProducto, nombreProducto, cantidadProducto, precioProducto, precioTotalProducto FROM listadomovimientos WHERE idMovimiento = :numero_idmovimiento";
+      $statement = $connect->prepare($query);
+      $statement->execute($data);
+
+      while( $datos = $statement->fetch()){
+      $id_p = $datos[0];
+      $pname = $datos[1];
+      $cantidadP = $datos[2];
+      $precioP = $datos[3];
+      $precioTotal = $datos[4];
+    }
+
+    //Cliente Venta
+    $data = [
+    'id_cliente' => $id_Cliente
+    ,];
+    $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
+    $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $query = "SELECT nombre_Cliente FROM cat_Clientes WHERE id_Cliente = :id_cliente";
+    $statement = $connect->prepare($query);
+    $statement->execute($data);
+
+    while( $datos = $statement->fetch()){
+    $nombreCliente = $datos[0];
+    }
 
 
+
+    if(isset($_POST["botonBorrarMov"])){
+      $idMovimiento = $_POST['id_Movimiento'];
+      $id_p = trim($_POST['id_p']);
+      $pname = trim($_POST['name_product']);
+      $descP = trim($_POST['descripcion_Producto']);
+      $costoP = trim($_POST['costo_Producto']);
+      $precioP = trim($_POST['precio_Producto']);
+      $unidadP = trim($_POST['unidad_Producto']);
+      $existenciaP = trim($_POST['existencia_Producto']);
+      $numeroVenta= trim($_POST['numero_Venta']);
+      $cantidadP = trim($_POST['cantidad_Producto']);
+      $id_Cliente = trim($_POST['id_Cliente']);
+      $nombreCliente = trim($_POST['nombre_Cliente']);
+      $subtotalVenta = trim($_POST['subtotal_Venta']);
+      $ivaVenta = trim($_POST['iva_Venta']);
+      $totalVenta = trim($_POST['total_Venta']);
+
+      $data1 = [
+      'id_Movimiento' => $idMovimiento
+      ,];
+        $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
+          $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+          $query = "DELETE FROM listadomovimientos WHERE idMovimiento = :id_Movimiento";
+          $statement = $connect->prepare($query);
+          $statement->execute($data1);
+          header('Location: registroventa.php');
+    }
 
     if(isset($_POST["btn-search"])){
 
@@ -30,6 +162,7 @@ try {
           $subtotalVenta = trim($_POST['subtotal_Venta']);
           $ivaVenta = trim($_POST['iva_Venta']);
           $totalVenta = trim($_POST['total_Venta']);
+          $precioTotal = 0 ;
 
           if(empty($id_p))
           {
@@ -64,12 +197,21 @@ try {
              }
 
 
+
     }
 
 
 
     if (isset($_POST["btn-nuevo"])){
-
+      $id_p = '';
+      $pname = '';
+      $cantidadP = 0;
+      $precioP = 0;
+      $precioTotal = 0;
+      $subtotalVenta = 0;
+      $ivaVenta = 0;
+      $totalVenta = 0;
+      $fechaVenta = trim($_POST['fecha_Venta']);
       $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
       $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
@@ -84,6 +226,27 @@ try {
       }
       $suma=1;
       $numeroVenta=$id+$suma;
+
+      $data = [
+    'numero_Venta' => $numeroVenta,
+    'fecha_Venta' => $fechaVenta,
+    'id_Cliente' => '0',
+    'subtotal_Venta' => '0.00',
+    'iva_Venta' => '0.00',
+    'total_Venta' => '0.00',
+    'estadoRegistroV' => '1'
+    ,];
+
+        $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
+        $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $query = "INSERT INTO listado_venta(fechaVenta, id_ClienteVenta, subtotalVenta, ivaVenta, totalVenta, numeroVenta, estadoRegistroV)
+        VALUES (:fecha_Venta, :id_Cliente, :subtotal_Venta, :iva_Venta, :total_Venta, :numero_Venta, :estadoRegistroV)";
+        $statement = $connect->prepare($query);
+        $statement->execute($data);
+
+
+
+
     }
 
     if(isset($_POST["btn-searchCliente"])){
@@ -99,6 +262,7 @@ try {
           $subtotalVenta = trim($_POST['subtotal_Venta']);
           $ivaVenta = trim($_POST['iva_Venta']);
           $totalVenta = trim($_POST['total_Venta']);
+
 
           if(empty($id_Cliente))
           {
@@ -157,24 +321,15 @@ try {
               [
                 'numero_Venta' => $numeroVenta,
               ]
-              //Se reemplazan las lineas de abajo.
-            //      array(
-            //           'id_p'     =>     $_POST["id_p"],
-            //
-            //      )
              );
             $count = $statement->rowCount();
             if($count > 0)
             {
               echo '<script language="javascript">';
-              echo 'alert("El Folio de la venta ya existe")';
+              echo 'alert("Venta Guardada")';
               echo '</script>';
-            }
-            else
-            {
+
               $data = [
-            'numero_Venta' => $numeroVenta,
-            'fecha_Venta' => $fechaVenta,
             'id_Cliente' => $idCliente,
             'subtotal_Venta' => $subtotalVenta,
             'iva_Venta' => $ivaVenta,
@@ -183,15 +338,88 @@ try {
 
                 $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
                 $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                $query = "INSERT INTO listado_venta(fechaVenta, id_ClienteVenta, subtotalVenta, ivaVenta, totalVenta, numeroVenta)
-                VALUES (:fecha_Venta, :id_Cliente, :subtotal_Venta, :iva_Venta, :total_Venta, :numero_Venta)";
+                $query = "UPDATE listado_venta
+                SET id_ClienteVenta = :id_Cliente,
+                subtotalVenta = :subtotal_Venta,
+                ivaVenta = :iva_Venta,
+                totalVenta = :total_Venta
+                WHERE idVenta = $numeroVenta";
                 $statement = $connect->prepare($query);
                 $statement->execute($data);
+            }
+            else
+            {
+
               }
     }
 
+    if(isset($_POST["btn-agregar"])){
+
+          $id_p = trim($_POST['id_p']);
+          $pname = trim($_POST['name_product']);
+          $cantidadP = trim($_POST['cantidad_Producto']);
+          $precioP = trim($_POST['precio_Producto']);
+          $precioTotal = trim($_POST['precio_Total']);
+          $numeroVenta= trim($_POST['numero_Venta']);
+          $cantidadP = trim($_POST['cantidad_Producto']);
+          $id = '';
+          $id_Cliente = trim($_POST['id_Cliente']);
+          $nombreCliente = trim($_POST['nombre_Cliente']);
+          $subtotalVenta = trim($_POST['subtotal_Venta']);
+          $ivaVenta = trim($_POST['iva_Venta']);
+          $totalVenta = trim($_POST['total_Venta']);
 
 
+          $precioTotal = $precioP * $cantidadP;
+          if(empty($id_p))
+          {
+           $error = "Por favor ingresa un ID del producto";
+           $code = 1;
+          }else {
+            $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
+            $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            $query1 = "SELECT MAX(idVenta) AS id FROM listado_venta";
+
+            $statement = $connect->prepare($query1);
+            $statement->execute();
+            $count = $statement->rowCount();
+
+            while( $datos = $statement->fetch()){
+            $id = $datos[0];
+            }
+
+            $data = [
+            'id_p' => $id_p,
+            'pname' => $pname,
+            'cantidadP' => $cantidadP,
+            'precioP' => $precioP,
+            'precioTotal' => $precioTotal,
+            'numeroVenta'=> $id,
+          ];
+
+            $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
+            $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $query = "INSERT INTO listadomovimientos(claveProducto, nombreProducto, cantidadProducto, precioProducto, precioTotalProducto, idDocumentoVenta)
+            VALUES (:id_p, :pname, :cantidadP, :precioP, :precioTotal, :numeroVenta)";
+            $statement = $connect->prepare($query);
+            $statement->execute($data);
+
+            //Inicia update Cliente
+            $data = [
+          'id_Cliente' => $id_Cliente
+          ,];
+
+              $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
+              $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+              $query = "UPDATE listado_venta
+              SET id_ClienteVenta = :id_Cliente
+              WHERE idVenta = $numeroVenta";
+              $statement = $connect->prepare($query);
+              $statement->execute($data);
+
+    }
+  }
   }
  } catch(PDOException $e) {
    echo 'Error: ' . $e->getMessage();
@@ -268,7 +496,22 @@ try {
               <?php
           }
           ?>
-
+          <tr>
+          <td><input type="text" name="numero_Venta" placeholder="No. Venta" value="<?php if(isset($numeroVenta)){echo $numeroVenta;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> /></td>
+          </tr>
+          <tr>
+          <td><input type="text" name="fecha_Venta" placeholder="Fecha" value="<?php if(isset($fechaVenta)){echo $fechaVenta;} ?>"  <?php if(isset($code) && $code == 2){ echo "autofocus"; }  ?> /></td>
+          </tr>
+          <tr>
+          <td><input type="text" name="id_Cliente" placeholder="Id Cliente" value="<?php if(isset($id_Cliente)){echo $id_Cliente;} ?>"  <?php if(isset($code) && $code == 7){ echo "autofocus"; }  ?> /></td>
+          </tr>
+          <tr>
+          <td><input type="text" name="nombre_Cliente" placeholder="N. Cliente" value="<?php if(isset($nombreCliente)){echo $nombreCliente;} ?>"  <?php if(isset($code) && $code == 5){ echo "autofocus"; }  ?> /></td>
+          </tr>
+          <tr>
+            <td><button type="submit" name="btn-searchCliente">Buscar Cliente</button></td>
+            <td><button type="submit" name="btn-nuevo">Nuevo</button></td>
+          </tr>
           <tr>
           <td><input type="text" name="id_p" placeholder="Id Producto" value="<?php if(isset($id_p)){echo $id_p;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> /></td>
           </tr>
@@ -288,82 +531,10 @@ try {
             <td><button type="submit" name="btn-search">Buscar</button></td>
             <td><button type="submit" name="btn-agregar">Agregar</button></td>
           </tr>
-          <tr>
-          <td><input type="text" name="numero_Venta" placeholder="No. Venta" value="<?php if(isset($numeroVenta)){echo $numeroVenta;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> /></td>
-          </tr>
-          <tr>
-          <td><input type="text" name="fecha_Venta" placeholder="Fecha" value="<?php if(isset($fechaVenta)){echo $fechaVenta;} ?>"  <?php if(isset($code) && $code == 2){ echo "autofocus"; }  ?> /></td>
-          </tr>
-          <tr>
-          <td><input type="text" name="id_Cliente" placeholder="Id Cliente" value="<?php if(isset($id_Cliente)){echo $id_Cliente;} ?>"  <?php if(isset($code) && $code == 7){ echo "autofocus"; }  ?> /></td>
-          </tr>
-          <tr>
-          <td><input type="text" name="nombre_Cliente" placeholder="N. Cliente" value="<?php if(isset($nombreCliente)){echo $nombreCliente;} ?>"  <?php if(isset($code) && $code == 5){ echo "autofocus"; }  ?> /></td>
-          </tr>
-          <tr>
-            <td><button type="submit" name="btn-searchCliente">Buscar Cliente</button></td>
-          </tr>
+
 
           <?php
           if(isset($_POST["btn-agregar"])){
-
-                $id_p = trim($_POST['id_p']);
-                $pname = trim($_POST['name_product']);
-                $cantidadP = trim($_POST['cantidad_Producto']);
-                $precioP = trim($_POST['precio_Producto']);
-                $precioTotal = trim($_POST['precio_Total']);
-                $numeroVenta= trim($_POST['numero_Venta']);
-                $cantidadP = trim($_POST['cantidad_Producto']);
-                $id = '';
-                $id_Cliente = trim($_POST['id_Cliente']);
-                $nombreCliente = trim($_POST['nombre_Cliente']);
-                $subtotalVenta = trim($_POST['subtotal_Venta']);
-                $ivaVenta = trim($_POST['iva_Venta']);
-                $totalVenta = trim($_POST['total_Venta']);
-
-                $precioTotal = $precioP * $cantidadP;
-                if(empty($id_p))
-                {
-                 $error = "Por favor ingresa un ID del producto";
-                 $code = 1;
-                }else {
-                  $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
-                  $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-                  $query1 = "SELECT MAX(idVenta) AS id FROM listado_venta";
-
-                  $statement = $connect->prepare($query1);
-                  $statement->execute();
-                  $count = $statement->rowCount();
-
-                  while( $datos = $statement->fetch()){
-                  $id = $datos[0];
-                  }
-
-                  $data = [
-                  'id_p' => $id_p,
-                  'pname' => $pname,
-                  'cantidadP' => $cantidadP,
-                  'precioP' => $precioP,
-                  'precioTotal' => $precioTotal,
-                  'numeroVenta'=> $id,
-                ];
-
-                  $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
-                  $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-
-
-                  // $rs = mysql_query("SELECT MAX(idVenta) AS id FROM listado_venta");
-                  // if ($row = fetch($rs)) {
-                  //   $id = trim($row[0]);
-                  // }
-
-                  $query = "INSERT INTO listadomovimientos(claveProducto, nombreProducto, cantidadProducto, precioProducto, precioTotalProducto, idDocumentoVenta)
-                  VALUES (:id_p, :pname, :cantidadP, :precioP, :precioTotal, :numeroVenta)";
-                  $statement = $connect->prepare($query);
-                  $statement->execute($data);
-
                   // Inicio Tabla
                   $numeroVenta = trim($_POST['numero_Venta']);
                   $data = [
@@ -371,60 +542,51 @@ try {
                   ,];
                       $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
                       $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                      $query = "SELECT claveProducto, nombreProducto, cantidadProducto, precioProducto, precioTotalProducto FROM listadomovimientos WHERE idDocumentoVenta= :numero_Venta";
+                      $query = "SELECT idMovimiento,claveProducto, nombreProducto, cantidadProducto, precioProducto, precioTotalProducto FROM listadomovimientos WHERE idDocumentoVenta= :numero_Venta";
                       $statement = $connect->prepare($query);
                       $statement->execute($data);
-
+                      echo "<table>
+                      <tr>
+                      <td width='150'>Clave</td>
+                      <td width='150'>Nombre</td>
+                      <td width='150'>Precio</td>
+                      <td width='150'>Precio Total</td>
+                      <td width='300'></td>
+                      </tr>";
                       while($registro = $statement->fetch())
                   {
-                    echo "
-                    <table>
+                    //Boton MEtodo Get
+                    //<td><a href='eliminarmov.php?id=".$registro["idMovimiento"]."'>Eliminar</a></td>
+                    echo"
                     <tr>
                     <td width='150'>".$registro['claveProducto']."</td>
                     <td width='150'>".$registro['nombreProducto']."</td>
                     <td width='150'>".$registro['precioProducto']."</td>
                     <td width='150'>".$registro['precioTotalProducto']."</td>
-                    <td width='150'></td>
+                    <td width='300'>
+                    <form method = 'POST' action='registroventa.php'>
+                    <input type='hidden' name='id_Movimiento' value='".$registro['idMovimiento']."'>
+                    <input type='submit' name='botonBorrarMov' value='Borrar'>
+                    </form>
+                    </td>
                     </tr>
-                    </table>
                     ";
                   }
+                  echo "</table>";
 
-
-
+                  $query = "SELECT SUM(precioTotalProducto) as subtotal FROM listadomovimientos WHERE idDocumentoVenta = :numero_Venta";
+                  $statement = $connect->prepare($query);
+                  $statement->execute($data);
+                  while( $subtotal = $statement->fetch()){
+                  $subtotalVenta = $subtotal[0];
                    }
-
-
+                  $ivaVenta = $subtotalVenta * .16;
+                  $totalVenta = $subtotalVenta + $ivaVenta;
           }
-
-          
-          if(isset($_POST["btn-tabla"])){
-            $numeroVenta = trim($_POST['numero_Venta']);
-            $data = [
-            'numero_Venta' => $numeroVenta
-            ,];
-                $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
-                $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                $query = "SELECT claveProducto, nombreProducto, cantidadProducto, precioProducto, precioTotalProducto FROM listadomovimientos WHERE idDocumentoVenta= :numero_Venta";
-                $statement = $connect->prepare($query);
-                $statement->execute($data);
-
-                while($registro = $statement->fetch())
-            {
-              echo "
-              <table>
-              <tr>
-              <td width='150'>".$registro['claveProducto']."</td>
-              <td width='150'>".$registro['nombreProducto']."</td>
-              <td width='150'>".$registro['precioProducto']."</td>
-              <td width='150'>".$registro['precioTotalProducto']."</td>
-              <td width='150'></td>
-              </tr>
-              </table>
-              ";
-            }
-          }?>
-
+          ?>
+          <?php
+          echo $tabla;
+            ?>
           <tr>
           <td><input type="text" name="subtotal_Venta" placeholder="Subtotal" value="<?php if(isset($subtotalVenta)){echo $subtotalVenta;} ?>"  <?php if(isset($code) && $code == 5){ echo "autofocus"; }  ?> /></td>
           </tr>
@@ -437,8 +599,7 @@ try {
 
           <tr>
             <td><button type="submit" name="btn-guardar">Guardar</button></td>
-            <td><button type="submit" name="btn-nuevo">Nuevo</button></td>
-            <td><button type="submit" name="btn-tabla">Tabla</button></td>
+            <!-- <td><button type="submit" name="btn-tabla">Tabla</button></td> -->
           </tr>
         </form>
 
