@@ -39,6 +39,11 @@ try {
            $error = "Solo se admiten numeros";
            $code = 1;
           }
+          else if($id_Cliente>9999)
+          {
+           $error = "El ID del cliente no puede ser mayor a 4 Digitos";
+           $code = 1;
+          }
            else if($id_Cliente<1)
            {
             $error = "El ID no puede ser menor a 1";

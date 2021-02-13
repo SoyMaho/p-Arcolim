@@ -39,9 +39,19 @@ try {
            $error = "Solo se admiten numeros";
            $code = 1;
           }
+          else if($id_Cliente>9999)
+          {
+           $error = "El ID del cliente no puede ser mayor a 4 Digitos";
+           $code = 1;
+          }
+           else if($id_Cliente<1)
+           {
+            $error = "El ID no puede ser menor a 1";
+            $code = 1;
+           }
            else if(empty($name_Cliente))
            {
-            $error = "Ingresa un nombre";
+            $error = "Ingresa el nombre del cliente";
             $code = 2;
            }
            else if(!ctype_alpha($name_Cliente))
@@ -49,9 +59,14 @@ try {
             $error = "Solo se admiten letras";
             $code = 2;
            }
+           else if(strlen($name_Cliente)>100)
+           {
+            $error = "El nombre del Cliente no puede exceder 100 caracteres";
+            $code = 2;
+           }
            else if(empty($apellido_Paterno))
            {
-            $error = "Ingresa el apellido Paterno";
+            $error = "Ingresa tu apellido Paterno";
             $code = 3;
            }
            else if(!ctype_alpha($apellido_Paterno))
@@ -59,9 +74,19 @@ try {
             $error = "Solo se admiten letras en este campo";
             $code = 3;
            }
+           else if(strlen($apellido_Paterno)>100)
+           {
+            $error = "El Apellido del Cliente no puede exceder 100 caracteres";
+            $code = 3;
+           }
            else if(empty($razonSocial_Cliente))
            {
             $error = "Ingresa la razon social";
+            $code = 4;
+           }
+           else if(strlen($razonSocial_Cliente)>250)
+           {
+            $error = "La razon social no puede exceder 250 caracteres";
             $code = 4;
            }
            else if(empty($rfc_Cliente))
@@ -69,9 +94,19 @@ try {
             $error = "Ingresa el RFC";
             $code = 5;
             }
+            else if(strlen($rfc_Cliente)>13)
+            {
+             $error = "El RFC no puede exceder los 13 caracteres";
+             $code = 5;
+            }
+            else if(strlen($rfc_Cliente)<12)
+            {
+             $error = "El RFC no puede ser menor a 12 caracteres";
+             $code = 5;
+            }
            else if(empty($email_Cliente))
            {
-            $error = "Ingresa el Correo electronico";
+            $error = "Ingresa tu Correo electronico";
             $code = 6;
            }
            else if(!preg_match("/^[_.0-9a-zA-Z-]+@([0-9a-zA-Z][0-9a-zA-Z-]+.)+[a-zA-Z]{2,6}$/i", $email_Cliente))
@@ -81,7 +116,7 @@ try {
            }
            else if(empty($tel_Cliente))
            {
-            $error = "Ingresa el numero telefonico";
+            $error = "Ingresa tu numero telefonico";
             $code = 7;
            }
            else if(!is_numeric($tel_Cliente))
@@ -91,7 +126,7 @@ try {
            }
            else if(strlen($tel_Cliente)!=10)
            {
-            $error = "Solo se admiten 10 caracteres";
+            $error = "El numero telefonico debe contener 10 digitos";
             $code = 7;
            }
            else if(empty($calle_Cliente))
@@ -99,31 +134,51 @@ try {
             $error = "Ingresa la calle";
             $code = 8;
            }
-            else if(empty($numeroExt_Cliente))
-            {
-             $error = "Ingresa un numero exterior";
-             $code = 9;
+           else if(strlen($calle_Cliente)>50)
+           {
+            $error = "La calle no puede exceder los 50 caracteres";
+            $code = 8;
            }
-           else if(empty($numeroInt_Cliente))
+           else if(empty($numeroExt_Cliente))
             {
-            $error = "Ingresa un numero interior";
-            $code = 10;
+            $error = "Ingresa el numero Exterior";
+            $code = 9;
             }
+            else if(strlen($numeroExt_Cliente)>5)
+            {
+             $error = "El numero exterior no puede ser mayor a 5 digitos";
+             $code = 9;
+            }
+             else if(strlen($numeroInt_Cliente)>5)
+             {
+              $error = "El numero interior no puede ser mayor a 5 digitos";
+              $code = 10;
+             }
             else if(empty($colonia_Cliente))
              {
              $error = "Ingresa la colonia";
              $code = 11;
+             }
+             else if(strlen($colonia_Cliente)>50)
+             {
+              $error = "La colonia no puede exceder los 50 Caracteres";
+              $code = 11;
              }
              else if(empty($ciudad_Cliente))
               {
               $error = "Ingresa la ciudad";
               $code = 12;
               }
+              else if(strlen($ciudad_Cliente)>50)
+              {
+               $error = "La ciudad no puede exceder los 50 Caracteres";
+               $code = 12;
+              }
               else if(empty($estado_Cliente))
                {
-               $error = "Ingresa el estado";
+               $error = "Selecciona un estado";
                $code = 13;
-             }else {
+               }else {
                $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
                $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                $query = "SELECT * FROM cat_clientes WHERE id_Cliente = :id_Cliente";

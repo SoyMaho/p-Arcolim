@@ -354,7 +354,6 @@ try {
           $id_Cliente = trim($_POST['select_cliente']);
           $numeroVenta = trim($_POST['numero_Venta']);
           $fechaVenta = trim($_POST['fecha_Venta']);
-          $idCliente = trim($_POST['select_cliente']);
           $nombreCliente = trim($_POST['nombre_Cliente']);
           $subtotalVenta = trim($_POST['subtotal_Venta']);
           $ivaVenta = trim($_POST['iva_Venta']);
@@ -362,7 +361,107 @@ try {
           $estadoRegistroV = trim($_POST['check_Entregado']);
           $fechaVenta = trim($_POST['fecha_Venta']);
 
-
+          if(empty($numeroVenta))
+          {
+           $error = "Por favor ingresa un ID";
+           $code = 1;
+          }
+          else if(!is_numeric($numeroVenta))
+          {
+           $error = "Solo se admiten numeros";
+           $code = 1;
+          }
+          else if($numeroVenta>9999)
+          {
+           $error = "El ID no puede ser mayor a 4 Digitos";
+           $code = 1;
+          }
+          else if($numeroVenta<1)
+          {
+           $error = "El ID no puede ser menor a 1";
+           $code = 1;
+         }
+           if(empty($id_Cliente))
+           {
+            $error = "Por favor ingresa un ID";
+            $code = 1;
+           }
+           else if(!is_numeric($id_Cliente))
+           {
+            $error = "Solo se admiten numeros";
+            $code = 1;
+          }
+          else if($id_Cliente>9999)
+          {
+           $error = "El ID del cliente no puede ser mayor a 4 Digitos";
+           $code = 1;
+          }
+          else if($id_Cliente<1)
+          {
+           $error = "El ID del cliente no puede ser menor a 1";
+           $code = 1;
+          }
+          else if(empty($subtotalVenta))
+          {
+           $error = "El subtotal no puede estar vacio";
+           $code = 1;
+          }
+          else if($subtotalVenta<0)
+          {
+           $error = "El subtotal no puede ser menor a 0.00";
+           $code = 1;
+          }
+          else if($subtotalVenta>9999999)
+          {
+           $error = "El subtotal no puede ser mayor a 9,999,999.00";
+           $code = 1;
+          }
+          else if(!is_numeric($subtotalVenta))
+          {
+           $error = "Solo se admiten numeros en el Subtotal";
+           $code = 1;
+          }
+          else if(empty($ivaVenta))
+          {
+           $error = "El IVA no puede estar vacio";
+           $code = 1;
+          }
+          else if($ivaVenta<0)
+          {
+           $error = "El IVA no puede ser menor a 0.00";
+           $code = 1;
+          }
+          else if($ivaVenta>9999999)
+          {
+           $error = "El IVA no puede ser mayor a 9,999,999.0";
+           $code = 1;
+          }
+          else if(!is_numeric($ivaVenta))
+          {
+           $error = "Solo se admiten numeros en el IVA";
+           $code = 1;
+          }
+          else if(empty($totalVenta))
+          {
+           $error = "El Total de la venta no puede estar vacio";
+           $code = 1;
+          }
+          else if($totalVenta<0)
+          {
+           $error = "El Total de la venta no puede ser menor a 0.00";
+           $code = 1;
+          }
+          else if($totalVenta>9999999)
+          {
+           $error = "El Total de la venta no puede ser mayor a 9,999,999.0";
+           $code = 1;
+          }
+          else if(!is_numeric($totalVenta))
+          {
+           $error = "Solo se admiten numeros en el Total de la venta";
+           $code = 1;
+          }
+          else {
             $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
             $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $query = "SELECT * FROM listado_venta WHERE numeroVenta = :numero_Venta";
@@ -380,7 +479,7 @@ try {
               echo '</script>';
 
               $data = [
-            'id_Cliente' => $idCliente,
+            'id_Cliente' => $id_Cliente,
             'subtotal_Venta' => $subtotalVenta,
             'iva_Venta' => $ivaVenta,
             'total_Venta' => $totalVenta,
@@ -439,6 +538,9 @@ try {
                 }
             }
             header('Location: registroventa.php');
+         }
+
+
 
     }
 

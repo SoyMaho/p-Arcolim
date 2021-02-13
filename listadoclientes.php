@@ -106,7 +106,17 @@ try {
       {
        $error = "Solo se admiten numeros";
        $code = 1;
-      }
+     }
+     else if($id_Cliente>9999)
+     {
+      $error = "El ID del cliente no puede ser mayor a 4 Digitos";
+      $code = 1;
+     }
+     else if($id_Cliente<1)
+     {
+      $error = "El ID del cliente no puede ser menor a 1";
+      $code = 1;
+     }
       else {
        $data = [
        'id_Cliente' => $id_Cliente
@@ -165,6 +175,7 @@ try {
     if (isset($_POST["btn-modif"])){
 
       $id_Cliente = trim($_POST['select_cliente']);
+
       if(empty($id_Cliente))
       {
        $error = "Por favor ingresa un ID";
@@ -175,14 +186,9 @@ try {
        $error = "Solo se admiten numeros";
        $code = 1;
       }
-      if(empty($id_Cliente))
+      else if($id_Cliente>9999)
       {
-       $error = "Por favor ingresa un ID";
-       $code = 1;
-      }
-      else if(!is_numeric($id_Cliente))
-      {
-       $error = "Solo se admiten numeros";
+       $error = "El ID del cliente no puede ser mayor a 4 Digitos";
        $code = 1;
       }
        else if($id_Cliente<1)
