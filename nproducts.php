@@ -2,7 +2,9 @@
 session_start();
 include("conexion.php");
 include_once 'sesion.php';
+include("funcsql.php");
 $sesion = new sesion ();
+$funcsql = new funcionSQL();
 ?>
 <?php
 try {
@@ -12,6 +14,10 @@ try {
   else {
     $currentUser = $sesion->getCurrentUser();
     echo '<h2> Bienvenido </h2>' .$currentUser ;
+
+
+    $idAutoProducto= $funcsql ->ultimoId("id_Producto","cat_producto","id_Producto");
+    $id_p = $idAutoProducto+1;
 
     if(isset($_POST["btn-signup"])){
 

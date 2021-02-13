@@ -47,8 +47,7 @@ include("sesion.php");
                       $message = "Exito";
                       $sesion = new sesion ();
                       $sesion -> setCurrentUser($_POST["campoUsuario"]);
-                      //Se borra la linea por que era redundante.
-                      //$_SESSION["user"] = $_POST["campoUsuario"];
+                    
                       header('Location: home.php');
                       die();
                  }

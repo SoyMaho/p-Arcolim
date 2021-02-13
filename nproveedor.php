@@ -2,7 +2,9 @@
 session_start();
 include("conexion.php");
 include_once 'sesion.php';
+include("funcsql.php");
 $sesion = new sesion ();
+$funcsql = new funcionSQL();
 ?>
 <?php
 try {
@@ -12,7 +14,8 @@ try {
   else {
     $currentUser = $sesion->getCurrentUser();
     echo '<h2> Bienvenido </h2>' .$currentUser ;
-
+    $idAutoCliente = $funcsql ->ultimoId("id_Cliente","cat_clientes","id_Cliente");
+    $id_Cliente = $idAutoCliente+1;
     if(isset($_POST["btn-regCliente"])){
 
           $id_Cliente = trim($_POST['id_Cliente']);
@@ -217,6 +220,7 @@ try {
                    'email_Cliente' => $email_Cliente,
                    'tel_Cliente'=>$tel_Cliente,
                    'tipo_Entidad' => '2',
+                   'estadoRegistroC'=>'1',
                    ];
 
 
@@ -229,7 +233,7 @@ try {
 
                    $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
                    $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                   $query = "INSERT INTO cat_clientes (id_Cliente, nombre_Cliente, pApellido_Cliente, razonSocial_Cliente, rfc_Cliente, direccion_Cliente, correo_Cliente, tel_Cliente, tipo_Entidad) VALUES (:id_Cliente, :name_Cliente, :apellido_Paterno, :razonSocial_Cliente, :rfc_Cliente, :direccion_Cliente, :email_Cliente,:tel_Cliente,:tipo_Entidad)";
+                   $query = "INSERT INTO cat_clientes (id_Cliente, nombre_Cliente, pApellido_Cliente, razonSocial_Cliente, rfc_Cliente, direccion_Cliente, correo_Cliente, tel_Cliente, tipo_Entidad,estadoRegistroC) VALUES (:id_Cliente, :name_Cliente, :apellido_Paterno, :razonSocial_Cliente, :rfc_Cliente, :direccion_Cliente, :email_Cliente,:tel_Cliente,:tipo_Entidad,:estadoRegistroC)";
                    $statement = $connect->prepare($query);
                    $statement->execute($data1);
 
@@ -329,7 +333,7 @@ try {
       </div>
 
       <div class="">
-        <form class="" action="" method="post">
+        <form id="" class="" action="" method="post">
           <?php
           if(isset($error))
           {

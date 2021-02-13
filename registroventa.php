@@ -240,6 +240,7 @@ try {
       $subtotalVenta = 0;
       $ivaVenta = 0;
       $totalVenta = 0;
+      $estadoRegistroV=1;
       $fechaVenta= trim(date('Y-m-d H:i:s'));
       $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
       $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -651,9 +652,7 @@ try {
 
       $count = $statement->rowCount();
       if ($count ==0 ) {
-        echo '<script language="javascript">';
-        echo 'alert("El folio de la venta no existe")';
-        echo '</script>';
+
         $fechaVenta="";
         $id_p = "";
         $pname = "";
@@ -671,7 +670,10 @@ try {
         $totalVenta = "";
         $precioTotal = "" ;
 
-
+        echo "<script>";
+        echo "alert('EL ID venta no esta registrado');";
+        echo 'window.location.href = "registroventa.php"';
+        echo "</script>";
 
       }else {
         while( $datos = $statement->fetch()){
@@ -803,7 +805,7 @@ try {
       </div>
 
       <div class="">
-        <form class="" action="" method="post">
+        <form id="regVenta" class="" action="" method="post">
           <?php
           if(isset($error))
           {

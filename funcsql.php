@@ -19,6 +19,7 @@ class funcionSQL{
         $statement->execute($data1);
       }
 
+      //Funcion para obtener el ultimoID de una tabla
     public function ultimoId($nombreColumnaIdSQL, $tabla, $nombreColumnaIdAsignada){
           include("conexion.php");
           $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
@@ -33,22 +34,21 @@ class funcionSQL{
           while( $datos = $statement->fetch()){
           $id = $datos[0];
           }
-          $numeroVenta=$id;
 
               $data = [
-            'numero_Venta' => $numeroVenta
+            'id' => $id
             ,];
 
             $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
             $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $query = "SELECT $nombreColumnaIdAsignada FROM $tabla WHERE numeroVenta = :numero_Venta";
+            $query = "SELECT $nombreColumnaIdAsignada FROM $tabla WHERE $nombreColumnaIdSQL = :id";
             $statement = $connect->prepare($query);
             $statement->execute($data);
 
             while( $datos = $statement->fetch()){
-            $numeroVenta = $datos[0];
+            $id = $datos[0];
           }
-          return $numeroVenta;
+          return $id;
         }
 
         public function existenciaProducto($idProducto){
