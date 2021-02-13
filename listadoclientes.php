@@ -48,7 +48,8 @@ try {
 
                $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
                $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-               $query = "SELECT cat_clientes.id_Cliente, cat_clientes.nombre_Cliente, cat_clientes.pApellido_Cliente, cat_clientes.razonSocial_Cliente, cat_clientes.rfc_Cliente, cat_clientes.correo_Cliente, cat_clientes.tel_Cliente, cat_direccionclientes.calle_Cliente, cat_direccionclientes.numeroEx_Cliente, cat_direccionclientes.numeroInt_Cliente, cat_direccionclientes.colonia_Cliente, cat_direccionclientes.ciudad_Cliente, cat_direccionclientes.estado_Cliente FROM cat_clientes INNER JOIN cat_direccionclientes ON cat_clientes.id_Cliente = cat_direccionclientes.id_Direccion WHERE cat_clientes.id_Cliente = :id_Cliente AND cat_clientes.tipo_Entidad=1";
+               $query = "SELECT c.id_Cliente,c.nombre_Cliente, c.pApellido_Cliente, c.razonSocial_Cliente, c.rfc_Cliente, c.correo_Cliente, c.tel_Cliente, d.calle_Cliente, d.numeroEx_Cliente, d.numeroInt_Cliente, d.colonia_Cliente, d.ciudad_Cliente, e.nombre_Estado FROM cat_clientes AS c INNER JOIN cat_direccionclientes AS d ON c.direccion_Cliente = d.id_Direccion INNER JOIN cat_estado AS e ON d.estado_Cliente = e.id_Estado WHERE c.id_Cliente = :id_Cliente AND c.tipo_Entidad=1";
+
                $statement = $connect->prepare($query);
                $statement->execute($data);
 
@@ -303,7 +304,7 @@ try {
             </li>
             <li> <a href="/listadoproducts.php">Venta</a>
               <ul>
-                <li><a href="#">Registrar Venta</a></li>
+                <li><a href="/registroventa.php">Registrar Venta</a></li>
               </ul>
             </li>
             <li> <a href="/listadoproducts.php">Proveedores</a>
