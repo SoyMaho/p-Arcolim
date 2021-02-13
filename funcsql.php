@@ -19,46 +19,53 @@ class funcionSQL{
         $statement->execute($data1);
       }
 
-      public function buscarUltimaVenta(){
-        $id_Cliente=0 ;
-        $subtotalVenta =0 ;
-        $ivaVenta =0;
-        $totalVenta =0;
-        $numeroVenta =0;
-
-        include("conexion.php");
-        $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
-        $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-        $query1 = "SELECT MAX(idVenta) AS id FROM listado_venta";
-
-        $statement = $connect->prepare($query1);
-        $statement->execute();
-        $count = $statement->rowCount();
-
-        while( $datos = $statement->fetch()){
-        $id = $datos[0];
-        }
-        $numeroVenta=$id;
-
-            $data = [
-          'numero_Venta' => $numeroVenta
-          ,];
-
+    public function ultimoId($nombreColumnaIdSQL, $tabla, $nombreColumnaIdAsignada){
+          include("conexion.php");
           $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
           $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-          $query = "SELECT id_ClienteVenta, subtotalVenta, ivaVenta, totalVenta, numeroVenta FROM listado_venta WHERE numeroVenta = :numero";
-          $statement = $connect->prepare($query);
-          $statement->execute($data);
+
+          $query1 = "SELECT MAX($nombreColumnaIdSQL) AS id FROM $tabla";
+
+          $statement = $connect->prepare($query1);
+          $statement->execute();
+          $count = $statement->rowCount();
 
           while( $datos = $statement->fetch()){
-          $id_Cliente = $datos[0];
-          $subtotalVenta = $datos[1];
-          $ivaVenta = $datos[2];
-          $totalVenta = $datos[3];
-          $numeroVenta = $datos[4];
+          $id = $datos[0];
+          }
+          $numeroVenta=$id;
+
+              $data = [
+            'numero_Venta' => $numeroVenta
+            ,];
+
+            $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
+            $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $query = "SELECT $nombreColumnaIdAsignada FROM $tabla WHERE numeroVenta = :numero_Venta";
+            $statement = $connect->prepare($query);
+            $statement->execute($data);
+
+            while( $datos = $statement->fetch()){
+            $numeroVenta = $datos[0];
+          }
+          return $numeroVenta;
         }
-        return $numeroVenta;
+
+        public function existenciaProducto($idProducto){
+          include("conexion.php");
+          $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
+          $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+          $data=[
+            'id_Producto'=>$idProducto,
+          ];
+
+          $query1 = "SELECT existencia_Producto FROM cat_producto WHERE id_Producto =:id_Producto";
+          $statement = $connect->prepare($query1);
+          $statement->execute($data);
+          while( $datos = $statement->fetch()){
+          $existenciaProducto = $datos[0];
+        }
+        return $existenciaProducto;
         }
 }
 ?>
