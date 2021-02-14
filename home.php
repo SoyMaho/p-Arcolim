@@ -37,7 +37,7 @@ try {
 
     <div class="work_Section">
       <div class="NavBar">
-        <nav>
+        <nav class="menuMain">
           <ul>
             <li> <a>Productos</a>
                 <ul>

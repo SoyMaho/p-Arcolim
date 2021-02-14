@@ -26,7 +26,7 @@ form{
   align-items: center;
   margin: auto;
   width: 60%;
-  max-width: 500px;
+  max-width: 90%;
   padding: 20px;
 }
 
@@ -78,6 +78,11 @@ header{
 }
 
 /* Estilos Barra Nav */
+.menuMain{
+  display: flex;
+  justify-content: center;
+
+}
 nav a{
       text-decoration:none;
       color:inherit;
@@ -89,7 +94,7 @@ nav li{
       width:150px;
       height:30px;
       padding:5px 10px;
-      margin: 10px 3%;
+      margin: 10px 0%;
       background-color:#40e1fb;
       border:1px solid #fff;
       text-align:center;
@@ -121,8 +126,53 @@ nav li:hover>ul{
 /* Fin estilos barra nav */
 
 /* Inicio estilo Venta */
+/* #wrapper{
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+} */
+
 #regVenta{
-  max-width: 20%;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-gap: 20px;
+  align-items: center;
+  margin: 10rem 15rem 1rem 20%;
+  width: 100%;
+  padding: 0%;
+}
+#venta{
+  display: flex;
+  flex-direction: row;
+}
+
+#labelFecha{
+    width: 4.5rem;
+}
+
+.inputShort{
+  width: 6.5rem;
+  height: 1.5rem;
+  margin: 0rem 1rem 0rem 1rem;
+
+}
+#inputFechaVenta{
+    width: 2rem;
+}
+
+#cboxEntregado{
+  width: 1rem;
+  margin-left: 1rem;
+}
+
+.boton{
+  width: 4.5rem;
+  margin: 0rem 1rem 0rem 1rem;
+}
+
+.tablaMov{
+  margin: 1rem;
+  width: 25%;
+  padding: 20px;
 }
 
 

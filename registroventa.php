@@ -767,35 +767,33 @@ try {
 
     <div class="work_Section">
       <div class="NavBar">
-        <nav>
+        <nav class="menuMain">
           <ul>
             <li> <a>Productos</a>
                 <ul>
-
                   <li><a href="listadoproducts.php">Listado</a></li>
-                  <li><a href="nproducts.php">Registrar Producto</a></li>
-
+                  <li><a href="nproducts.php">Registrar</a></li>
                 </ul>
             </li>
-            <li> <a href="/listadoproducts.php">Venta</a>
+            <li> <a>Venta</a>
               <ul>
-                <li><a href="/registroventa.php">Registrar Venta</a></li>
+                <li><a href="registroventa.php">Registrar Venta</a></li>
               </ul>
             </li>
-            <li> <a href="/listadoproducts.php">Proveedores</a>
+            <li> <a>Proveedores</a>
               <ul>
                 <li><a href="listadoproveedores.php">Listado</a></li>
-                <li><a href="nproveedor.php">Registrar Proveedor</a></li>
+                <li><a href="nproveedor.php">Registrar</a></li>
               </ul>
             </li>
             <li> <a>Clientes</a>
               <ul>
-                <li><a href="listadoclientes.php">Lista</a></li>
-                <li><a href="ncliente.php">Registrar Clientes</a></li>
+                <li><a href="listadoclientes.php">Listado</a></li>
+                <li><a href="ncliente.php">Registrar</a></li>
               </ul>
             </li>
-            <li> <a href="/nproducts.php">Reportes</a></li>
-            <li> <a href="#">Panel de control</a></li>
+            <li> <a href="">Reportes</a></li>
+            <li> <a href="usuarios.php">Usuarios</a></li>
           </ul>
         </nav>
       </div>
@@ -804,7 +802,7 @@ try {
         <h1>Venta</h1>
       </div>
 
-      <div class="">
+      <div class="" id="">
         <form id="regVenta" class="" action="" method="post">
           <?php
           if(isset($error))
@@ -816,152 +814,134 @@ try {
               <?php
           }
           ?>
-          <tr>
-          <td><h3>ID Venta</h3><input type="text" name="numero_Venta" placeholder="No. Venta" value="<?php if(isset($numeroVenta)){echo $numeroVenta;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> /></td>
-          </tr>
-          <tr>
-          <td><h3>Fecha</h3><input type="text" name="fecha_Venta" placeholder="Fecha" value="<?php if(isset($fechaVenta)){echo $fechaVenta;} ?>"  <?php if(isset($code) && $code == 2){ echo "autofocus"; }  ?> /></td>
-          </tr>
-          <tr>
-            <td><button type="submit" name="btn-searchVenta">Buscar Venta</button></td>
-          </tr>
-          <tr>
-            <input type="checkbox" name="check_Entregado" id="cboxEntregado" value="2"<?php if ($estadoRegistroV==2) {echo "checked";} ?>/>
+          <div id="venta">
+            <h3>ID Venta</h3>
+            <input id="" class="inputShort" type="text" name="numero_Venta" placeholder="No. Venta" value="<?php if(isset($numeroVenta)){echo $numeroVenta;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> />
+            <button type="submit" class="boton" name="btn-searchVenta">Buscar Venta</button>
+            <button type="submit" class="boton"name="btn-nuevo">Nuevo</button>
+          </div>
 
-          </tr>
-          <tr>
-          <!-- <td><input type="text" name="id_Cliente" placeholder="Id Cliente" value="<?php if(isset($id_Cliente)){echo $id_Cliente;} ?>"  <?php if(isset($code) && $code == 7){ echo "autofocus"; }  ?> /></td> -->
-          <td><select class="" name="select_cliente">
-            <option value="<?php if(isset($id_Cliente)){echo $id_Cliente;}  ?>"><?php if(isset($nombreCliente)){echo $nombreCliente;}  ?></option>
-            <?php
-                $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
-                $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                $query = "SELECT id_Cliente, nombre_Cliente FROM cat_clientes where tipo_Entidad=1";
-                $statement = $connect->prepare($query);
-                $statement->execute();
+          <div id="venta" class="">
 
-                while($registro = $statement->fetch())
-            {
-              echo"
-              <option value=".$registro["id_Cliente"].">".$registro["nombre_Cliente"]."</option>";
-            }
-             ?>
-            </select>
-          </td>
-          </tr>
-          <tr>
-          <td><h3>Nombre del Cliente</h3><input type="text" name="nombre_Cliente" placeholder="N. Cliente" value="<?php if(isset($nombreCliente)){echo $nombreCliente;} ?>"  <?php if(isset($code) && $code == 5){ echo "autofocus"; }  ?> /></td>
-          </tr>
-          <tr>
-            <td><button type="submit" name="btn-searchCliente">Buscar Cliente</button></td>
-            <td><button type="submit" name="btn-nuevo">Nuevo</button></td>
-          </tr>
-          <tr>
-          <!-- <td><input type="text" name="id_p" placeholder="Id Producto" value="<?php if(isset($id_p)){echo $id_p;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> /></td> -->
-          <td><select class="" name="select_product">
-            <option value="<?php if(isset($id_p)){echo $id_p;}  ?>"><?php if(isset($pname)){echo $pname;}  ?></option>
-            <?php
-                $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
-                $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                $query = "SELECT id_Producto, nombre_Producto FROM cat_producto";
-                $statement = $connect->prepare($query);
-                $statement->execute();
+          </div>
 
-                while($registro = $statement->fetch())
-            {
-              echo"
-              <option value=".$registro["id_Producto"].">".$registro["nombre_Producto"]."</option>";
-            }
-             ?>
-            </select>
-          </td>
-          </tr>
-          <tr>
-          <td><h3>Nombre del Producto</h3><input type="text" name="name_product" placeholder="Nombre del producto" value="<?php if(isset($pname)){echo $pname;} ?>"  <?php if(isset($code) && $code == 2){ echo "autofocus"; }  ?> /></td>
-          </tr>
-          <tr>
-          <td><h3>Cantidad</h3><input type="text" name="cantidad_Producto" placeholder=" Cantidad" value="<?php if(isset($cantidadP)){echo $cantidadP;} ?>"  <?php if(isset($code) && $code == 7){ echo "autofocus"; }  ?> /></td>
-          </tr>
-          <tr>
-          <td><h3>Precio</h3><input type="text" name="precio_Producto" placeholder="Precio" value="<?php if(isset($precioP)){echo $precioP;} ?>"  <?php if(isset($code) && $code == 5){ echo "autofocus"; }  ?> /></td>
-          </tr>
-          <tr>
-          <td><h3>Precio Total</h3><input type="text" name="precio_Total" placeholder="Precio Total" value="<?php if(isset($precioTotal)){echo $precioTotal;} ?>"  <?php if(isset($code) && $code == 5){ echo "autofocus"; }  ?> /></td>
-          </tr>
-          <tr>
-            <td><button type="submit" name="btn-search">Buscar Producto</button></td>
-            <td><button type="submit" name="btn-agregar" <?php if ($estadoRegistroV==2) {echo "disabled";} ?>>Agregar</button></td>
-          </tr>
-
-          <?php
-          //Tabla Sin if para mostrar los ultimos movimientos de la venta
-
-          $data = [
-          'numero_Venta' => $numeroVenta
-          ,];
-              $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
-              $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-              $query = "SELECT idMovimiento,claveProducto, nombreProducto, cantidadProducto, precioProducto, precioTotalProducto FROM listadomovimientos WHERE idDocumentoVenta= :numero_Venta";
-              $statement = $connect->prepare($query);
-              $statement->execute($data);
-              echo "<table>
-              <tr>
-              <td width='150'>Clave</td>
-              <td width='150'>Nombre</td>
-              <td width='150'>Cantidad</td>
-              <td width='150'>Precio U</td>
-              <td width='150'>Precio Total</td>
-              <td width='300'></td>
-              </tr>";
-              while($registro = $statement->fetch())
-          {
-            echo"
-            <tr>
-            <td width='150'>".$registro['claveProducto']."</td>
-            <td width='150'>".$registro['nombreProducto']."</td>
-            <td width='150'>".$registro['cantidadProducto']."</td>
-            <td width='150'>".$registro['precioProducto']."</td>
-            <td width='150'>".$registro['precioTotalProducto']."</td>
-            <td width='300'>
-            <form method = 'POST' action=''>
-            <input type='hidden' name='id_Movimiento' value='".$registro['idMovimiento']."'>
-            <input type='submit' name='botonBorrarMov' value='Borrar'>
-            </form>
-            </td>
-            </tr>
-            ";
-          }
-          echo "</table>";
-           ?>
-          <?php
-          if(isset($_POST["btn-agregar"])){
-                  // Inicio Tabla, se borra para dejar que al actualizar el index se muestre la tabla con el ultimo registro
-
-
-                  $query = "SELECT SUM(precioTotalProducto) as subtotal FROM listadomovimientos WHERE idDocumentoVenta = :numero_Venta";
+          <div id="venta">
+            <h3 id="labelFecha">Fecha</h3> <input class="inputShort" id="" type="text" name="fecha_Venta" placeholder="Fecha" value="<?php if(isset($fechaVenta)){echo $fechaVenta;} ?>"  <?php if(isset($code) && $code == 2){ echo "autofocus"; }  ?> />
+            <h3>Entregado</h3>
+            <input class="inputShort"type="checkbox" name="check_Entregado" id="cboxEntregado" value="2"<?php if ($estadoRegistroV==2) {echo "checked";} ?>/>
+          </div>
+          <div id="venta">
+            <select class="inputShort" name="select_cliente">
+              <option value="<?php if(isset($id_Cliente)){echo $id_Cliente;}  ?>"><?php if(isset($nombreCliente)){echo $nombreCliente;}  ?></option>
+              <?php
+                  $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
+                  $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                  $query = "SELECT id_Cliente, nombre_Cliente FROM cat_clientes where tipo_Entidad=1";
                   $statement = $connect->prepare($query);
-                  $statement->execute($data);
-                  while( $subtotal = $statement->fetch()){
-                  $subtotalVenta = $subtotal[0];
-                   }
-                  $ivaVenta = $subtotalVenta * .16;
-                  $totalVenta = $subtotalVenta + $ivaVenta;
-          }
-          ?>
-          <tr>
-          <td><h3>Subtotal</h3><input type="text" name="subtotal_Venta" placeholder="Subtotal" value="<?php if(isset($subtotalVenta)){echo $subtotalVenta;} ?>"  <?php if(isset($code) && $code == 5){ echo "autofocus"; }  ?> /></td>
-          </tr>
-          <tr>
-          <td><h3>IVA</h3><input type="text" name="iva_Venta" placeholder="IVA" value="<?php if(isset($ivaVenta)){echo $ivaVenta;} ?>"  <?php if(isset($code) && $code == 5){ echo "autofocus"; }  ?> /></td>
-          </tr>
-          <tr>
-          <td><h3>Total</h3><input type="text" name="total_Venta" placeholder="Total Venta" value="<?php if(isset($totalVenta)){echo $totalVenta;} ?>"  <?php if(isset($code) && $code == 5){ echo "autofocus"; }  ?> /></td>
-          </tr>
+                  $statement->execute();
 
-          <tr>
-            <td><button type="submit" name="btn-guardar" <?php if ($estadoRegistroV==2) {echo "disabled";} ?>>Guardar </button></td>
-            <!-- <td><button type="submit" name="btn-tabla">Tabla</button></td> -->
-          </tr>
+                  while($registro = $statement->fetch())
+              {
+                echo"
+                <option value=".$registro["id_Cliente"].">".$registro["nombre_Cliente"]."</option>";
+              }
+               ?>
+              </select>
+              <h3>Nombre del Cliente</h3><input class="inputShort"type="text" name="nombre_Cliente" placeholder="N. Cliente" value="<?php if(isset($nombreCliente)){echo $nombreCliente;} ?>"  <?php if(isset($code) && $code == 5){ echo "autofocus"; }  ?> />
+              <button type="submit" name="btn-searchCliente">Buscar Cliente</button>
+          </div>
+          <div id="venta">
+            <select class="inputShort" name="select_product">
+              <option value="<?php if(isset($id_p)){echo $id_p;}  ?>"><?php if(isset($pname)){echo $pname;}  ?></option>
+              <?php
+                  $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
+                  $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                  $query = "SELECT id_Producto, nombre_Producto FROM cat_producto";
+                  $statement = $connect->prepare($query);
+                  $statement->execute();
+
+                  while($registro = $statement->fetch())
+              {
+                echo"
+                <option value=".$registro["id_Producto"].">".$registro["nombre_Producto"]."</option>";
+              }
+               ?>
+              </select>
+            <h3>Nombre del Producto</h3><input class="inputShort" type="text" name="name_product" placeholder="Nombre del producto" value="<?php if(isset($pname)){echo $pname;} ?>"  <?php if(isset($code) && $code == 2){ echo "autofocus"; }  ?> /></td>
+            <h3>Cantidad</h3><input class="inputShort"type="text" name="cantidad_Producto" placeholder=" Cantidad" value="<?php if(isset($cantidadP)){echo $cantidadP;} ?>"  <?php if(isset($code) && $code == 7){ echo "autofocus"; }  ?> /></td>
+            <h3>Precio</h3><input class="inputShort" type="text" name="precio_Producto" placeholder="Precio" value="<?php if(isset($precioP)){echo $precioP;} ?>"  <?php if(isset($code) && $code == 5){ echo "autofocus"; }  ?> /></td>
+            <h3>Precio Total</h3><input class="inputShort" type="text" name="precio_Total" placeholder="Precio Total" value="<?php if(isset($precioTotal)){echo $precioTotal;} ?>"  <?php if(isset($code) && $code == 5){ echo "autofocus"; }  ?> /></td>
+              <button type="submit" name="btn-search">Buscar Producto</button>
+              <button type="submit" name="btn-agregar" <?php if ($estadoRegistroV==2) {echo "disabled";} ?>>Agregar</button>
+          </div>
+
+          <p>
+            <?php
+            //Tabla Sin if para mostrar los ultimos movimientos de la venta
+
+            $data = [
+            'numero_Venta' => $numeroVenta
+            ,];
+                $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
+                $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                $query = "SELECT idMovimiento,claveProducto, nombreProducto, cantidadProducto, precioProducto, precioTotalProducto FROM listadomovimientos WHERE idDocumentoVenta= :numero_Venta";
+                $statement = $connect->prepare($query);
+                $statement->execute($data);
+                echo "<table>
+                <tr>
+                <td width='150'>Clave</td>
+                <td width='150'>Nombre</td>
+                <td width='150'>Cantidad</td>
+                <td width='150'>Precio U</td>
+                <td width='150'>Precio Total</td>
+                <td width='300'></td>
+                </tr>";
+                while($registro = $statement->fetch())
+            {
+              echo"
+              <tr>
+              <td width='150'>".$registro['claveProducto']."</td>
+              <td width='150'>".$registro['nombreProducto']."</td>
+              <td width='150'>".$registro['cantidadProducto']."</td>
+              <td width='150'>".$registro['precioProducto']."</td>
+              <td width='150'>".$registro['precioTotalProducto']."</td>
+              <td width='150'>
+              <form class='tablaMov' method = 'POST' action=''>
+              <input type='hidden' name='id_Movimiento' value='".$registro['idMovimiento']."'>
+              <input class='boton' type='submit' name='botonBorrarMov' value='Borrar'>
+              </form>
+              </td>
+              </tr>
+              ";
+            }
+            echo "</table>";
+             ?>
+             <?php
+             if(isset($_POST["btn-agregar"])){
+                     // Inicio Tabla, se borra para dejar que al actualizar el index se muestre la tabla con el ultimo registro
+
+
+                     $query = "SELECT SUM(precioTotalProducto) as subtotal FROM listadomovimientos WHERE idDocumentoVenta = :numero_Venta";
+                     $statement = $connect->prepare($query);
+                     $statement->execute($data);
+                     while( $subtotal = $statement->fetch()){
+                     $subtotalVenta = $subtotal[0];
+                      }
+                     $ivaVenta = $subtotalVenta * .16;
+                     $totalVenta = $subtotalVenta + $ivaVenta;
+             }
+             ?>
+          </p>
+          <p>
+            <h3>Subtotal</h3><input  class="inputShort" type="text" name="subtotal_Venta" placeholder="Subtotal" value="<?php if(isset($subtotalVenta)){echo $subtotalVenta;} ?>"  <?php if(isset($code) && $code == 5){ echo "autofocus"; }  ?> />
+            <h3>IVA</h3><input  class="inputShort" type="text" name="iva_Venta" placeholder="IVA" value="<?php if(isset($ivaVenta)){echo $ivaVenta;} ?>"  <?php if(isset($code) && $code == 5){ echo "autofocus"; }  ?> />
+            <h3>Total</h3><input  class="inputShort" type="text" name="total_Venta" placeholder="Total Venta" value="<?php if(isset($totalVenta)){echo $totalVenta;} ?>"  <?php if(isset($code) && $code == 5){ echo "autofocus"; }  ?> />
+
+
+          </p>
+          <div class="">
+            <button class="boton" type="submit" name="btn-guardar" <?php if ($estadoRegistroV==2) {echo "disabled";} ?>>Guardar </button>
+          </div>
         </form>
 
 
