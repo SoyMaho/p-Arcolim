@@ -128,7 +128,7 @@ try {
 
     if(isset($_POST["botonBorrarMov"])){
       $idMovimiento = $_POST['id_Movimiento'];
-      $id_p = trim($_POST['select_product']);
+      $id_p = trim($_POST['id_p']);
       $pname = trim($_POST['name_product']);
       $descP = trim($_POST['descripcion_Producto']);
       $costoP = trim($_POST['costo_Producto']);
@@ -137,13 +137,11 @@ try {
       $existenciaP = trim($_POST['existencia_Producto']);
       $numeroVenta= trim($_POST['numero_Venta']);
       $cantidadP = trim($_POST['cantidad_Producto']);
-      $id_Cliente = trim($_POST['select_cliente']);
+      $id_Cliente = trim($_POST['id_Cliente']);
       $nombreCliente = trim($_POST['nombre_Cliente']);
       $subtotalVenta = trim($_POST['subtotal_Venta']);
       $ivaVenta = trim($_POST['iva_Venta']);
       $totalVenta = trim($_POST['total_Venta']);
-      $estadoRegistroV = trim($_POST['check_Entregado']);
-      $fechaVenta = trim($_POST['fecha_Venta']);
 
       $data1 = [
       'id_Movimiento' => $idMovimiento
@@ -153,14 +151,12 @@ try {
           $query = "DELETE FROM listadomovimientos WHERE idMovimiento = :id_Movimiento";
           $statement = $connect->prepare($query);
           $statement->execute($data1);
-
-
           header('Location: registroventa.php');
     }
 
     if(isset($_POST["btn-search"])){
 
-          $id_p = trim($_POST['select_product']);
+          $id_p = trim($_POST['id_p']);
           $pname = trim($_POST['name_product']);
           $descP = trim($_POST['descripcion_Producto']);
           $costoP = trim($_POST['costo_Producto']);
@@ -169,33 +165,16 @@ try {
           $existenciaP = trim($_POST['existencia_Producto']);
           $numeroVenta= trim($_POST['numero_Venta']);
           $cantidadP = trim($_POST['cantidad_Producto']);
-          $id_Cliente = trim($_POST['select_cliente']);
+          $id_Cliente = trim($_POST['id_Cliente']);
           $nombreCliente = trim($_POST['nombre_Cliente']);
           $subtotalVenta = trim($_POST['subtotal_Venta']);
           $ivaVenta = trim($_POST['iva_Venta']);
           $totalVenta = trim($_POST['total_Venta']);
-          $estadoRegistroV = trim($_POST['check_Entregado']);
-          $fechaVenta = trim($_POST['fecha_Venta']);
           $precioTotal = 0 ;
 
           if(empty($id_p))
           {
-           $error = "Por favor ingresa un ID";
-           $code = 1;
-          }
-          else if(!is_numeric($id_p))
-          {
-           $error = "Solo se admiten numeros";
-           $code = 1;
-          }
-          else if($id_p>9999)
-          {
-           $error = "El ID no puede ser mayor a 4 Digitos";
-           $code = 1;
-          }
-          else if($id_p<1)
-          {
-           $error = "El ID no puede ser menor a 1";
+           $error = "Por favor ingresa un ID del producto";
            $code = 1;
           }else {
             $data = [
@@ -280,8 +259,8 @@ try {
 
     if(isset($_POST["btn-searchCliente"])){
 
-          $id_Cliente = trim($_POST['select_cliente']);
-          $id_p = trim($_POST['select_product']);
+          $id_Cliente = trim($_POST['id_Cliente']);
+          $id_p = trim($_POST['id_p']);
           $pname = trim($_POST['name_product']);
           $cantidadP = trim($_POST['cantidad_Producto']);
           $precioP = trim($_POST['precio_Producto']);
@@ -291,31 +270,13 @@ try {
           $subtotalVenta = trim($_POST['subtotal_Venta']);
           $ivaVenta = trim($_POST['iva_Venta']);
           $totalVenta = trim($_POST['total_Venta']);
-          $estadoRegistroV = trim($_POST['check_Entregado']);
-          $fechaVenta = trim($_POST['fecha_Venta']);
 
 
           if(empty($id_Cliente))
           {
-           $error = "Por favor ingresa un ID";
+           $error = "Por favor ingresa un ID del Cliente";
            $code = 1;
-          }
-          else if(!is_numeric($id_Cliente))
-          {
-           $error = "Solo se admiten numeros";
-           $code = 1;
-         }
-         else if($id_Cliente>9999)
-         {
-          $error = "El ID del cliente no puede ser mayor a 4 Digitos";
-          $code = 1;
-         }
-         else if($id_Cliente<1)
-         {
-          $error = "El ID del cliente no puede ser menor a 1";
-          $code = 1;
-         }
-         else {
+          }else {
             $data = [
             'id_Cliente' => $id_Cliente
             ,];
@@ -346,122 +307,20 @@ try {
     }
 
     if(isset($_POST["btn-guardar"])){
-          $id_p = trim($_POST['select_product']);
+          $id_p = trim($_POST['id_p']);
           $pname = trim($_POST['name_product']);
           $cantidadP = trim($_POST['cantidad_Producto']);
           $precioP = trim($_POST['precio_Producto']);
           $precioTotal = trim($_POST['precio_Total']);
-          $id_Cliente = trim($_POST['select_cliente']);
+          $id_Cliente = trim($_POST['id_Cliente']);
           $numeroVenta = trim($_POST['numero_Venta']);
           $fechaVenta = trim($_POST['fecha_Venta']);
+          $idCliente = trim($_POST['id_Cliente']);
           $nombreCliente = trim($_POST['nombre_Cliente']);
           $subtotalVenta = trim($_POST['subtotal_Venta']);
           $ivaVenta = trim($_POST['iva_Venta']);
           $totalVenta = trim($_POST['total_Venta']);
-          $estadoRegistroV = trim($_POST['check_Entregado']);
-          $fechaVenta = trim($_POST['fecha_Venta']);
 
-          if(empty($numeroVenta))
-          {
-           $error = "Por favor ingresa un ID";
-           $code = 1;
-          }
-          else if(!is_numeric($numeroVenta))
-          {
-           $error = "Solo se admiten numeros";
-           $code = 1;
-          }
-          else if($numeroVenta>9999)
-          {
-           $error = "El ID no puede ser mayor a 4 Digitos";
-           $code = 1;
-          }
-          else if($numeroVenta<1)
-          {
-           $error = "El ID no puede ser menor a 1";
-           $code = 1;
-         }
-           if(empty($id_Cliente))
-           {
-            $error = "Por favor ingresa un ID";
-            $code = 1;
-           }
-           else if(!is_numeric($id_Cliente))
-           {
-            $error = "Solo se admiten numeros";
-            $code = 1;
-          }
-          else if($id_Cliente>9999)
-          {
-           $error = "El ID del cliente no puede ser mayor a 4 Digitos";
-           $code = 1;
-          }
-          else if($id_Cliente<1)
-          {
-           $error = "El ID del cliente no puede ser menor a 1";
-           $code = 1;
-          }
-          else if(empty($subtotalVenta))
-          {
-           $error = "El subtotal no puede estar vacio";
-           $code = 1;
-          }
-          else if($subtotalVenta<0)
-          {
-           $error = "El subtotal no puede ser menor a 0.00";
-           $code = 1;
-          }
-          else if($subtotalVenta>9999999)
-          {
-           $error = "El subtotal no puede ser mayor a 9,999,999.00";
-           $code = 1;
-          }
-          else if(!is_numeric($subtotalVenta))
-          {
-           $error = "Solo se admiten numeros en el Subtotal";
-           $code = 1;
-          }
-          else if(empty($ivaVenta))
-          {
-           $error = "El IVA no puede estar vacio";
-           $code = 1;
-          }
-          else if($ivaVenta<0)
-          {
-           $error = "El IVA no puede ser menor a 0.00";
-           $code = 1;
-          }
-          else if($ivaVenta>9999999)
-          {
-           $error = "El IVA no puede ser mayor a 9,999,999.0";
-           $code = 1;
-          }
-          else if(!is_numeric($ivaVenta))
-          {
-           $error = "Solo se admiten numeros en el IVA";
-           $code = 1;
-          }
-          else if(empty($totalVenta))
-          {
-           $error = "El Total de la venta no puede estar vacio";
-           $code = 1;
-          }
-          else if($totalVenta<0)
-          {
-           $error = "El Total de la venta no puede ser menor a 0.00";
-           $code = 1;
-          }
-          else if($totalVenta>9999999)
-          {
-           $error = "El Total de la venta no puede ser mayor a 9,999,999.0";
-           $code = 1;
-          }
-          else if(!is_numeric($totalVenta))
-          {
-           $error = "Solo se admiten numeros en el Total de la venta";
-           $code = 1;
-          }
-          else {
             $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
             $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $query = "SELECT * FROM listado_venta WHERE numeroVenta = :numero_Venta";
@@ -479,7 +338,7 @@ try {
               echo '</script>';
 
               $data = [
-            'id_Cliente' => $id_Cliente,
+            'id_Cliente' => $idCliente,
             'subtotal_Venta' => $subtotalVenta,
             'iva_Venta' => $ivaVenta,
             'total_Venta' => $totalVenta,
@@ -538,29 +397,26 @@ try {
                 }
             }
             header('Location: registroventa.php');
-         }
-
-
 
     }
 
 
     if(isset($_POST["btn-agregar"])){
 
-          $id_p = trim($_POST['select_product']);
+          $id_p = trim($_POST['id_p']);
           $pname = trim($_POST['name_product']);
           $cantidadP = trim($_POST['cantidad_Producto']);
           $precioP = trim($_POST['precio_Producto']);
           $precioTotal = trim($_POST['precio_Total']);
           $numeroVenta= trim($_POST['numero_Venta']);
           $cantidadP = trim($_POST['cantidad_Producto']);
-          $id_Cliente = trim($_POST['select_cliente']);
+          $id = '';
+          $id_Cliente = trim($_POST['id_Cliente']);
           $nombreCliente = trim($_POST['nombre_Cliente']);
           $subtotalVenta = trim($_POST['subtotal_Venta']);
           $ivaVenta = trim($_POST['iva_Venta']);
           $totalVenta = trim($_POST['total_Venta']);
-          $estadoRegistroV = trim($_POST['check_Entregado']);
-          $fechaVenta = trim($_POST['fecha_Venta']);
+
 
           $precioTotal = $precioP * $cantidadP;
           if(empty($id_p))
@@ -568,19 +424,18 @@ try {
            $error = "Por favor ingresa un ID del producto";
            $code = 1;
           }else {
-            //obtener Ultimo ID no sirve para el boton Agregar por que agrega movimientos al ultimo ID independiente de la venta en que se encuentre
-            // $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
-            // $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            //
-            // $query1 = "SELECT MAX(idVenta) AS id FROM listado_venta";
-            //
-            // $statement = $connect->prepare($query1);
-            // $statement->execute();
-            // $count = $statement->rowCount();
-            //
-            // while( $datos = $statement->fetch()){
-            // $id = $datos[0];
-            // }
+            $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
+            $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            $query1 = "SELECT MAX(idVenta) AS id FROM listado_venta";
+
+            $statement = $connect->prepare($query1);
+            $statement->execute();
+            $count = $statement->rowCount();
+
+            while( $datos = $statement->fetch()){
+            $id = $datos[0];
+            }
 
             $data = [
             'id_p' => $id_p,
@@ -588,7 +443,7 @@ try {
             'cantidadP' => $cantidadP,
             'precioP' => $precioP,
             'precioTotal' => $precioTotal,
-            'numeroVenta'=> $numeroVenta,
+            'numeroVenta'=> $id,
           ];
 
             $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
@@ -618,27 +473,6 @@ try {
 
       $numeroVenta = trim($_POST['numero_Venta']);
 
-      if(empty($numeroVenta))
-      {
-       $error = "Por favor ingresa un ID";
-       $code = 1;
-      }
-      else if(!is_numeric($numeroVenta))
-      {
-       $error = "Solo se admiten numeros";
-       $code = 1;
-      }
-      else if($numeroVenta>9999)
-      {
-       $error = "El ID no puede ser mayor a 4 Digitos";
-       $code = 1;
-      }
-      else if($numeroVenta<1)
-      {
-       $error = "El ID no puede ser menor a 1";
-       $code = 1;
-      }
-      else {
         $data = [
       'numero_Venta' => $numeroVenta
       ,];
@@ -732,8 +566,6 @@ try {
       $nombreCliente = $datos[0];
       }
       }
-    }
-
 
 
 
@@ -815,76 +647,41 @@ try {
           }
           ?>
           <tr>
-          <td><h3>ID Venta</h3><input type="text" name="numero_Venta" placeholder="No. Venta" value="<?php if(isset($numeroVenta)){echo $numeroVenta;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> /></td>
+          <td><input type="text" name="numero_Venta" placeholder="No. Venta" value="<?php if(isset($numeroVenta)){echo $numeroVenta;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> /></td>
           </tr>
           <tr>
-          <td><h3>Fecha</h3><input type="text" name="fecha_Venta" placeholder="Fecha" value="<?php if(isset($fechaVenta)){echo $fechaVenta;} ?>"  <?php if(isset($code) && $code == 2){ echo "autofocus"; }  ?> /></td>
+          <td><input type="text" name="fecha_Venta" placeholder="Fecha" value="<?php if(isset($fechaVenta)){echo $fechaVenta;} ?>"  <?php if(isset($code) && $code == 2){ echo "autofocus"; }  ?> /></td>
           </tr>
           <tr>
             <td><button type="submit" name="btn-searchVenta">Buscar Venta</button></td>
           </tr>
           <tr>
-            <input type="checkbox" name="check_Entregado" id="cboxEntregado" value="2"<?php if ($estadoRegistroV==2) {echo "checked";} ?>/>
-
+            <input type="checkbox" name="check_Entregado" id="cboxEntregado" <?php if ($estadoRegistroV==2) {echo "checked";} ?> />
           </tr>
           <tr>
-          <!-- <td><input type="text" name="id_Cliente" placeholder="Id Cliente" value="<?php if(isset($id_Cliente)){echo $id_Cliente;} ?>"  <?php if(isset($code) && $code == 7){ echo "autofocus"; }  ?> /></td> -->
-          <td><select class="" name="select_cliente">
-            <option value="<?php if(isset($id_Cliente)){echo $id_Cliente;}  ?>"><?php if(isset($nombreCliente)){echo $nombreCliente;}  ?></option>
-            <?php
-                $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
-                $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                $query = "SELECT id_Cliente, nombre_Cliente FROM cat_clientes where tipo_Entidad=1";
-                $statement = $connect->prepare($query);
-                $statement->execute();
-
-                while($registro = $statement->fetch())
-            {
-              echo"
-              <option value=".$registro["id_Cliente"].">".$registro["nombre_Cliente"]."</option>";
-            }
-             ?>
-            </select>
-          </td>
+          <td><input type="text" name="id_Cliente" placeholder="Id Cliente" value="<?php if(isset($id_Cliente)){echo $id_Cliente;} ?>"  <?php if(isset($code) && $code == 7){ echo "autofocus"; }  ?> /></td>
           </tr>
           <tr>
-          <td><h3>Nombre del Cliente</h3><input type="text" name="nombre_Cliente" placeholder="N. Cliente" value="<?php if(isset($nombreCliente)){echo $nombreCliente;} ?>"  <?php if(isset($code) && $code == 5){ echo "autofocus"; }  ?> /></td>
+          <td><input type="text" name="nombre_Cliente" placeholder="N. Cliente" value="<?php if(isset($nombreCliente)){echo $nombreCliente;} ?>"  <?php if(isset($code) && $code == 5){ echo "autofocus"; }  ?> /></td>
           </tr>
           <tr>
             <td><button type="submit" name="btn-searchCliente">Buscar Cliente</button></td>
             <td><button type="submit" name="btn-nuevo">Nuevo</button></td>
           </tr>
           <tr>
-          <!-- <td><input type="text" name="id_p" placeholder="Id Producto" value="<?php if(isset($id_p)){echo $id_p;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> /></td> -->
-          <td><select class="" name="select_product">
-            <option value="<?php if(isset($id_p)){echo $id_p;}  ?>"><?php if(isset($pname)){echo $pname;}  ?></option>
-            <?php
-                $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
-                $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                $query = "SELECT id_Producto, nombre_Producto FROM cat_producto";
-                $statement = $connect->prepare($query);
-                $statement->execute();
-
-                while($registro = $statement->fetch())
-            {
-              echo"
-              <option value=".$registro["id_Producto"].">".$registro["nombre_Producto"]."</option>";
-            }
-             ?>
-            </select>
-          </td>
+          <td><input type="text" name="id_p" placeholder="Id Producto" value="<?php if(isset($id_p)){echo $id_p;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> /></td>
           </tr>
           <tr>
-          <td><h3>Nombre del Producto</h3><input type="text" name="name_product" placeholder="Nombre del producto" value="<?php if(isset($pname)){echo $pname;} ?>"  <?php if(isset($code) && $code == 2){ echo "autofocus"; }  ?> /></td>
+          <td><input type="text" name="name_product" placeholder="Nombre del producto" value="<?php if(isset($pname)){echo $pname;} ?>"  <?php if(isset($code) && $code == 2){ echo "autofocus"; }  ?> /></td>
           </tr>
           <tr>
-          <td><h3>Cantidad</h3><input type="text" name="cantidad_Producto" placeholder=" Cantidad" value="<?php if(isset($cantidadP)){echo $cantidadP;} ?>"  <?php if(isset($code) && $code == 7){ echo "autofocus"; }  ?> /></td>
+          <td><input type="text" name="cantidad_Producto" placeholder=" Cantidad" value="<?php if(isset($cantidadP)){echo $cantidadP;} ?>"  <?php if(isset($code) && $code == 7){ echo "autofocus"; }  ?> /></td>
           </tr>
           <tr>
-          <td><h3>Precio</h3><input type="text" name="precio_Producto" placeholder="Precio" value="<?php if(isset($precioP)){echo $precioP;} ?>"  <?php if(isset($code) && $code == 5){ echo "autofocus"; }  ?> /></td>
+          <td><input type="text" name="precio_Producto" placeholder="Precio" value="<?php if(isset($precioP)){echo $precioP;} ?>"  <?php if(isset($code) && $code == 5){ echo "autofocus"; }  ?> /></td>
           </tr>
           <tr>
-          <td><h3>Precio Total</h3><input type="text" name="precio_Total" placeholder="Precio Total" value="<?php if(isset($precioTotal)){echo $precioTotal;} ?>"  <?php if(isset($code) && $code == 5){ echo "autofocus"; }  ?> /></td>
+          <td><input type="text" name="precio_Total" placeholder="Precio Total" value="<?php if(isset($precioTotal)){echo $precioTotal;} ?>"  <?php if(isset($code) && $code == 5){ echo "autofocus"; }  ?> /></td>
           </tr>
           <tr>
             <td><button type="submit" name="btn-search">Buscar Producto</button></td>
@@ -947,13 +744,13 @@ try {
           }
           ?>
           <tr>
-          <td><h3>Subtotal</h3><input type="text" name="subtotal_Venta" placeholder="Subtotal" value="<?php if(isset($subtotalVenta)){echo $subtotalVenta;} ?>"  <?php if(isset($code) && $code == 5){ echo "autofocus"; }  ?> /></td>
+          <td><input type="text" name="subtotal_Venta" placeholder="Subtotal" value="<?php if(isset($subtotalVenta)){echo $subtotalVenta;} ?>"  <?php if(isset($code) && $code == 5){ echo "autofocus"; }  ?> /></td>
           </tr>
           <tr>
-          <td><h3>IVA</h3><input type="text" name="iva_Venta" placeholder="IVA" value="<?php if(isset($ivaVenta)){echo $ivaVenta;} ?>"  <?php if(isset($code) && $code == 5){ echo "autofocus"; }  ?> /></td>
+          <td><input type="text" name="iva_Venta" placeholder="IVA" value="<?php if(isset($ivaVenta)){echo $ivaVenta;} ?>"  <?php if(isset($code) && $code == 5){ echo "autofocus"; }  ?> /></td>
           </tr>
           <tr>
-          <td><h3>Total</h3><input type="text" name="total_Venta" placeholder="Total Venta" value="<?php if(isset($totalVenta)){echo $totalVenta;} ?>"  <?php if(isset($code) && $code == 5){ echo "autofocus"; }  ?> /></td>
+          <td><input type="text" name="total_Venta" placeholder="Total Venta" value="<?php if(isset($totalVenta)){echo $totalVenta;} ?>"  <?php if(isset($code) && $code == 5){ echo "autofocus"; }  ?> /></td>
           </tr>
 
           <tr>

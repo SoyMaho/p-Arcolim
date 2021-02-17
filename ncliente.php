@@ -39,14 +39,29 @@ try {
            $error = "Solo se admiten numeros";
            $code = 1;
           }
+          else if($id_Cliente>9999)
+          {
+           $error = "El ID del cliente no puede ser mayor a 4 Digitos";
+           $code = 1;
+          }
+           else if($id_Cliente<1)
+           {
+            $error = "El ID no puede ser menor a 1";
+            $code = 1;
+           }
            else if(empty($name_Cliente))
            {
-            $error = "Ingresa tu nombre";
+            $error = "Ingresa el nombre del cliente";
             $code = 2;
            }
            else if(!ctype_alpha($name_Cliente))
            {
             $error = "Solo se admiten letras";
+            $code = 2;
+           }
+           else if(strlen($name_Cliente)>100)
+           {
+            $error = "El nombre del Cliente no puede exceder 100 caracteres";
             $code = 2;
            }
            else if(empty($apellido_Paterno))
@@ -59,15 +74,35 @@ try {
             $error = "Solo se admiten letras en este campo";
             $code = 3;
            }
+           else if(strlen($apellido_Paterno)>100)
+           {
+            $error = "El Apellido del Cliente no puede exceder 100 caracteres";
+            $code = 3;
+           }
            else if(empty($razonSocial_Cliente))
            {
             $error = "Ingresa la razon social";
+            $code = 4;
+           }
+           else if(strlen($razonSocial_Cliente)>250)
+           {
+            $error = "La razon social no puede exceder 250 caracteres";
             $code = 4;
            }
            else if(empty($rfc_Cliente))
             {
             $error = "Ingresa el RFC";
             $code = 5;
+            }
+            else if(strlen($rfc_Cliente)>13)
+            {
+             $error = "El RFC no puede exceder los 13 caracteres";
+             $code = 5;
+            }
+            else if(strlen($rfc_Cliente)<12)
+            {
+             $error = "El RFC no puede ser menor a 12 caracteres";
+             $code = 5;
             }
            else if(empty($email_Cliente))
            {
@@ -91,7 +126,7 @@ try {
            }
            else if(strlen($tel_Cliente)!=10)
            {
-            $error = "Solo se admiten 10 caracteres";
+            $error = "El numero telefonico debe contener 10 digitos";
             $code = 7;
            }
            else if(empty($calle_Cliente))
@@ -99,29 +134,49 @@ try {
             $error = "Ingresa la calle";
             $code = 8;
            }
-            else if(empty($numeroExt_Cliente))
-            {
-             $error = "Ingresa un numero exterior";
-             $code = 9;
+           else if(strlen($calle_Cliente)>50)
+           {
+            $error = "La calle no puede exceder los 50 caracteres";
+            $code = 8;
            }
-           else if(empty($numeroInt_Cliente))
+           else if(empty($numeroExt_Cliente))
             {
-            $error = "Ingresa un numero interior";
-            $code = 10;
+            $error = "Ingresa el numero Exterior";
+            $code = 9;
             }
+            else if(strlen($numeroExt_Cliente)>5)
+            {
+             $error = "El numero exterior no puede ser mayor a 5 digitos";
+             $code = 9;
+            }
+             else if(strlen($numeroInt_Cliente)>5)
+             {
+              $error = "El numero interior no puede ser mayor a 5 digitos";
+              $code = 10;
+             }
             else if(empty($colonia_Cliente))
              {
              $error = "Ingresa la colonia";
              $code = 11;
+             }
+             else if(strlen($colonia_Cliente)>50)
+             {
+              $error = "La colonia no puede exceder los 50 Caracteres";
+              $code = 11;
              }
              else if(empty($ciudad_Cliente))
               {
               $error = "Ingresa la ciudad";
               $code = 12;
               }
+              else if(strlen($ciudad_Cliente)>50)
+              {
+               $error = "La ciudad no puede exceder los 50 Caracteres";
+               $code = 12;
+              }
               else if(empty($estado_Cliente))
                {
-               $error = "Ingresa el estado";
+               $error = "Selecciona un estado";
                $code = 13;
                }
            else {
@@ -290,44 +345,44 @@ try {
           ?>
           <tr>
             <h3>Datos del cliente</h3>
-          <td><input type="text" name="id_Cliente" placeholder="ID Cliente" value="<?php if(isset($id_Cliente)){echo $id_Cliente;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> /></td>
+          <td><h4>ID del Cliente</h4><input type="text" name="id_Cliente" placeholder="ID Cliente" value="<?php if(isset($id_Cliente)){echo $id_Cliente;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> /></td>
           </tr>
           <tr>
-          <td><input type="text" name="name_Cliente" placeholder="Nombre del cliente" value="<?php if(isset($name_Cliente)){echo $name_Cliente;} ?>"  <?php if(isset($code) && $code == 2){ echo "autofocus"; }  ?> /></td>
+          <td><h4>Nombre</h4><input type="text" name="name_Cliente" placeholder="Nombre del cliente" value="<?php if(isset($name_Cliente)){echo $name_Cliente;} ?>"  <?php if(isset($code) && $code == 2){ echo "autofocus"; }  ?> /></td>
           </tr>
           <tr>
-          <td><input type="text" name="apellido_Paterno" placeholder="Apellido Paterno" value="<?php if(isset($apellido_Paterno)){echo $apellido_Paterno;} ?>"  <?php if(isset($code) && $code == 3){ echo "autofocus"; }  ?> /></td>
+          <td><h4>Apellido Paterno</h4><input type="text" name="apellido_Paterno" placeholder="Apellido Paterno" value="<?php if(isset($apellido_Paterno)){echo $apellido_Paterno;} ?>"  <?php if(isset($code) && $code == 3){ echo "autofocus"; }  ?> /></td>
           </tr>
           <tr>
-          <td><input type="text" name="razonSocial_Cliente" placeholder="Razon Social" value="<?php if(isset($razonSocial_Cliente)){echo $razonSocial_Cliente;} ?>"  <?php if(isset($code) && $code == 4){ echo "autofocus"; }  ?> /></td>
+          <td><h4>Razon Social</h4><input type="text" name="razonSocial_Cliente" placeholder="Razon Social" value="<?php if(isset($razonSocial_Cliente)){echo $razonSocial_Cliente;} ?>"  <?php if(isset($code) && $code == 4){ echo "autofocus"; }  ?> /></td>
           </tr>
           <tr>
-          <td><input type="text" name="rfc_Cliente" placeholder="RFC" value="<?php if(isset($rfc_Cliente)){echo $rfc_Cliente;} ?>"  <?php if(isset($code) && $code == 5){ echo "autofocus"; }  ?> /></td>
+          <td><h4>RFC</h4><input type="text" name="rfc_Cliente" placeholder="RFC" value="<?php if(isset($rfc_Cliente)){echo $rfc_Cliente;} ?>"  <?php if(isset($code) && $code == 5){ echo "autofocus"; }  ?> /></td>
           </tr>
           <tr>
-          <td><input type="text" name="email_Cliente" placeholder="Correo Electronico" value="<?php if(isset($email_Cliente)){echo $email_Cliente;} ?>"  <?php if(isset($code) && $code == 6){ echo "autofocus"; }  ?> /></td>
+          <td><h4>Correo Electronico</h4><input type="text" name="email_Cliente" placeholder="Correo Electronico" value="<?php if(isset($email_Cliente)){echo $email_Cliente;} ?>"  <?php if(isset($code) && $code == 6){ echo "autofocus"; }  ?> /></td>
           </tr>
           <tr>
-          <td><input type="text" name="tel_Cliente" placeholder="Numero Telefonico" value="<?php if(isset($tel_Cliente)){echo $tel_Cliente;} ?>"  <?php if(isset($code) && $code == 7){ echo "autofocus"; }  ?> /></td>
+          <td><h4>Numero Telefonico</h4><input type="text" name="tel_Cliente" placeholder="Numero Telefonico" value="<?php if(isset($tel_Cliente)){echo $tel_Cliente;} ?>"  <?php if(isset($code) && $code == 7){ echo "autofocus"; }  ?> /></td>
           </tr>
           <tr>
             <h3>Direccion</h3>
-          <td><input type="text" name="calle_Cliente" placeholder="Calle" value="<?php if(isset($calle_Cliente)){echo $calle_Cliente;} ?>"  <?php if(isset($code) && $code == 8){ echo "autofocus"; }  ?> /></td>
+          <td><h4>Calle</h4><input type="text" name="calle_Cliente" placeholder="Calle" value="<?php if(isset($calle_Cliente)){echo $calle_Cliente;} ?>"  <?php if(isset($code) && $code == 8){ echo "autofocus"; }  ?> /></td>
           </tr>
           <tr>
-          <td><input type="text" name="numeroExt_Cliente" placeholder="Numero Exterior" value="<?php if(isset($numeroExt_Cliente)){echo $numeroExt_Cliente;} ?>"  <?php if(isset($code) && $code == 9){ echo "autofocus"; }  ?> /></td>
+          <td><h4>Numero Ex.</h4><input type="text" name="numeroExt_Cliente" placeholder="Numero Exterior" value="<?php if(isset($numeroExt_Cliente)){echo $numeroExt_Cliente;} ?>"  <?php if(isset($code) && $code == 9){ echo "autofocus"; }  ?> /></td>
           </tr>
           <tr>
-          <td><input type="text" name="numeroInt_Cliente" placeholder="Numero Interior" value="<?php if(isset($numeroInt_Cliente)){echo $numeroInt_Cliente;} ?>"  <?php if(isset($code) && $code == 10){ echo "autofocus"; }  ?> /></td>
+          <td><h4>Numero Int.</h4><input type="text" name="numeroInt_Cliente" placeholder="Numero Interior" value="<?php if(isset($numeroInt_Cliente)){echo $numeroInt_Cliente;} ?>"  <?php if(isset($code) && $code == 10){ echo "autofocus"; }  ?> /></td>
           </tr>
           <tr>
-          <td><input type="text" name="colonia_Cliente" placeholder="Colonia" value="<?php if(isset($colonia_Cliente)){echo $colonia_Cliente;} ?>"  <?php if(isset($code) && $code == 11){ echo "autofocus"; }  ?> /></td>
+          <td><h4>Colonia</h4><input type="text" name="colonia_Cliente" placeholder="Colonia" value="<?php if(isset($colonia_Cliente)){echo $colonia_Cliente;} ?>"  <?php if(isset($code) && $code == 11){ echo "autofocus"; }  ?> /></td>
           </tr>
           <tr>
-          <td><input type="text" name="ciudad_Cliente" placeholder="Ciudad" value="<?php if(isset($ciudad_Cliente)){echo $ciudad_Cliente;} ?>"  <?php if(isset($code) && $code == 12){ echo "autofocus"; }  ?> /></td>
+          <td><h4>Ciudad</h4><input type="text" name="ciudad_Cliente" placeholder="Ciudad" value="<?php if(isset($ciudad_Cliente)){echo $ciudad_Cliente;} ?>"  <?php if(isset($code) && $code == 12){ echo "autofocus"; }  ?> /></td>
           </tr>
           <tr>
-          <td><input type="text" name="estado_Cliente" placeholder="Estado" value="<?php if(isset($estado_Cliente)){echo $estado_Cliente;} ?>"  <?php if(isset($code) && $code == 13){ echo "autofocus"; }  ?> /></td>
+          <td><h4>Estado</h4><input type="text" name="estado_Cliente" placeholder="Estado" value="<?php if(isset($estado_Cliente)){echo $estado_Cliente;} ?>"  <?php if(isset($code) && $code == 13){ echo "autofocus"; }  ?> /></td>
           </tr>
           <tr>
             <td><button type="submit" name="btn-regCliente">Registrar Cliente</button></td>

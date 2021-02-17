@@ -33,14 +33,34 @@ try {
            $error = "Solo se admiten numeros";
            $code = 1;
           }
+          else if($id_p>9999)
+          {
+           $error = "El ID no puede ser mayor a 4 Digitos";
+           $code = 1;
+          }
+          else if($id_p<1)
+          {
+           $error = "El ID no puede ser menor a 1";
+           $code = 1;
+          }
            else if(empty($pname))
            {
             $error = "Ingresa el nombre del producto";
             $code = 2;
            }
+           else if(strlen($pname)>100)
+           {
+            $error = "El nombre del producto no puede exceder 100 caracteres";
+            $code = 2;
+           }
            else if(empty($descP))
            {
             $error = "Ingresa la descripcion del producto";
+            $code = 3;
+           }
+           else if(strlen($descP)>150)
+           {
+            $error = "La descripcion del producto no puede exceder 150 caracteres";
             $code = 3;
            }
            else if(empty($costoP))
@@ -53,6 +73,16 @@ try {
             $error = "Solo se admiten numeros";
             $code = 4;
            }
+           else if($costoP>9999999)
+           {
+            $error = "El costo no puede ser mayor a 9,999,999.00";
+            $code = 4;
+           }
+           else if($costoP<0)
+           {
+            $error = "El costo no puede ser menor a 0.00";
+            $code = 4;
+           }
            else if(empty($precioP))
            {
             $error = "Ingresa el precio";
@@ -63,10 +93,25 @@ try {
             $error = "Solo se admiten numeros";
             $code = 5;
            }
+           else if($precioP>9999999)
+           {
+            $error = "El precio no puede ser mayor a 9,999,999.00";
+            $code = 5;
+           }
+           else if($precioP<0)
+           {
+            $error = "El precio no puede ser menor a 0.00";
+            $code = 5;
+           }
            else if(empty($unidadP))
            {
             $error = "Ingresa la unidad del producto";
             $code = 6;
+           }
+           else if(strlen($unidadP)>10)
+           {
+            $error = "La unidad del producto no puede exceder 10 caracteres";
+            $code = 2;
            }
            else if(empty($existenciaP))
            {
@@ -76,6 +121,16 @@ try {
            else if(!is_numeric($existenciaP))
            {
             $error = "Solo se admiten numeros";
+            $code = 7;
+           }
+           else if($existenciaP>99999)
+           {
+            $error = "La existencia no puede ser mayor a 99,999";
+            $code = 7;
+           }
+           else if($existenciaP<-99999)
+           {
+            $error = "La existencia no puede ser menor a -99,999";
             $code = 7;
            }
             else {
@@ -227,25 +282,25 @@ try {
           }
           ?>
           <tr>
-          <td><input type="text" name="id_p" placeholder="ID Producto" value="<?php if(isset($id_p)){echo $id_p;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> /></td>
+          <td><h3>Id Producto</h3><input type="text" name="id_p" placeholder="ID Producto" value="<?php if(isset($id_p)){echo $id_p;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> /></td>
           </tr>
           <tr>
-          <td><input type="text" name="name_product" placeholder="Nombre del producto" value="<?php if(isset($pname)){echo $pname;} ?>"  <?php if(isset($code) && $code == 2){ echo "autofocus"; }  ?> /></td>
+          <td><h3>Nombre</h3><input type="text" name="name_product" placeholder="Nombre del producto" value="<?php if(isset($pname)){echo $pname;} ?>"  <?php if(isset($code) && $code == 2){ echo "autofocus"; }  ?> /></td>
           </tr>
           <tr>
-          <td><input type="text" name="descripcion_Producto" placeholder="Descripcion del producto" value="<?php if(isset($descP)){echo $descP;} ?>"  <?php if(isset($code) && $code == 3){ echo "autofocus"; }  ?> /></td>
+          <td><h3>Descripcion</h3><input type="text" name="descripcion_Producto" placeholder="Descripcion del producto" value="<?php if(isset($descP)){echo $descP;} ?>"  <?php if(isset($code) && $code == 3){ echo "autofocus"; }  ?> /></td>
           </tr>
           <tr>
-          <td><input type="text" name="costo_Producto" placeholder="Costo del producto" value="<?php if(isset($costoP)){echo $costoP;} ?>"  <?php if(isset($code) && $code == 4){ echo "autofocus"; }  ?> /></td>
+          <td><h3>Costo</h3><input type="text" name="costo_Producto" placeholder="Costo del producto" value="<?php if(isset($costoP)){echo $costoP;} ?>"  <?php if(isset($code) && $code == 4){ echo "autofocus"; }  ?> /></td>
           </tr>
           <tr>
-          <td><input type="text" name="precio_Producto" placeholder="Precio del producto" value="<?php if(isset($precioP)){echo $precioP;} ?>"  <?php if(isset($code) && $code == 5){ echo "autofocus"; }  ?> /></td>
+          <td><h3>Precio</h3><input type="text" name="precio_Producto" placeholder="Precio del producto" value="<?php if(isset($precioP)){echo $precioP;} ?>"  <?php if(isset($code) && $code == 5){ echo "autofocus"; }  ?> /></td>
           </tr>
           <tr>
-          <td><input type="text" name="unidad_Producto" placeholder="Unidad del producto" value="<?php if(isset($unidadP)){echo $unidadP;} ?>"  <?php if(isset($code) && $code == 6){ echo "autofocus"; }  ?> /></td>
+          <td><h3>Unidad de medida</h3><input type="text" name="unidad_Producto" placeholder="Unidad del producto" value="<?php if(isset($unidadP)){echo $unidadP;} ?>"  <?php if(isset($code) && $code == 6){ echo "autofocus"; }  ?> /></td>
           </tr>
           <tr>
-          <td><input type="text" name="existencia_Producto" placeholder="Existencia del producto" value="<?php if(isset($existenciaP)){echo $existenciaP;} ?>"  <?php if(isset($code) && $code == 7){ echo "autofocus"; }  ?> /></td>
+          <td><h3>Existencia</h3><input type="text" name="existencia_Producto" placeholder="Existencia del producto" value="<?php if(isset($existenciaP)){echo $existenciaP;} ?>"  <?php if(isset($code) && $code == 7){ echo "autofocus"; }  ?> /></td>
           </tr>
           <tr>
             <td><button type="submit" name="btn-signup">Registrar Producto</button></td>
