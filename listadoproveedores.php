@@ -28,6 +28,7 @@ try {
     $ciudad_Cliente = trim($_POST['ciudad_Cliente']);
     $estado_Cliente = trim($_POST['estado_Cliente']);
 
+
     if(isset($_POST["btn-search"])){
 
           $id_Cliente = trim($_POST['select_cliente']);

@@ -7,13 +7,16 @@ include("sesion.php");
  {
 
 
-
-     if (isset($_SESSION['user'])){
+    //Condiciones para ingresar al home que le pertenece al usuario
+     if (isset($_SESSION['user'])&&($_SESSION['tipoUsuario']==1)){
      header('Location: home.php');
-   } else {
+      }
+   else if (isset($_SESSION['user'])&&($_SESSION['tipoUsuario']==2)) {
+     header('Location: homeUser.php');
+   }
+      else {
      $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
      $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-     // $recaptcha=isset($_POST["g-recaptcha-response"]);
 
 
      if(isset($_POST["botonLogin"])){
@@ -40,16 +43,28 @@ include("sesion.php");
                            'upass'     =>     $_POST["campoContraseña"]
                       )
                  );
+                 while( $datos = $statement->fetch()){
+                 $password = $datos[1];
+                 $tipoUsuario = $datos[2];
+                 $nUsuario = $datos[3];
+                 }
                  $count = $statement->rowCount();
                  if($count > 0)
                  {
 
                       $message = "Exito";
                       $sesion = new sesion ();
-                      $sesion -> setCurrentUser($_POST["campoUsuario"]);
-                    
-                      header('Location: home.php');
-                      die();
+                      // $sesion -> setCurrentUser($_POST["campoUsuario"]);
+                      $sesion -> setCurrentUser($nUsuario,$tipoUsuario);
+                      //Condicion para mostrar una u otra pagina dependiendo del nivel de usuario
+                      if ($tipoUsuario==1) {
+                        header('Location: home.php');
+                        die();
+                      }
+                        else if ($tipoUsuario==2) {
+                          header('Location: homeUser.php');
+                          die();
+                        }
                  }
                  else
                  {

@@ -3,13 +3,16 @@ class sesion
 {
 
 
-  public function setCurrentUser($user){
+  public function setCurrentUser($user,$tipoUsuario){
           $_SESSION['user'] = $user;
+          $_SESSION['tipoUsuario'] = $tipoUsuario;
       }
 
       public function getCurrentUser(){
           return $_SESSION['user'];
       }
+
+
 
       public function closeSession(){
         // Se elimina la funcion session_unset , debido a que ya no esta soportada.

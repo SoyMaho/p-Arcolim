@@ -7,7 +7,11 @@ try {
   if (!isset($_SESSION['user'])){
     header('Location: index.php');
   }
-  else {
+  //Condicion para Evitar que el usuario sin privilegios, ingrese a la pagina de Usuarios
+  else if ($_SESSION['tipoUsuario']!=1) {
+      header('Location: index.php');
+    }
+    else {
     $currentUser = $sesion->getCurrentUser();
     echo '<h2> Bienvenido </h2>' .$currentUser;
 

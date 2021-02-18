@@ -112,7 +112,7 @@ try {
     ,];
     $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
     $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $query = "SELECT nombre_Cliente FROM cat_Clientes WHERE id_Cliente = :id_cliente";
+    $query = "SELECT nombre_Cliente FROM cat_clientes WHERE id_Cliente = :id_cliente";
     $statement = $connect->prepare($query);
     $statement->execute($data);
 
@@ -726,7 +726,7 @@ try {
       ,];
       $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
       $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-      $query = "SELECT nombre_Cliente FROM cat_Clientes WHERE id_Cliente = :id_cliente";
+      $query = "SELECT nombre_Cliente FROM cat_clientes WHERE id_Cliente = :id_cliente";
       $statement = $connect->prepare($query);
       $statement->execute($data);
 

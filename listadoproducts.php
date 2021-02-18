@@ -20,6 +20,7 @@ try {
     $unidadP = trim($_POST['unidad_Producto']);
     $existenciaP = trim($_POST['existencia_Producto']);
 
+
     if(isset($_POST["btn-signup"])){
 
           $id_p = trim($_POST['select_product']);
@@ -59,13 +60,7 @@ try {
                  echo '<script language="javascript">';
                  echo 'alert("El producto no existe")';
                  echo '</script>';
-                 // $id_p = '';
-                 // $pname = '';
-                 // $descP = '';
-                 // $costoP = '';
-                 // $precioP = '';
-                 // $unidadP = '';
-                 // $existenciaP = '';
+
 
 
                }
@@ -127,13 +122,7 @@ try {
              echo '<script language="javascript">';
              echo 'alert("El producto no existe")';
              echo '</script>';
-             // $id_p = '';
-             // $pname = '';
-             // $descP = '';
-             // $costoP = '';
-             // $precioP = '';
-             // $unidadP = '';
-             // $existenciaP = '';
+
 
 
            }else {
