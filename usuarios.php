@@ -241,15 +241,14 @@ try {
     <header>
       <a href="home.php"><img src="img/arcolim_Logo.jpg" id="logo_Home" alt=""></a>
       <div class="user">
-
-
          <a href="logout.php"> Salir</a>
       </div>
     </header>
 
-    <div class="work_Section">
+      <div class="work_Section">
+
       <div class="NavBar">
-        <nav>
+        <nav class="menuMain">
           <ul>
             <li> <a>Productos</a>
                 <ul>

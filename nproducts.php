@@ -2,7 +2,9 @@
 session_start();
 include("conexion.php");
 include_once 'sesion.php';
+include("funcsql.php");
 $sesion = new sesion ();
+$funcsql = new funcionSQL();
 ?>
 <?php
 try {
@@ -12,6 +14,10 @@ try {
   else {
     $currentUser = $sesion->getCurrentUser();
     echo '<h2> Bienvenido </h2>' .$currentUser ;
+
+
+    $idAutoProducto= $funcsql ->ultimoId("id_Producto","cat_producto","id_Producto");
+    $id_p = $idAutoProducto+1;
 
     if(isset($_POST["btn-signup"])){
 
@@ -232,35 +238,33 @@ try {
 
     <div class="work_Section">
       <div class="NavBar">
-        <nav>
+        <nav class="menuMain">
           <ul>
             <li> <a>Productos</a>
                 <ul>
-
                   <li><a href="listadoproducts.php">Listado</a></li>
-                  <li><a href="nproducts.php">Registrar Producto</a></li>
-
+                  <li><a href="nproducts.php">Registrar</a></li>
                 </ul>
             </li>
-            <li> <a href="/listadoproducts.php">Venta</a>
+            <li> <a>Venta</a>
               <ul>
-                <li><a href="/registroventa.php">Registrar Venta</a></li>
+                <li><a href="registroventa.php">Registrar Venta</a></li>
               </ul>
             </li>
-            <li> <a href="/listadoproducts.php">Proveedores</a>
+            <li> <a>Proveedores</a>
               <ul>
                 <li><a href="listadoproveedores.php">Listado</a></li>
-                <li><a href="nproveedor.php">Registrar Proveedor</a></li>
+                <li><a href="nproveedor.php">Registrar</a></li>
               </ul>
             </li>
             <li> <a>Clientes</a>
               <ul>
-                <li><a href="listadoclientes.php">Lista</a></li>
-                <li><a href="ncliente.php">Registrar Clientes</a></li>
+                <li><a href="listadoclientes.php">Listado</a></li>
+                <li><a href="ncliente.php">Registrar</a></li>
               </ul>
             </li>
-            <li> <a href="/nproducts.php">Reportes</a></li>
-            <li> <a href="#">Panel de control</a></li>
+            <li> <a href="">Reportes</a></li>
+            <li> <a href="usuarios.php">Usuarios</a></li>
           </ul>
         </nav>
       </div>

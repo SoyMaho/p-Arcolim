@@ -2,7 +2,9 @@
 session_start();
 include("conexion.php");
 include_once 'sesion.php';
+include("funcsql.php");
 $sesion = new sesion ();
+$funcsql = new funcionSQL();
 ?>
 <?php
 try {
@@ -13,6 +15,9 @@ try {
     $currentUser = $sesion->getCurrentUser();
     echo '<h2> Bienvenido </h2>' .$currentUser ;
 
+      //Se instancia la clase y se utiliza el metodo ultimo ID
+      $idAutoCliente = $funcsql ->ultimoId("id_Cliente","cat_clientes","id_Cliente");
+      $id_Cliente = $idAutoCliente+1;
     if(isset($_POST["btn-regCliente"])){
 
           $id_Cliente = trim($_POST['id_Cliente']);
@@ -218,6 +223,7 @@ try {
                  'email_Cliente' => $email_Cliente,
                  'tel_Cliente'=>$tel_Cliente,
                  'tipo_Entidad' => '1',
+                 'estadoRegistroC'=>'1',
                  ];
 
 
@@ -230,7 +236,7 @@ try {
 
                  $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
                  $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                 $query = "INSERT INTO cat_clientes (id_Cliente, nombre_Cliente, pApellido_Cliente, razonSocial_Cliente, rfc_Cliente, direccion_Cliente, correo_Cliente, tel_Cliente, tipo_Entidad) VALUES (:id_Cliente, :name_Cliente, :apellido_Paterno, :razonSocial_Cliente, :rfc_Cliente, :direccion_Cliente, :email_Cliente,:tel_Cliente,:tipo_Entidad)";
+                 $query = "INSERT INTO cat_clientes (id_Cliente, nombre_Cliente, pApellido_Cliente, razonSocial_Cliente, rfc_Cliente, direccion_Cliente, correo_Cliente, tel_Cliente, tipo_Entidad,estadoRegistroC) VALUES (:id_Cliente, :name_Cliente, :apellido_Paterno, :razonSocial_Cliente, :rfc_Cliente, :direccion_Cliente, :email_Cliente,:tel_Cliente,:tipo_Entidad,:estadoRegistroC)";
                  $statement = $connect->prepare($query);
                  $statement->execute($data1);
 
@@ -293,35 +299,33 @@ try {
 
     <div class="work_Section">
       <div class="NavBar">
-        <nav>
+        <nav class="menuMain">
           <ul>
             <li> <a>Productos</a>
                 <ul>
-
                   <li><a href="listadoproducts.php">Listado</a></li>
-                  <li><a href="nproducts.php">Registrar Producto</a></li>
-
+                  <li><a href="nproducts.php">Registrar</a></li>
                 </ul>
             </li>
-            <li> <a href="/listadoproducts.php">Venta</a>
+            <li> <a>Venta</a>
               <ul>
-                <li><a href="/registroventa.php">Registrar Venta</a></li>
+                <li><a href="registroventa.php">Registrar Venta</a></li>
               </ul>
             </li>
-            <li> <a href="/listadoproducts.php">Proveedores</a>
+            <li> <a>Proveedores</a>
               <ul>
                 <li><a href="listadoproveedores.php">Listado</a></li>
-                <li><a href="nproveedor.php">Registrar Proveedor</a></li>
+                <li><a href="nproveedor.php">Registrar</a></li>
               </ul>
             </li>
             <li> <a>Clientes</a>
               <ul>
-                <li><a href="listadoclientes.php">Lista</a></li>
-                <li><a href="ncliente.php">Registrar Clientes</a></li>
+                <li><a href="listadoclientes.php">Listado</a></li>
+                <li><a href="ncliente.php">Registrar</a></li>
               </ul>
             </li>
-            <li> <a href="/nproducts.php">Reportes</a></li>
-            <li> <a href="#">Panel de control</a></li>
+            <li> <a href="">Reportes</a></li>
+            <li> <a href="usuarios.php">Usuarios</a></li>
           </ul>
         </nav>
       </div>
