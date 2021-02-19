@@ -19,8 +19,8 @@ try {
       $idAutoCliente = $funcsql ->ultimoId("id_Cliente","cat_clientes","id_Cliente");
       $id_Cliente = $idAutoCliente+1;
     if(isset($_POST["btn-regCliente"])){
-
-          $id_Cliente = trim($_POST['id_Cliente']);
+          //Se elimina por que el ID es autogenerado
+          // $id_Cliente = trim($_POST['id_Cliente']);
           $name_Cliente= trim($_POST['name_Cliente']);
           $apellido_Paterno = trim($_POST['apellido_Paterno']);
           $razonSocial_Cliente = trim($_POST['razonSocial_Cliente']);
@@ -349,9 +349,9 @@ try {
           ?>
           <tr>
             <h3>Datos del cliente</h3>
-          <td><h4>ID del Cliente</h4><input type="text" name="id_Cliente" placeholder="ID Cliente" value="<?php if(isset($id_Cliente)){echo $id_Cliente;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> /></td>
+          <!-- Se elimina por que el ID es autogenerado <td><h4>ID del Cliente</h4><input type="text" name="id_Cliente" placeholder="ID Cliente" value="<?php if(isset($id_Cliente)){echo $id_Cliente;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> /></td>
           </tr>
-          <tr>
+          <tr> -->
           <td><h4>Nombre</h4><input type="text" name="name_Cliente" placeholder="Nombre del cliente" value="<?php if(isset($name_Cliente)){echo $name_Cliente;} ?>"  <?php if(isset($code) && $code == 2){ echo "autofocus"; }  ?> /></td>
           </tr>
           <tr>
