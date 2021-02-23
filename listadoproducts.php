@@ -20,12 +20,13 @@ try {
     $unidadP = trim($_POST['unidad_Producto']);
     $existenciaP = trim($_POST['existencia_Producto']);
 
+
     if(isset($_POST["btn-signup"])){
 
           $id_p = trim($_POST['select_product']);
           if(empty($id_p))
           {
-           $error = "Por favor ingresa un ID";
+           $error = "Por favor selecciona un producto";
            $code = 1;
           }
           else if(!is_numeric($id_p))
@@ -59,13 +60,7 @@ try {
                  echo '<script language="javascript">';
                  echo 'alert("El producto no existe")';
                  echo '</script>';
-                 // $id_p = '';
-                 // $pname = '';
-                 // $descP = '';
-                 // $costoP = '';
-                 // $precioP = '';
-                 // $unidadP = '';
-                 // $existenciaP = '';
+
 
 
                }
@@ -92,7 +87,7 @@ try {
       $id_p = trim($_POST['select_product']);
       if(empty($id_p))
       {
-       $error = "Por favor ingresa un ID";
+       $error = "Por favor selecciona un producto";
        $code = 1;
       }
       else if(!is_numeric($id_p))
@@ -127,13 +122,7 @@ try {
              echo '<script language="javascript">';
              echo 'alert("El producto no existe")';
              echo '</script>';
-             // $id_p = '';
-             // $pname = '';
-             // $descP = '';
-             // $costoP = '';
-             // $precioP = '';
-             // $unidadP = '';
-             // $existenciaP = '';
+
 
 
            }else {
@@ -159,7 +148,7 @@ try {
       $id_p = trim($_POST['select_product']);
       if(empty($id_p))
       {
-       $error = "Por favor ingresa un ID";
+       $error = "Por favor selecciona un producto";
        $code = 1;
       }
       else if(!is_numeric($id_p))
@@ -453,7 +442,7 @@ try {
           <td><h3>Existencia</h3><input type="text" name="existencia_Producto" placeholder="" value="<?php if(isset($id_p)){echo $existenciaP;}?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> /></td>
           </tr>
           <tr>
-            <td><button type="submit" name="btn-signup">Buscar Producto</button></td>
+            <td><button type="submit" name="btn-signup">Seleccionar Producto</button></td>
             <td> <button type="submit" name="btn-delete">Eliminar Producto</button></td>
             <td> <button type="submit" name="btn-modif">Modificar Producto</button></td>
           </tr>

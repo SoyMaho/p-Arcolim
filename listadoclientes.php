@@ -28,13 +28,15 @@ try {
     $ciudad_Cliente = trim($_POST['ciudad_Cliente']);
     $estado_Cliente = trim($_POST['estado_Cliente']);
 
+
+
     if(isset($_POST["btn-search"])){
 
           $id_Cliente = trim($_POST['select_cliente']);
 
           if(empty($id_Cliente))
           {
-           $error = "Por favor ingresa un ID";
+           $error = "Por favor selecciona un cliente";
            $code = 1;
           }
           else if(!is_numeric($id_Cliente))
@@ -99,7 +101,7 @@ try {
       $id_Cliente = trim($_POST['select_cliente']);
       if(empty($id_Cliente))
       {
-       $error = "Por favor ingresa un ID";
+       $error = "Por favor selecciona un cliente";
        $code = 1;
       }
       else if(!is_numeric($id_Cliente))
@@ -178,7 +180,7 @@ try {
 
       if(empty($id_Cliente))
       {
-       $error = "Por favor ingresa un ID";
+       $error = "Por favor selecciona un cliente";
        $code = 1;
       }
       else if(!is_numeric($id_Cliente))
@@ -600,7 +602,7 @@ try {
           <!-- <td><h4>Estado</h4><input type="text" name="estado_Cliente" placeholder="Estado" value="<?php if(isset($estado_Cliente)){echo $estado_Cliente;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> /></td> -->
           </tr>
           <tr>
-            <td><button type="submit" name="btn-search">Buscar Cliente</button></td>
+            <td><button type="submit" name="btn-search">Seleccionar Cliente</button></td>
             <td> <button type="submit" name="btn-delete">Eliminar Cliente</button></td>
             <td> <button type="submit" name="btn-modif">Modificar Cliente</button></td>
           </tr>

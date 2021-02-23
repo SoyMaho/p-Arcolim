@@ -1,5 +1,4 @@
 # p-Arcolim
 pArcolim
-Se agrega el autoincremento a los campos de id.
-Se agrega funcion para refrescar la pagina cuando el ID no existe en la venta.
+18.02.2021 Version con Control de sesiones
  

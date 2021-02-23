@@ -20,8 +20,8 @@ try {
     $id_p = $idAutoProducto+1;
 
     if(isset($_POST["btn-signup"])){
-
-          $id_p = trim($_POST['id_p']);
+          // Se elimina por que el ID es autoGenerado
+          // $id_p = trim($_POST['id_p']);
           $pname = trim($_POST['name_product']);
           $descP = trim($_POST['descripcion_Producto']);
           $costoP = trim($_POST['costo_Producto']);
@@ -285,9 +285,9 @@ try {
               <?php
           }
           ?>
-          <tr>
+          <!-- Se eliminar por que el ID es autogenerado <tr>
           <td><h3>Id Producto</h3><input type="text" name="id_p" placeholder="ID Producto" value="<?php if(isset($id_p)){echo $id_p;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> /></td>
-          </tr>
+          </tr> -->
           <tr>
           <td><h3>Nombre</h3><input type="text" name="name_product" placeholder="Nombre del producto" value="<?php if(isset($pname)){echo $pname;} ?>"  <?php if(isset($code) && $code == 2){ echo "autofocus"; }  ?> /></td>
           </tr>
