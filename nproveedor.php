@@ -30,7 +30,7 @@ try {
           $numeroInt_Cliente = trim($_POST['numeroInt_Cliente']);
           $colonia_Cliente = trim($_POST['colonia_Cliente']);
           $ciudad_Cliente = trim($_POST['ciudad_Cliente']);
-          $estado_Cliente = trim($_POST['estado_Cliente']);
+          $idEstadoCliente = trim($_POST['estado_Cliente']);
 
           if(empty($id_Cliente))
           {
@@ -177,7 +177,7 @@ try {
                $error = "La ciudad no puede exceder los 50 Caracteres";
                $code = 12;
               }
-              else if(empty($estado_Cliente))
+              else if(empty($idEstadoCliente))
                {
                $error = "Selecciona un estado";
                $code = 13;
@@ -208,7 +208,7 @@ try {
                    'numeroInt_Cliente'=>$numeroInt_Cliente,
                    'colonia_Cliente'=>$colonia_Cliente,
                    'ciudad_Cliente'=>$ciudad_Cliente,
-                   'estado_Cliente'=>$estado_Cliente,
+                   'estado_Cliente'=>$idEstadoCliente,
                    ];
                    $data1 = [
                    'id_Cliente' => $id_Cliente,
@@ -381,7 +381,42 @@ try {
           <td><h4>Ciudad</h4><input type="text" name="ciudad_Cliente" placeholder="Ciudad" value="<?php if(isset($ciudad_Cliente)){echo $ciudad_Cliente;} ?>"  <?php if(isset($code) && $code == 12){ echo "autofocus"; }  ?> /></td>
           </tr>
           <tr>
-          <td><h4>Estado</h4><input type="text" name="estado_Cliente" placeholder="Estado" value="<?php if(isset($estado_Cliente)){echo $estado_Cliente;} ?>"  <?php if(isset($code) && $code == 13){ echo "autofocus"; }  ?> /></td>
+            <select class="" name="estado_Cliente">
+              <option value="<?php if(isset($idEstadoCliente)){echo $idEstadoCliente;}  ?>"><?php if(isset($estado_Cliente)){echo $estado_Cliente;}  ?></option>
+              <option value="1">Aguascalientes</option>
+              <option value="2">Baja California</option>
+              <option value="3">Baja California Sur</option>
+              <option value="4">Campeche</option>
+              <option value="5">Coahuila</option>
+              <option value="6">Colima</option>
+              <option value="7">Chiapas</option>
+              <option value="8">Chihuahua</option>
+              <option value="9">CDMX</option>
+              <option value="10">Durango</option>
+              <option value="11">Guanajuato</option>
+              <option value="12">Guerrero</option>
+              <option value="13">Hidalgo</option>
+              <option value="14">Jalisco</option>
+              <option value="15">Estado de Mexico</option>
+              <option value="16">Michoacan</option>
+              <option value="17">Morelos</option>
+              <option value="18">Nayarit</option>
+              <option value="19">Nuevo Leon</option>
+              <option value="20">Oaxaca</option>
+              <option value="21">Puebla</option>
+              <option value="22">Queretaro</option>
+              <option value="23">Quintana Roo</option>
+              <option value="24">San Luis Potosi</option>
+              <option value="25">Sinaloa</option>
+              <option value="26">Sonora</option>
+              <option value="27">Tabasco</option>
+              <option value="28">Tamaulipas</option>
+              <option value="29">Tlaxcala</option>
+              <option value="30">Veracruz</option>
+              <option value="31">Yucatan</option>
+              <option value="32">Zacatecas</option>
+            </select>
+
           </tr>
           <tr>
             <td><button type="submit" name="btn-regCliente">Registrar Proveedor</button></td>

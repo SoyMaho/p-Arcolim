@@ -26,7 +26,8 @@ try {
     $numeroInt_Cliente = trim($_POST['numeroInt_Cliente']);
     $colonia_Cliente = trim($_POST['colonia_Cliente']);
     $ciudad_Cliente = trim($_POST['ciudad_Cliente']);
-    $estado_Cliente = trim($_POST['estado_Cliente']);
+    $idEstadoCliente = trim($_POST['estado_Cliente']);
+
 
 
 
@@ -61,7 +62,7 @@ try {
 
                $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
                $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-               $query = "SELECT c.id_Cliente,c.nombre_Cliente, c.pApellido_Cliente, c.razonSocial_Cliente, c.rfc_Cliente, c.correo_Cliente, c.tel_Cliente, d.calle_Cliente, d.numeroEx_Cliente, d.numeroInt_Cliente, d.colonia_Cliente, d.ciudad_Cliente, e.nombre_Estado FROM cat_clientes AS c INNER JOIN cat_direccionclientes AS d ON c.direccion_Cliente = d.id_Direccion INNER JOIN cat_estado AS e ON d.estado_Cliente = e.id_Estado WHERE c.id_Cliente = :id_Cliente AND c.tipo_Entidad=1";
+               $query = "SELECT c.id_Cliente,c.nombre_Cliente, c.pApellido_Cliente, c.razonSocial_Cliente, c.rfc_Cliente, c.correo_Cliente, c.tel_Cliente, c.estadoRegistroC,c.oculto, d.calle_Cliente, d.numeroEx_Cliente, d.numeroInt_Cliente, d.colonia_Cliente, d.ciudad_Cliente, e.nombre_Estado, e.id_Estado FROM cat_clientes AS c INNER JOIN cat_direccionclientes AS d ON c.direccion_Cliente = d.id_Direccion INNER JOIN cat_estado AS e ON d.estado_Cliente = e.id_Estado WHERE c.id_Cliente = :id_Cliente AND c.tipo_Entidad=1";
 
                $statement = $connect->prepare($query);
                $statement->execute($data);
@@ -81,12 +82,15 @@ try {
                  $rfc_Cliente = $datos[4];
                  $email_Cliente = $datos[5];
                  $tel_Cliente = $datos[6];
-                 $calle_Cliente = $datos[7];
-                 $numeroExt_Cliente = $datos[8];
-                 $numeroInt_Cliente = $datos[9];
-                 $colonia_Cliente = $datos[10];
-                 $ciudad_Cliente = $datos[11];
-                 $estado_Cliente = $datos[12];
+                 $estadoRegistro = $datos[7];
+                 $registroOculto = $datos[8];
+                 $calle_Cliente = $datos[9];
+                 $numeroExt_Cliente = $datos[10];
+                 $numeroInt_Cliente = $datos[11];
+                 $colonia_Cliente = $datos[12];
+                 $ciudad_Cliente = $datos[13];
+                 $estado_Cliente = $datos[14];
+                 $idEstadoCliente = $datos[15];
                  }
                }
          }
@@ -126,9 +130,13 @@ try {
 
            $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
            $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-           $query = "SELECT * FROM cat_clientes WHERE id_Cliente = :id_Cliente AND tipo_Entidad=1";
+           $query = "SELECT id_Cliente, estadoRegistroC FROM cat_clientes WHERE id_Cliente = :id_Cliente AND tipo_Entidad=1";
            $statement = $connect->prepare($query);
            $statement->execute($data);
+
+           while( $datos = $statement->fetch()){
+           $estadoRegistro = $datos[1];
+           }
 
            $count = $statement->rowCount();
            if($count == 0)
@@ -139,40 +147,39 @@ try {
            }else {
              $id_Cliente = trim($_POST['select_cliente']);
 
-             $data1 = [
-             'id_Direccion' => $id_Cliente
-             ,];
+             if ($estadoRegistro !=2) {
 
-             $data2 = [
-             'id_Cliente' => $id_Cliente
-             ,];
+               $data1 = [
+               'id_Direccion' => $id_Cliente
+               ,];
 
-                 $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
-                 $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                 $query = "DELETE FROM cat_clientes WHERE id_Cliente = :id_Cliente";
-                 $statement = $connect->prepare($query);
-                 $statement->execute($data2);
+               $data2 = [
+               'id_Cliente' => $id_Cliente
+               ,];
 
-                 $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
-                 $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                 $query = "DELETE FROM cat_direccionclientes WHERE id_Direccion = :id_Direccion";
-                 $statement = $connect->prepare($query);
-                 $statement->execute($data1);
+                   $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
+                   $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+                   //Update para cambiar el estado del cliente a "Eliminado"
+                   $query = "UPDATE cat_clientes SET estadoRegistroC = 3 WHERE id_Cliente = :id_Cliente";
+                   $statement = $connect->prepare($query);
+                   $statement->execute($data2);
 
+                   echo "<script>";
+                   echo "alert('Cliente Eliminado');";
+                   echo 'window.location.href = "listadoclientes.php"';
+                   echo "</script>";
 
+                   // header('Location: listadoclientes.php');
+             }else {
+               echo '<script language="javascript">';
+               echo 'alert("El cliente tiene documentos asociados y no se puede eliminar, como alternativa se puede optar por inactivarlo")';
+               echo '</script>';
 
-
-
-                 echo '<script language="javascript">';
-                 echo 'alert("Cliente Eliminado")';
-                 echo '</script>';
+             }
            }
      }
-     header('Location: listadoclientes.php');
-
-
-    }
+}
 
     if (isset($_POST["btn-modif"])){
 
@@ -323,7 +330,7 @@ try {
            $error = "La ciudad no puede exceder los 50 Caracteres";
            $code = 12;
           }
-          else if(empty($estado_Cliente))
+          else if(empty($idEstadoCliente))
            {
            $error = "Selecciona un estado";
            $code = 13;
@@ -349,6 +356,7 @@ try {
 
 
            }else {
+
              $id_Cliente = trim($_POST['select_cliente']);
              $name_Cliente= trim($_POST['name_Cliente']);
              $apellido_Paterno = trim($_POST['apellido_Paterno']);
@@ -361,7 +369,8 @@ try {
              $numeroInt_Cliente = trim($_POST['numeroInt_Cliente']);
              $colonia_Cliente = trim($_POST['colonia_Cliente']);
              $ciudad_Cliente = trim($_POST['ciudad_Cliente']);
-             $estado_Cliente = trim($_POST['estado_Cliente']);
+             $idEstadoCliente = trim($_POST['estado_Cliente']);
+             $estadoRegistro = trim($_POST['check_estadoRegistro']);
 
              $data=[
 
@@ -370,7 +379,7 @@ try {
              'numeroInt_Cliente'=>$numeroInt_Cliente,
              'colonia_Cliente'=>$colonia_Cliente,
              'ciudad_Cliente'=>$ciudad_Cliente,
-             'estado_Cliente'=>$estado_Cliente,
+             'estado_Cliente'=>$idEstadoCliente,
              'id_Direccion'=>$id_Cliente,
              ];
              $data1 = [
@@ -401,11 +410,31 @@ try {
              $statement = $connect->prepare($query);
              $statement->execute($data1);
 
+             // echo '<script language="javascript">';
+             // echo 'alert("Cliente Modificado Exitosamente")';
+             // echo '</script>';
 
+             if (isset($_POST["check_estadoRegistro"])) {
+               $data = [
+               'id_Cliente' => $id_Cliente
+               ,];
+               $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
+               $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+               $query = "UPDATE cat_clientes SET oculto =0  WHERE id_Cliente = :id_Cliente";
+               $statement = $connect->prepare($query);
+               $statement->execute($data);
+             }else {
+               $data1 = [
+               'id_Cliente' => $id_Cliente
+               ,];
+               $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
+               $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+               $query = "UPDATE cat_clientes SET oculto =1  WHERE id_Cliente = :id_Cliente";
+               $statement = $connect->prepare($query);
+               $statement->execute($data1);
+             }
+             
 
-             echo '<script language="javascript">';
-             echo 'alert("Cliente Modificado Exitosamente")';
-             echo '</script>';
            }
      }
 
@@ -511,12 +540,13 @@ try {
           <!-- <td><h4>ID del Cliente</h4><input type="text" name="id_Cliente" placeholder="ID Cliente" value="<?php if(isset($id_Cliente)){echo $id_Cliente;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> /></td> -->
           </tr>
           <tr>
+            <!-- Select para mostrar todos los registros de clientes que no esten "Eliminados" -->
               <td><select class="" name="select_cliente">
                 <option value="<?php if(isset($id_Cliente)){echo $id_Cliente;}  ?>"><?php if(isset($name_Cliente)){echo $name_Cliente;}  ?></option>
                 <?php
                     $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
                     $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                    $query = "SELECT id_Cliente, nombre_Cliente FROM cat_clientes where tipo_Entidad=1";
+                    $query = "SELECT id_Cliente, nombre_Cliente FROM cat_clientes where tipo_Entidad=1 AND estadoRegistroC !=3";
                     $statement = $connect->prepare($query);
                     $statement->execute();
 
@@ -528,6 +558,9 @@ try {
                  ?>
                 </select>
               </td>
+          </tr>
+          <tr>
+            <input class="inputShort"type="checkbox" name="check_estadoRegistro" id="cbox_estadoRegistro" value="2"<?php if ($registroOculto==0) {echo "checked";} ?>/>
           </tr>
           <tr>
           <td><h4>Nombre</h4><input type="text" name="name_Cliente" placeholder="Nombre del cliente" value="<?php if(isset($name_Cliente)){echo $name_Cliente;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> /></td>
@@ -564,42 +597,48 @@ try {
           <td><h4>Ciudad</h4><input type="text" name="ciudad_Cliente" placeholder="Ciudad" value="<?php if(isset($ciudad_Cliente)){echo $ciudad_Cliente;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> /></td>
           </tr>
           <tr>
-          <select class="" name="estado_Cliente">
-            <option value="<?php if(isset($estado_Cliente)){echo $estado_Cliente;} ?>"><?php if(isset($estado_Cliente)){echo $estado_Cliente;} ?></option>
-            <option value="1">Aguascalientes</option>
-            <option value="2">Baja California</option>
-            <option value="3">Baja California Sur</option>
-            <option value="4">Campeche</option>
-            <option value="5">Coahuila</option>
-            <option value="6">Colima</option>
-            <option value="7">Chiapas</option>
-            <option value="8">Chihuahua</option>
-            <option value="9">CDMX</option>
-            <option value="10">Durango</option>
-            <option value="11">Guanajuato</option>
-            <option value="12">Guerrero</option>
-            <option value="13">Hidalgo</option>
-            <option value="14">Jalisco</option>
-            <option value="15">Estado de Mexico</option>
-            <option value="16">Michoacan</option>
-            <option value="17">Morelos</option>
-            <option value="18">Nayarit</option>
-            <option value="19">Nuevo Leon</option>
-            <option value="20">Oaxaca</option>
-            <option value="21">Puebla</option>
-            <option value="22">Queretaro</option>
-            <option value="23">Quintana Roo</option>
-            <option value="24">San Luis Potosi</option>
-            <option value="25">Sinaloa</option>
-            <option value="26">Sonora</option>
-            <option value="27">Tabasco</option>
-            <option value="28">Tamaulipas</option>
-            <option value="29">Tlaxcala</option>
-            <option value="30">Veracruz</option>
-            <option value="31">Yucatan</option>
-            <option value="32">Zacatecas</option>
-          </select>
-          <!-- <td><h4>Estado</h4><input type="text" name="estado_Cliente" placeholder="Estado" value="<?php if(isset($estado_Cliente)){echo $estado_Cliente;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> /></td> -->
+            <select class="" name="estado_Cliente">
+              <option value="<?php if(isset($idEstadoCliente)){echo $idEstadoCliente;}  ?>"><?php if(isset($estado_Cliente)){echo $estado_Cliente;}  ?></option>
+              <option value="1">Aguascalientes</option>
+              <option value="2">Baja California</option>
+              <option value="3">Baja California Sur</option>
+              <option value="4">Campeche</option>
+              <option value="5">Coahuila</option>
+              <option value="6">Colima</option>
+              <option value="7">Chiapas</option>
+              <option value="8">Chihuahua</option>
+              <option value="9">CDMX</option>
+              <option value="10">Durango</option>
+              <option value="11">Guanajuato</option>
+              <option value="12">Guerrero</option>
+              <option value="13">Hidalgo</option>
+              <option value="14">Jalisco</option>
+              <option value="15">Estado de Mexico</option>
+              <option value="16">Michoacan</option>
+              <option value="17">Morelos</option>
+              <option value="18">Nayarit</option>
+              <option value="19">Nuevo Leon</option>
+              <option value="20">Oaxaca</option>
+              <option value="21">Puebla</option>
+              <option value="22">Queretaro</option>
+              <option value="23">Quintana Roo</option>
+              <option value="24">San Luis Potosi</option>
+              <option value="25">Sinaloa</option>
+              <option value="26">Sonora</option>
+              <option value="27">Tabasco</option>
+              <option value="28">Tamaulipas</option>
+              <option value="29">Tlaxcala</option>
+              <option value="30">Veracruz</option>
+              <option value="31">Yucatan</option>
+              <option value="32">Zacatecas</option>
+            </select>
+          </tr>
+          <tr>
+          <select class="" name="ai_Cliente">
+            <option value="<?php if(isset($id_p)){echo $id_p;}  ?>"><?php if(isset($pname)){echo $pname;}  ?></option>
+            <option value="0">Inactivo</option>
+            <option value="1">Activo</option>
+            </select>
           </tr>
           <tr>
             <td><button type="submit" name="btn-search">Seleccionar Cliente</button></td>

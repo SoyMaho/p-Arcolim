@@ -254,8 +254,8 @@ try {
       while( $datos = $statement->fetch()){
       $id = $datos[0];
       }
-      $suma=1;
-      $numeroVenta=$id+$suma;
+      $incremento=1;
+      $numeroVenta=$id+$incremento;
 
       $data = [
     'numero_Venta' => $numeroVenta,
@@ -499,6 +499,46 @@ try {
                 $statement = $connect->prepare($query);
                 $statement->execute($data);
 
+                //Revisar estado actual del cliente
+                $data = [
+              'id_Cliente' => $id_Cliente,
+                ];
+                $query="SELECT estadoRegistroC FROM cat_clientes WHERE id_Cliente =:id_Cliente";
+                $statement = $connect->prepare($query);
+                $statement->execute($data);
+                while($datos = $statement->fetch()){
+                $estadoRegistro = $datos[0];
+              }
+
+              //Revisar estado actual del Producto
+              $data = [
+            'id_p' => $id_p,
+              ];
+              $query="SELECT estadoRegistroP FROM cat_producto WHERE id_Producto =:id_p";
+              $statement = $connect->prepare($query);
+              $statement->execute($data);
+              while($datos = $statement->fetch()){
+              $estadoRegistroP = $datos[0];
+            }
+
+              //Si el estado del producto no es "Eliminado" , actualiza el valor a 2 "Asociado"
+              if ($estadoRegistroP !=3) {
+                $data = [
+              'id_p' => $id_p,
+                ];
+                $query="UPDATE cat_producto SET estadoRegistroP =2 WHERE id_Producto =:id_p";
+                $statement = $connect->prepare($query);
+                $statement->execute($data);
+              }
+              //Si el estado del cliente no es "Eliminado" , actualiza el valor a 2 "Asociado"
+              if ($estadoRegistro!=3) {
+                $data = [
+              'id_Cliente' => $id_Cliente,
+                ];
+                $query = "UPDATE cat_clientes SET estadoRegistroC =2 WHERE id_Cliente =:id_Cliente";
+                $statement = $connect->prepare($query);
+                $statement->execute($data);
+
                 if (isset($_POST["check_Entregado"])) {
                     $data = [
                   'estadoRegistroV'=> 2,
@@ -537,6 +577,48 @@ try {
                                $statement2->execute($dataSumaExistencia);
                       }
                 }
+              }
+              else {
+                if (isset($_POST["check_Entregado"])) {
+                    $data = [
+                  'estadoRegistroV'=> 2,
+                  'numeroVenta'=>$numeroVenta
+                  ,];
+                      $query = "UPDATE listado_venta
+                               SET estadoRegistroV = :estadoRegistroV
+                               WHERE idVenta = :numeroVenta";
+                      $statement = $connect->prepare($query);
+                      $statement->execute($data);
+
+                      //inicia proceso de Suma de cantidad
+                      $dataSuma = [
+                    'numeroVenta'=>$numeroVenta
+                    ,];
+                      $querySuma= "SELECT claveProducto,SUM(cantidadProducto) AS SUMA FROM listadomovimientos WHERE idDocumentoVenta = :numeroVenta GROUP BY claveProducto";
+                      $statement = $connect->prepare($querySuma);
+                      $statement->execute($dataSuma);
+
+                      while($datos = $statement->fetch()){
+                      $id_p = $datos[0];
+                      $Suma = $datos[1];
+
+                      $existenciaP = $funcionsql ->existenciaProducto($id_p);
+                      $existenciaActualP = $existenciaP - $Suma;
+
+                      $dataSumaExistencia =[
+                        'existenciaActualP' =>$existenciaActualP,
+                        'id_p'=>$id_p
+                      ,];
+
+                      $queryUpdateSuma = "UPDATE cat_producto
+                               SET existencia_Producto = :existenciaActualP
+                               WHERE id_Producto = :id_p";
+                               $statement2 = $connect->prepare($queryUpdateSuma);
+                               $statement2->execute($dataSumaExistencia);
+                      }
+                }
+
+              }
             }
             header('Location: registroventa.php');
          }
@@ -836,7 +918,7 @@ try {
               <?php
                   $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
                   $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                  $query = "SELECT id_Cliente, nombre_Cliente FROM cat_clientes where tipo_Entidad=1";
+                  $query = "SELECT id_Cliente, nombre_Cliente FROM cat_clientes where tipo_Entidad=1 AND oculto=0 AND estadoRegistroC!=3";
                   $statement = $connect->prepare($query);
                   $statement->execute();
 
@@ -856,7 +938,7 @@ try {
               <?php
                   $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
                   $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                  $query = "SELECT id_Producto, nombre_Producto FROM cat_producto";
+                  $query = "SELECT id_Producto, nombre_Producto FROM cat_producto WHERE estadoRegistroP!=3 AND pOculto=0";
                   $statement = $connect->prepare($query);
                   $statement->execute();
 
