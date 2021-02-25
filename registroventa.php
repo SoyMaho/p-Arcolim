@@ -279,6 +279,34 @@ try {
 
     }
 
+    if (isset($_POST["btn-deleteVenta"])) {
+      $numeroVenta = trim($_POST['numero_Venta']);
+
+      $data=[
+        'numero_Venta'=>$numeroVenta,
+      ];
+
+      $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
+      $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+      $query = "UPDATE listado_venta SET estadoRegistroV=3 WHERE numeroVenta= :numero_Venta";
+      $statement = $connect->prepare($query);
+      $statement->execute($data);
+
+      $ultimoIdVenta=$funcionsql ->ultimoId('idventa','listado_venta','numeroVenta');
+
+      if ($ultimoIdVenta==$numeroVenta) {
+        $funcionsql ->nRegistroVenta();
+      }
+
+      echo "<script>";
+      echo "alert('La venta fue eliminada');";
+      echo 'window.location.href = "registroventa.php"';
+      echo "</script>";
+
+
+
+    }
+
     if(isset($_POST["btn-searchCliente"])){
 
           $id_Cliente = trim($_POST['select_cliente']);
@@ -345,6 +373,7 @@ try {
 
 
     }
+
 
     if(isset($_POST["btn-guardar"])){
           $id_p = trim($_POST['select_product']);
@@ -728,12 +757,17 @@ try {
 
       $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
       $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-      $query = "SELECT id_ClienteVenta, subtotalVenta, ivaVenta, totalVenta, numeroVenta, fechaVenta, estadoRegistroV FROM listado_venta WHERE numeroVenta = :numero_Venta";
+      $query = "SELECT estadoRegistroV FROM listado_venta WHERE numeroVenta = :numero_Venta";
       $statement = $connect->prepare($query);
       $statement->execute($data);
 
+      while( $datos = $statement->fetch()){
+      $estadoRegistroV = $datos[0];
+    }
+
+
       $count = $statement->rowCount();
-      if ($count ==0 ) {
+      if ($count ==0 || $estadoRegistroV==3) {
 
         $fechaVenta="";
         $id_p = "";
@@ -758,6 +792,13 @@ try {
         echo "</script>";
 
       }else {
+        $data = [
+      'numero_Venta' => $numeroVenta
+      ,];
+        $query = "SELECT id_ClienteVenta, subtotalVenta, ivaVenta, totalVenta, numeroVenta, fechaVenta, estadoRegistroV FROM listado_venta WHERE numeroVenta = :numero_Venta";
+        $statement = $connect->prepare($query);
+        $statement->execute($data);
+
         while( $datos = $statement->fetch()){
         $id_Cliente = $datos[0];
         $subtotalVenta = $datos[1];
@@ -817,11 +858,6 @@ try {
       }
       }
     }
-
-
-
-
-
 }
 
   }
@@ -901,6 +937,7 @@ try {
             <input id="" class="inputShort" type="text" name="numero_Venta" placeholder="No. Venta" value="<?php if(isset($numeroVenta)){echo $numeroVenta;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> />
             <button type="submit" class="boton" name="btn-searchVenta">Buscar Venta</button>
             <button type="submit" class="boton"name="btn-nuevo">Nuevo</button>
+            <button type="submit" class="boton"name="btn-deleteVenta" <?php if ($estadoRegistroV==2) {echo "disabled";} ?>>Borrar</button>
           </div>
 
           <div id="venta" class="">
@@ -990,13 +1027,20 @@ try {
               <td width='150'>
               <form class='tablaMov' method = 'POST' action=''>
               <input type='hidden' name='id_Movimiento' value='".$registro['idMovimiento']."'>
-              <input class='boton' type='submit' name='botonBorrarMov' value='Borrar'>
+              <input class='boton' id='btnBorrar' type='submit' name='botonBorrarMov' value='Borrar'>
               </form>
               </td>
               </tr>
               ";
             }
+
             echo "</table>";
+
+            if ($estadoRegistroV==2) {
+              echo "<script>";
+              echo "document.getElementById('btnBorrar').disabled=true;";
+              echo "</script>";
+            }
              ?>
              <?php
              if(isset($_POST["btn-agregar"])){
