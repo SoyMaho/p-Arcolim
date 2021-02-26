@@ -34,7 +34,7 @@ include("sesion.php");
                  $message = '<label>Todos los campos son requeridos</label>';
             }
             else
-            {
+            {  
                  $query = "SELECT * FROM users WHERE nombre_Usuario = :n_Usuario AND password_Usuario = :upass";
                  $statement = $connect->prepare($query);
                  $statement->execute(
@@ -112,6 +112,7 @@ include("sesion.php");
            ?>
            <input type="text" name="campoUsuario" placeholder="Usuario" value="">
            <input type="password" name="campoContraseña" placeholder="Contraseña" value="">
+           <p><a href="forgottenpwd.php">Olvide mi contraseña</a></p>
            <div class="g-recaptcha" data-sitekey="6LdUQyoaAAAAAChPziM_TlYTU4AddF41QzRWEzo7"></div>
            <button type="submit" name="botonLogin"> Ingresar </button>
 
