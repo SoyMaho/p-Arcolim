@@ -433,7 +433,7 @@ try {
                $statement = $connect->prepare($query);
                $statement->execute($data1);
              }
-             
+
 
            }
      }
@@ -499,6 +499,7 @@ try {
             <li> <a>Venta</a>
               <ul>
                 <li><a href="registroventa.php">Registrar Venta</a></li>
+                <li><a href="servicio.php">Registrar Servicio</a> </li>
               </ul>
             </li>
             <li> <a>Proveedores</a>
@@ -560,6 +561,7 @@ try {
               </td>
           </tr>
           <tr>
+            <h4>Activo</h4>
             <input class="inputShort"type="checkbox" name="check_estadoRegistro" id="cbox_estadoRegistro" value="2"<?php if ($registroOculto==0) {echo "checked";} ?>/>
           </tr>
           <tr>

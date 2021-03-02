@@ -140,9 +140,24 @@ nav li:hover>ul{
   width: 100%;
   padding: 0%;
 }
+
+#regServicio{
+  display: flex;
+  flex-direction: column;
+}
 #venta{
   display: flex;
   flex-direction: row;
+
+}
+
+#horizontal{
+  display: flex;
+  flex-direction: row;
+}
+
+.elementForm{
+  margin: 1rem 1rem 1rem 1rem;
 }
 
 #labelFecha{
@@ -153,8 +168,13 @@ nav li:hover>ul{
   width: 6.5rem;
   height: 1.5rem;
   margin: 0rem 1rem 0rem 1rem;
-
 }
+.inputLong{
+  width: 15rem;
+  height: 1.5rem;
+  margin: 0rem 1rem 0rem 1rem;
+}
+
 #inputFechaVenta{
     width: 2rem;
 }

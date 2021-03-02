@@ -154,7 +154,7 @@ try {
 
                    $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
                    $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-      
+
 
                    //Update para cambiar el estado del cliente a "Eliminado"
                    $query = "UPDATE cat_clientes SET estadoRegistroC = 3 WHERE id_Cliente = :id_Cliente";
@@ -492,6 +492,7 @@ try {
             <li> <a>Venta</a>
               <ul>
                 <li><a href="registroventa.php">Registrar Venta</a></li>
+                <li><a href="servicio.php">Registrar Servicio</a> </li>
               </ul>
             </li>
             <li> <a>Proveedores</a>
@@ -553,6 +554,7 @@ try {
               </td>
           </tr>
           <tr>
+            <h4>Activo</h4>
             <input class="inputShort"type="checkbox" name="check_estadoRegistro" id="cbox_estadoRegistro" value="2"<?php if ($registroOculto==0) {echo "checked";} ?>/>
           </tr>
           <tr>
