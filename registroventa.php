@@ -254,8 +254,8 @@ try {
       while( $datos = $statement->fetch()){
       $id = $datos[0];
       }
-      $suma=1;
-      $numeroVenta=$id+$suma;
+      $incremento=1;
+      $numeroVenta=$id+$incremento;
 
       $data = [
     'numero_Venta' => $numeroVenta,
@@ -274,6 +274,34 @@ try {
         $statement = $connect->prepare($query);
         $statement->execute($data);
 
+
+
+
+    }
+
+    if (isset($_POST["btn-deleteVenta"])) {
+      $numeroVenta = trim($_POST['numero_Venta']);
+
+      $data=[
+        'numero_Venta'=>$numeroVenta,
+      ];
+
+      $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
+      $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+      $query = "UPDATE listado_venta SET estadoRegistroV=3 WHERE numeroVenta= :numero_Venta";
+      $statement = $connect->prepare($query);
+      $statement->execute($data);
+
+      $ultimoIdVenta=$funcionsql ->ultimoId('idventa','listado_venta','numeroVenta');
+
+      if ($ultimoIdVenta==$numeroVenta) {
+        $funcionsql ->nRegistroVenta();
+      }
+
+      echo "<script>";
+      echo "alert('La venta fue eliminada');";
+      echo 'window.location.href = "registroventa.php"';
+      echo "</script>";
 
 
 
@@ -345,6 +373,7 @@ try {
 
 
     }
+
 
     if(isset($_POST["btn-guardar"])){
           $id_p = trim($_POST['select_product']);
@@ -499,6 +528,46 @@ try {
                 $statement = $connect->prepare($query);
                 $statement->execute($data);
 
+                //Revisar estado actual del cliente
+                $data = [
+              'id_Cliente' => $id_Cliente,
+                ];
+                $query="SELECT estadoRegistroC FROM cat_clientes WHERE id_Cliente =:id_Cliente";
+                $statement = $connect->prepare($query);
+                $statement->execute($data);
+                while($datos = $statement->fetch()){
+                $estadoRegistro = $datos[0];
+              }
+
+              //Revisar estado actual del Producto
+              $data = [
+            'id_p' => $id_p,
+              ];
+              $query="SELECT estadoRegistroP FROM cat_producto WHERE id_Producto =:id_p";
+              $statement = $connect->prepare($query);
+              $statement->execute($data);
+              while($datos = $statement->fetch()){
+              $estadoRegistroP = $datos[0];
+            }
+
+              //Si el estado del producto no es "Eliminado" , actualiza el valor a 2 "Asociado"
+              if ($estadoRegistroP !=3) {
+                $data = [
+              'id_p' => $id_p,
+                ];
+                $query="UPDATE cat_producto SET estadoRegistroP =2 WHERE id_Producto =:id_p";
+                $statement = $connect->prepare($query);
+                $statement->execute($data);
+              }
+              //Si el estado del cliente no es "Eliminado" , actualiza el valor a 2 "Asociado"
+              if ($estadoRegistro!=3) {
+                $data = [
+              'id_Cliente' => $id_Cliente,
+                ];
+                $query = "UPDATE cat_clientes SET estadoRegistroC =2 WHERE id_Cliente =:id_Cliente";
+                $statement = $connect->prepare($query);
+                $statement->execute($data);
+
                 if (isset($_POST["check_Entregado"])) {
                     $data = [
                   'estadoRegistroV'=> 2,
@@ -537,6 +606,48 @@ try {
                                $statement2->execute($dataSumaExistencia);
                       }
                 }
+              }
+              else {
+                if (isset($_POST["check_Entregado"])) {
+                    $data = [
+                  'estadoRegistroV'=> 2,
+                  'numeroVenta'=>$numeroVenta
+                  ,];
+                      $query = "UPDATE listado_venta
+                               SET estadoRegistroV = :estadoRegistroV
+                               WHERE idVenta = :numeroVenta";
+                      $statement = $connect->prepare($query);
+                      $statement->execute($data);
+
+                      //inicia proceso de Suma de cantidad
+                      $dataSuma = [
+                    'numeroVenta'=>$numeroVenta
+                    ,];
+                      $querySuma= "SELECT claveProducto,SUM(cantidadProducto) AS SUMA FROM listadomovimientos WHERE idDocumentoVenta = :numeroVenta GROUP BY claveProducto";
+                      $statement = $connect->prepare($querySuma);
+                      $statement->execute($dataSuma);
+
+                      while($datos = $statement->fetch()){
+                      $id_p = $datos[0];
+                      $Suma = $datos[1];
+
+                      $existenciaP = $funcionsql ->existenciaProducto($id_p);
+                      $existenciaActualP = $existenciaP - $Suma;
+
+                      $dataSumaExistencia =[
+                        'existenciaActualP' =>$existenciaActualP,
+                        'id_p'=>$id_p
+                      ,];
+
+                      $queryUpdateSuma = "UPDATE cat_producto
+                               SET existencia_Producto = :existenciaActualP
+                               WHERE id_Producto = :id_p";
+                               $statement2 = $connect->prepare($queryUpdateSuma);
+                               $statement2->execute($dataSumaExistencia);
+                      }
+                }
+
+              }
             }
             header('Location: registroventa.php');
          }
@@ -646,12 +757,17 @@ try {
 
       $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
       $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-      $query = "SELECT id_ClienteVenta, subtotalVenta, ivaVenta, totalVenta, numeroVenta, fechaVenta, estadoRegistroV FROM listado_venta WHERE numeroVenta = :numero_Venta";
+      $query = "SELECT estadoRegistroV FROM listado_venta WHERE numeroVenta = :numero_Venta";
       $statement = $connect->prepare($query);
       $statement->execute($data);
 
+      while( $datos = $statement->fetch()){
+      $estadoRegistroV = $datos[0];
+    }
+
+
       $count = $statement->rowCount();
-      if ($count ==0 ) {
+      if ($count ==0 || $estadoRegistroV==3) {
 
         $fechaVenta="";
         $id_p = "";
@@ -676,6 +792,13 @@ try {
         echo "</script>";
 
       }else {
+        $data = [
+      'numero_Venta' => $numeroVenta
+      ,];
+        $query = "SELECT id_ClienteVenta, subtotalVenta, ivaVenta, totalVenta, numeroVenta, fechaVenta, estadoRegistroV FROM listado_venta WHERE numeroVenta = :numero_Venta";
+        $statement = $connect->prepare($query);
+        $statement->execute($data);
+
         while( $datos = $statement->fetch()){
         $id_Cliente = $datos[0];
         $subtotalVenta = $datos[1];
@@ -735,11 +858,6 @@ try {
       }
       }
     }
-
-
-
-
-
 }
 
   }
@@ -819,6 +937,7 @@ try {
             <input id="" class="inputShort" type="text" name="numero_Venta" placeholder="No. Venta" value="<?php if(isset($numeroVenta)){echo $numeroVenta;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> />
             <button type="submit" class="boton" name="btn-searchVenta">Buscar Venta</button>
             <button type="submit" class="boton"name="btn-nuevo">Nuevo</button>
+            <button type="submit" class="boton"name="btn-deleteVenta" <?php if ($estadoRegistroV==2) {echo "disabled";} ?>>Borrar</button>
           </div>
 
           <div id="venta" class="">
@@ -836,7 +955,7 @@ try {
               <?php
                   $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
                   $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                  $query = "SELECT id_Cliente, nombre_Cliente FROM cat_clientes where tipo_Entidad=1";
+                  $query = "SELECT id_Cliente, nombre_Cliente FROM cat_clientes where tipo_Entidad=1 AND oculto=0 AND estadoRegistroC!=3";
                   $statement = $connect->prepare($query);
                   $statement->execute();
 
@@ -856,7 +975,7 @@ try {
               <?php
                   $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
                   $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                  $query = "SELECT id_Producto, nombre_Producto FROM cat_producto";
+                  $query = "SELECT id_Producto, nombre_Producto FROM cat_producto WHERE estadoRegistroP!=3 AND pOculto=0";
                   $statement = $connect->prepare($query);
                   $statement->execute();
 
@@ -908,13 +1027,20 @@ try {
               <td width='150'>
               <form class='tablaMov' method = 'POST' action=''>
               <input type='hidden' name='id_Movimiento' value='".$registro['idMovimiento']."'>
-              <input class='boton' type='submit' name='botonBorrarMov' value='Borrar'>
+              <input class='boton' id='btnBorrar' type='submit' name='botonBorrarMov' value='Borrar'>
               </form>
               </td>
               </tr>
               ";
             }
+
             echo "</table>";
+
+            if ($estadoRegistroV==2) {
+              echo "<script>";
+              echo "document.getElementById('btnBorrar').disabled=true;";
+              echo "</script>";
+            }
              ?>
              <?php
              if(isset($_POST["btn-agregar"])){

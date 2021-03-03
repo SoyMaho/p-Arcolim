@@ -67,5 +67,52 @@ class funcionSQL{
         }
         return $existenciaProducto;
         }
+
+        public function nRegistroVenta(){
+          include("conexion.php");
+          $id_p = '';
+          $pname = '';
+          $cantidadP = 0;
+          $precioP = 0;
+          $precioTotal = 0;
+          $subtotalVenta = 0;
+          $ivaVenta = 0;
+          $totalVenta = 0;
+          $estadoRegistroV=1;
+          $fechaVenta= trim(date('Y-m-d H:i:s'));
+          $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
+          $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+          $query1 = "SELECT MAX(idVenta) AS id FROM listado_venta";
+
+          $statement = $connect->prepare($query1);
+          $statement->execute();
+          $count = $statement->rowCount();
+
+          while( $datos = $statement->fetch()){
+          $id = $datos[0];
+          }
+          $incremento=1;
+          $numeroVenta=$id+$incremento;
+
+          $data = [
+        'numero_Venta' => $numeroVenta,
+        'fecha_Venta' => $fechaVenta,
+        'id_Cliente' => '0',
+        'subtotal_Venta' => '0.00',
+        'iva_Venta' => '0.00',
+        'total_Venta' => '0.00',
+        'estadoRegistroV' => '1'
+        ,];
+
+            $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
+            $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $query = "INSERT INTO listado_venta(fechaVenta, id_ClienteVenta, subtotalVenta, ivaVenta, totalVenta, numeroVenta, estadoRegistroV)
+            VALUES (:fecha_Venta, :id_Cliente, :subtotal_Venta, :iva_Venta, :total_Venta, :numero_Venta, :estadoRegistroV)";
+            $statement = $connect->prepare($query);
+            $statement->execute($data);
+        }
+
+
 }
 ?>

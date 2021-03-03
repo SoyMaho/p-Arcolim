@@ -26,7 +26,7 @@ try {
     $numeroInt_Cliente = trim($_POST['numeroInt_Cliente']);
     $colonia_Cliente = trim($_POST['colonia_Cliente']);
     $ciudad_Cliente = trim($_POST['ciudad_Cliente']);
-    $estado_Cliente = trim($_POST['estado_Cliente']);
+    $idEstadoCliente = trim($_POST['estado_Cliente']);
 
 
     if(isset($_POST["btn-search"])){
@@ -59,7 +59,7 @@ try {
 
                $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
                $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-               $query = "SELECT c.id_Cliente,c.nombre_Cliente, c.pApellido_Cliente, c.razonSocial_Cliente, c.rfc_Cliente, c.correo_Cliente, c.tel_Cliente, d.calle_Cliente, d.numeroEx_Cliente, d.numeroInt_Cliente, d.colonia_Cliente, d.ciudad_Cliente, e.nombre_Estado FROM cat_clientes AS c INNER JOIN cat_direccionclientes AS d ON c.direccion_Cliente = d.id_Direccion INNER JOIN cat_estado AS e ON d.estado_Cliente = e.id_Estado WHERE c.id_Cliente = :id_Cliente AND c.tipo_Entidad=2";
+               $query = "SELECT c.id_Cliente,c.nombre_Cliente, c.pApellido_Cliente, c.razonSocial_Cliente, c.rfc_Cliente, c.correo_Cliente, c.tel_Cliente, c.estadoRegistroC,c.oculto, d.calle_Cliente, d.numeroEx_Cliente, d.numeroInt_Cliente, d.colonia_Cliente, d.ciudad_Cliente, e.nombre_Estado, e.id_Estado FROM cat_clientes AS c INNER JOIN cat_direccionclientes AS d ON c.direccion_Cliente = d.id_Direccion INNER JOIN cat_estado AS e ON d.estado_Cliente = e.id_Estado WHERE c.id_Cliente = :id_Cliente AND c.tipo_Entidad=2";
                $statement = $connect->prepare($query);
                $statement->execute($data);
 
@@ -78,12 +78,15 @@ try {
                  $rfc_Cliente = $datos[4];
                  $email_Cliente = $datos[5];
                  $tel_Cliente = $datos[6];
-                 $calle_Cliente = $datos[7];
-                 $numeroExt_Cliente = $datos[8];
-                 $numeroInt_Cliente = $datos[9];
-                 $colonia_Cliente = $datos[10];
-                 $ciudad_Cliente = $datos[11];
-                 $estado_Cliente = $datos[12];
+                 $estadoRegistro = $datos[7];
+                 $registroOculto = $datos[8];
+                 $calle_Cliente = $datos[9];
+                 $numeroExt_Cliente = $datos[10];
+                 $numeroInt_Cliente = $datos[11];
+                 $colonia_Cliente = $datos[12];
+                 $ciudad_Cliente = $datos[13];
+                 $estado_Cliente = $datos[14];
+                 $idEstadoCliente = $datos[15];
                  }
                }
          }
@@ -123,9 +126,12 @@ try {
 
            $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
            $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-           $query = "SELECT * FROM cat_clientes WHERE id_Cliente = :id_Cliente AND tipo_Entidad=2";
+           $query = "SELECT id_Cliente, estadoRegistroC FROM cat_clientes WHERE id_Cliente = :id_Cliente AND tipo_Entidad=2";
            $statement = $connect->prepare($query);
            $statement->execute($data);
+           while( $datos = $statement->fetch()){
+           $estadoRegistro = $datos[1];
+           }
 
            $count = $statement->rowCount();
            if($count == 0)
@@ -134,40 +140,41 @@ try {
              echo 'alert("El proveedor no existe")';
              echo '</script>';
            }else {
-            $id_Cliente = trim($_POST['select_cliente']);
+             $id_Cliente = trim($_POST['select_cliente']);
 
-             $data1 = [
-             'id_Direccion' => $id_Cliente
-             ,];
+             if ($estadoRegistro !=2) {
 
-             $data2 = [
-             'id_Cliente' => $id_Cliente
-             ,];
+               $data1 = [
+               'id_Direccion' => $id_Cliente
+               ,];
 
-                 $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
-                 $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                 $query = "DELETE FROM cat_clientes WHERE id_Cliente = :id_Cliente";
-                 $statement = $connect->prepare($query);
-                 $statement->execute($data2);
+               $data2 = [
+               'id_Cliente' => $id_Cliente
+               ,];
 
-                 $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
-                 $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                 $query = "DELETE FROM cat_direccionclientes WHERE id_Direccion = :id_Direccion";
-                 $statement = $connect->prepare($query);
-                 $statement->execute($data1);
+                   $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
+                   $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+      
 
+                   //Update para cambiar el estado del cliente a "Eliminado"
+                   $query = "UPDATE cat_clientes SET estadoRegistroC = 3 WHERE id_Cliente = :id_Cliente";
+                   $statement = $connect->prepare($query);
+                   $statement->execute($data2);
 
+                   echo "<script>";
+                   echo "alert('Proveedor Eliminado');";
+                   echo 'window.location.href = "listadoproveedores.php"';
+                   echo "</script>";
 
+                   // header('Location: listadoclientes.php');
+             }else {
+               echo '<script language="javascript">';
+               echo 'alert("El cliente tiene documentos asociados y no se puede eliminar, como alternativa se puede optar por inactivarlo")';
+               echo '</script>';
 
-
-
-                 echo '<script language="javascript">';
-                 echo 'alert("Proveedor Eliminado")';
-                 echo '</script>';
+             }
            }
      }
-
-      header('Location: listadoproveedores.php');
     }
 
     if (isset($_POST["btn-modif"])){
@@ -318,7 +325,7 @@ try {
            $error = "La ciudad no puede exceder los 50 Caracteres";
            $code = 12;
           }
-          else if(empty($estado_Cliente))
+          else if(empty($idEstadoCliente))
            {
            $error = "Selecciona un estado";
            $code = 13;
@@ -356,7 +363,8 @@ try {
              $numeroInt_Cliente = trim($_POST['numeroInt_Cliente']);
              $colonia_Cliente = trim($_POST['colonia_Cliente']);
              $ciudad_Cliente = trim($_POST['ciudad_Cliente']);
-             $estado_Cliente = trim($_POST['estado_Cliente']);
+             $idEstadoCliente = trim($_POST['estado_Cliente']);
+             $estadoRegistro = trim($_POST['check_estadoRegistro']);
 
              $data=[
 
@@ -365,7 +373,7 @@ try {
              'numeroInt_Cliente'=>$numeroInt_Cliente,
              'colonia_Cliente'=>$colonia_Cliente,
              'ciudad_Cliente'=>$ciudad_Cliente,
-             'estado_Cliente'=>$estado_Cliente,
+             'estado_Cliente'=>$idEstadoCliente,
              'id_Direccion'=>$id_Cliente,
              ];
              $data1 = [
@@ -396,11 +404,30 @@ try {
              $statement = $connect->prepare($query);
              $statement->execute($data1);
 
+             // echo '<script language="javascript">';
+             // echo 'alert("Cliente Modificado Exitosamente")';
+             // echo '</script>';
 
+             if (isset($_POST["check_estadoRegistro"])) {
+               $data = [
+               'id_Cliente' => $id_Cliente
+               ,];
+               $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
+               $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+               $query = "UPDATE cat_clientes SET oculto =0  WHERE id_Cliente = :id_Cliente";
+               $statement = $connect->prepare($query);
+               $statement->execute($data);
+             }else {
+               $data1 = [
+               'id_Cliente' => $id_Cliente
+               ,];
+               $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
+               $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+               $query = "UPDATE cat_clientes SET oculto =1  WHERE id_Cliente = :id_Cliente";
+               $statement = $connect->prepare($query);
+               $statement->execute($data1);
+             }
 
-             echo '<script language="javascript">';
-             echo 'alert("Proveedor Modificado Exitosamente")';
-             echo '</script>';
            }
 
      }
@@ -512,7 +539,7 @@ try {
                 <?php
                     $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
                     $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                    $query = "SELECT id_Cliente, nombre_Cliente FROM cat_clientes where tipo_Entidad=2 ";
+                    $query = "SELECT id_Cliente, nombre_Cliente FROM cat_clientes where tipo_Entidad=2 AND estadoRegistroC !=3";
                     $statement = $connect->prepare($query);
                     $statement->execute();
 
@@ -524,6 +551,9 @@ try {
                  ?>
                 </select>
               </td>
+          </tr>
+          <tr>
+            <input class="inputShort"type="checkbox" name="check_estadoRegistro" id="cbox_estadoRegistro" value="2"<?php if ($registroOculto==0) {echo "checked";} ?>/>
           </tr>
           <tr>
           <td><h4>Nombre</h4><input type="text" name="name_Cliente" placeholder="Nombre del Proveedor" value="<?php if(isset($name_Cliente)){echo $name_Cliente;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> /></td>
@@ -561,7 +591,7 @@ try {
           </tr>
           <tr>
             <select class="" name="estado_Cliente">
-              <option value="<?php if(isset($estado_Cliente)){echo $estado_Cliente;}  ?>"><?php if(isset($estado_Cliente)){echo $estado_Cliente;}  ?></option
+              <option value="<?php if(isset($idEstadoCliente)){echo $idEstadoCliente;}  ?>"><?php if(isset($estado_Cliente)){echo $estado_Cliente;}  ?></option>
               <option value="1">Aguascalientes</option>
               <option value="2">Baja California</option>
               <option value="3">Baja California Sur</option>
@@ -595,7 +625,6 @@ try {
               <option value="31">Yucatan</option>
               <option value="32">Zacatecas</option>
             </select>
-          <!-- <td><h4>Estado</h4><input type="text" name="estado_Cliente" placeholder="Estado" value="<?php if(isset($estado_Cliente)){echo $estado_Cliente;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> /></td> -->
           </tr>
           <tr>
             <td><button type="submit" name="btn-search">Seleccionar Proveedor</button></td>

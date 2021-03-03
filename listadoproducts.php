@@ -72,6 +72,8 @@ try {
                  $precioP = $datos[4];
                  $unidadP = $datos[5];
                  $existenciaP = $datos[6];
+                 $estadoRegistroP = $datos[7];
+                 $pOculto =$datos[8];
 
                  }
                }
@@ -112,9 +114,13 @@ try {
 
            $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
            $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-           $query = "SELECT * FROM cat_producto WHERE id_Producto = :id_p";
+           $query = "SELECT id_Producto, estadoRegistroP FROM cat_producto WHERE id_Producto = :id_p";
            $statement = $connect->prepare($query);
            $statement->execute($data);
+
+           while( $datos = $statement->fetch()){
+           $estadoRegistroP = $datos[1];
+           }
 
            $count = $statement->rowCount();
            if($count == 0)
@@ -127,22 +133,38 @@ try {
 
            }else {
              $id_p = trim($_POST['select_product']);
-             $data = [
-             'id_p' => $id_p
-             ,];
 
-                 $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
-                 $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                 $query = "DELETE FROM cat_producto WHERE id_Producto = :id_p";
-                 $statement = $connect->prepare($query);
-                 $statement->execute($data);
-                 echo '<script language="javascript">';
-                 echo 'alert("Producto Eliminado")';
-                 echo '</script>';
+             if ($estadoRegistroP !=2) {
+
+               $data = [
+               'id_p' => $id_p
+               ,];
+
+                   $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
+                   $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+
+                   //Update para cambiar el estado del cliente a "Eliminado"
+                   $query = "UPDATE cat_producto SET estadoRegistroP = 3 WHERE id_Producto = :id_p";
+                   $statement = $connect->prepare($query);
+                   $statement->execute($data);
+
+                   echo "<script>";
+                   echo "alert('Producto Eliminado');";
+                   echo 'window.location.href = "listadoproducts.php"';
+                   echo "</script>";
+             }else {
+               echo '<script language="javascript">';
+               echo 'alert("El producto tiene documentos asociados y no se puede eliminar, como alternativa se puede optar por inactivarlo")';
+               echo '</script>';
+
+             }
+
            }
      }
-     header('Location: listadoproducts.php');
     }
+
+
     if (isset($_POST["btn-modif"])){
 
       $id_p = trim($_POST['select_product']);
@@ -274,6 +296,7 @@ try {
              echo 'alert("El producto no existe")';
              echo '</script>';
            }else {
+
              $id_p = trim($_POST['select_product']);
              $pname = trim($_POST['name_product']);
              $descP = trim($_POST['descripcion_Producto']);
@@ -296,6 +319,26 @@ try {
              $query = "UPDATE cat_producto SET nombre_Producto = :name_product, descripcion_Producto = :descripcion_Producto, costo_Producto = :costo_Producto, precio_Producto = :precio_Producto, unidad_Producto = :unidad_Producto, existencia_Producto = :existencia_Producto WHERE id_Producto = :id_p";
              $statement = $connect->prepare($query);
              $statement->execute($data);
+
+             if (isset($_POST["check_estadoRegistro"])) {
+               $data = [
+               'id_p' => $id_p
+               ,];
+               $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
+               $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+               $query = "UPDATE cat_producto SET pOculto =0  WHERE id_Producto = :id_p";
+               $statement = $connect->prepare($query);
+               $statement->execute($data);
+             }else {
+               $data1 = [
+               'id_p' => $id_p
+               ,];
+               $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
+               $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+               $query = "UPDATE cat_producto SET pOculto =1  WHERE id_Producto = :id_p";
+               $statement = $connect->prepare($query);
+               $statement->execute($data1);
+             }
 
              echo '<script language="javascript">';
              echo 'alert("Producto Modificado Exitosamente")';
@@ -410,18 +453,20 @@ try {
                 <?php
                     $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
                     $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                    $query = "SELECT id_Producto, nombre_Producto FROM cat_producto";
+                    $query = "SELECT id_Producto, nombre_Producto FROM cat_producto where estadoRegistroP !=3";
                     $statement = $connect->prepare($query);
                     $statement->execute();
 
                     while($registro = $statement->fetch())
                 {
-                  echo"
-                  <option value=".$registro["id_Producto"].">".$registro["nombre_Producto"]."</option>";
+                  echo"<option value=".$registro["id_Producto"].">".$registro["nombre_Producto"]."</option>";
                 }
                  ?>
                 </select>
               </td>
+          </tr>
+          <tr>
+            <input class="inputShort"type="checkbox" name="check_estadoRegistro" id="cbox_estadoRegistro" value="2"<?php if ($pOculto==0) {echo "checked";} ?>/>
           </tr>
           <tr>
           <td> <h3>Nombre</h3> <input type="text" name="name_product" placeholder="" value="<?php if(isset($id_p)){echo $pname;}?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> /></td>

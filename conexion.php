@@ -5,3 +5,4 @@
  $dataBD = $_SERVER['RDS_DB_NAME'];
  $message = "";
  ?>
+<?php $id=8 ?>

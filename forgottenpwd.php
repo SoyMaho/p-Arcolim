@@ -9,6 +9,8 @@ use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
 //Cargar el Autoload de Composer
+
+// require 'vendor/autoload.php';
 // Para localhost require 'C:/Users/Mahonry Santiago/vendor/autoload.php';
 require 'vendor/autoload.php';
 //Instancias
