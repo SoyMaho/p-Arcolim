@@ -249,6 +249,7 @@ try {
             <li> <a>Venta</a>
               <ul>
                 <li><a href="registroventa.php">Registrar Venta</a></li>
+                <li><a href="servicio.php">Registrar Servicio</a> </li>
               </ul>
             </li>
             <li> <a>Proveedores</a>

@@ -38,7 +38,7 @@ try {
 
       $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
       $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-      $query = "SELECT id_ClienteVenta, subtotalVenta, ivaVenta, totalVenta, numeroVenta,fechaVenta, estadoRegistroV FROM listado_venta WHERE numeroVenta = :numero_Venta";
+      $query = "SELECT id_ClienteVenta, subtotalVenta, ivaVenta, totalVenta, numeroVenta,fechaVenta, estadoRegistroV, fechaVentaEntrega FROM listado_venta WHERE numeroVenta = :numero_Venta";
       $statement = $connect->prepare($query);
       $statement->execute($data);
 
@@ -50,6 +50,7 @@ try {
       $numeroVenta = $datos[4];
       $fechaVenta = $datos[5];
       $estadoRegistroV = $datos[6];
+      $fechaVentaEntrega = $datos[7];
     }
 
     $query1 = "SELECT MAX(idVenta) AS id FROM listado_venta";
@@ -144,6 +145,7 @@ try {
       $totalVenta = trim($_POST['total_Venta']);
       $estadoRegistroV = trim($_POST['check_Entregado']);
       $fechaVenta = trim($_POST['fecha_Venta']);
+      $fechaVentaEntrega =trim($_POST['fecha_VentaEntrega']);
 
       $data1 = [
       'id_Movimiento' => $idMovimiento
@@ -176,6 +178,7 @@ try {
           $totalVenta = trim($_POST['total_Venta']);
           $estadoRegistroV = trim($_POST['check_Entregado']);
           $fechaVenta = trim($_POST['fecha_Venta']);
+          $fechaVentaEntrega =trim($_POST['fecha_VentaEntrega']);
           $precioTotal = 0 ;
 
           if(empty($id_p))
@@ -241,7 +244,8 @@ try {
       $ivaVenta = 0;
       $totalVenta = 0;
       $estadoRegistroV=1;
-      $fechaVenta= trim(date('Y-m-d H:i:s'));
+      $fechaVenta= trim(date('Y-m-d'));
+      $fechaVentaEntrega =$fechaVenta;
       $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
       $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
@@ -264,13 +268,14 @@ try {
     'subtotal_Venta' => '0.00',
     'iva_Venta' => '0.00',
     'total_Venta' => '0.00',
-    'estadoRegistroV' => '1'
+    'estadoRegistroV' => '1',
+    'fecha_VentaEntrega'=>$fechaVentaEntrega
     ,];
 
         $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
         $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $query = "INSERT INTO listado_venta(fechaVenta, id_ClienteVenta, subtotalVenta, ivaVenta, totalVenta, numeroVenta, estadoRegistroV)
-        VALUES (:fecha_Venta, :id_Cliente, :subtotal_Venta, :iva_Venta, :total_Venta, :numero_Venta, :estadoRegistroV)";
+        $query = "INSERT INTO listado_venta(fechaVenta, id_ClienteVenta, subtotalVenta, ivaVenta, totalVenta, numeroVenta, estadoRegistroV, fechaVentaEntrega)
+        VALUES (:fecha_Venta, :id_Cliente, :subtotal_Venta, :iva_Venta, :total_Venta, :numero_Venta, :estadoRegistroV, :fecha_VentaEntrega)";
         $statement = $connect->prepare($query);
         $statement->execute($data);
 
@@ -322,7 +327,7 @@ try {
           $totalVenta = trim($_POST['total_Venta']);
           $estadoRegistroV = trim($_POST['check_Entregado']);
           $fechaVenta = trim($_POST['fecha_Venta']);
-
+          $fechaVentaEntrega =trim($_POST['fecha_VentaEntrega']);
 
           if(empty($id_Cliente))
           {
@@ -390,30 +395,31 @@ try {
           $totalVenta = trim($_POST['total_Venta']);
           $estadoRegistroV = trim($_POST['check_Entregado']);
           $fechaVenta = trim($_POST['fecha_Venta']);
+          $fechaVentaEntrega =trim($_POST['fecha_VentaEntrega']);
 
           if(empty($numeroVenta))
           {
-           $error = "Por favor ingresa un ID";
+           $error = "Por favor ingresa el Folio de la venta";
            $code = 1;
           }
           else if(!is_numeric($numeroVenta))
           {
-           $error = "Solo se admiten numeros";
+           $error = "Solo se admiten numeros en el Folio";
            $code = 1;
           }
           else if($numeroVenta>9999)
           {
-           $error = "El ID no puede ser mayor a 4 Digitos";
+           $error = "El Folio no puede ser mayor a 4 Digitos";
            $code = 1;
           }
           else if($numeroVenta<1)
           {
-           $error = "El ID no puede ser menor a 1";
+           $error = "El Folio no puede ser menor a 1";
            $code = 1;
          }
            if(empty($id_Cliente))
            {
-            $error = "Por favor ingresa un ID";
+            $error = "Por favor selecciona un cliente";
             $code = 1;
            }
            else if(!is_numeric($id_Cliente))
@@ -513,7 +519,8 @@ try {
             'subtotal_Venta' => $subtotalVenta,
             'iva_Venta' => $ivaVenta,
             'total_Venta' => $totalVenta,
-            'estadoRegistroV' => 1
+            'estadoRegistroV' => 1,
+            'fecha_VentaEntrega'=>$fechaVentaEntrega
             ,];
 
                 $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
@@ -523,7 +530,8 @@ try {
                 subtotalVenta = :subtotal_Venta,
                 ivaVenta = :iva_Venta,
                 totalVenta = :total_Venta,
-                estadoRegistroV = :estadoRegistroV
+                estadoRegistroV = :estadoRegistroV,
+                fechaVentaEntrega = :fecha_VentaEntrega
                 WHERE idVenta = $numeroVenta";
                 $statement = $connect->prepare($query);
                 $statement->execute($data);
@@ -763,10 +771,11 @@ try {
 
       while( $datos = $statement->fetch()){
       $estadoRegistroV = $datos[0];
-    }
+      }
 
 
       $count = $statement->rowCount();
+      //Si la el rgistro de venta no existe o tiene estado 3 "Eliminado" se muestra el mensaje: el ID no esta registrado
       if ($count ==0 || $estadoRegistroV==3) {
 
         $fechaVenta="";
@@ -795,7 +804,7 @@ try {
         $data = [
       'numero_Venta' => $numeroVenta
       ,];
-        $query = "SELECT id_ClienteVenta, subtotalVenta, ivaVenta, totalVenta, numeroVenta, fechaVenta, estadoRegistroV FROM listado_venta WHERE numeroVenta = :numero_Venta";
+        $query = "SELECT id_ClienteVenta, subtotalVenta, ivaVenta, totalVenta, numeroVenta, fechaVenta, estadoRegistroV,fechaVentaEntrega FROM listado_venta WHERE numeroVenta = :numero_Venta";
         $statement = $connect->prepare($query);
         $statement->execute($data);
 
@@ -807,6 +816,7 @@ try {
         $numeroVenta = $datos[4];
         $fechaVenta = $datos[5];
         $estadoRegistroV = $datos[6];
+        $fechaVentaEntrega = $datos[7];
       }
 
           $data = [
@@ -872,7 +882,7 @@ try {
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title></title>
+    <title>Registrar Venta</title>
     <link rel="stylesheet" href="css/main.css">
   </head>
   <body>
@@ -896,6 +906,7 @@ try {
             <li> <a>Venta</a>
               <ul>
                 <li><a href="registroventa.php">Registrar Venta</a></li>
+                <li><a href="servicio.php">Registrar Servicio</a> </li>
               </ul>
             </li>
             <li> <a>Proveedores</a>
@@ -945,7 +956,8 @@ try {
           </div>
 
           <div id="venta">
-            <h3 id="labelFecha">Fecha</h3> <input class="inputShort" id="" type="text" name="fecha_Venta" placeholder="Fecha" value="<?php if(isset($fechaVenta)){echo $fechaVenta;} ?>"  <?php if(isset($code) && $code == 2){ echo "autofocus"; }  ?> />
+            <h3 id="labelFecha">Fecha de Venta</h3> <input class="inputShort" id="" type="text" name="fecha_Venta" placeholder="Fecha" value="<?php if(isset($fechaVenta)){echo $fechaVenta;} ?>"  <?php if(isset($code) && $code == 2){ echo "autofocus"; }  ?> />
+            <h3 id="labelFecha">Fecha de Entrega</h3> <input class="inputShort" id="" type="text" name="fecha_VentaEntrega" placeholder="Fecha" value="<?php if(isset($fechaVentaEntrega)){echo $fechaVentaEntrega;} ?>"  <?php if(isset($code) && $code == 2){ echo "autofocus"; }  ?> />
             <h3>Entregado</h3>
             <input class="inputShort"type="checkbox" name="check_Entregado" id="cboxEntregado" value="2"<?php if ($estadoRegistroV==2) {echo "checked";} ?>/>
           </div>
