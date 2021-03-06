@@ -154,6 +154,8 @@ nav li:hover>ul{
 #horizontal{
   display: flex;
   flex-direction: row;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 
 .elementForm{
@@ -186,6 +188,11 @@ nav li:hover>ul{
 
 .boton{
   width: 4.5rem;
+  margin: 0rem 1rem 0rem 1rem;
+}
+
+.botonLista{
+  width: 9.5rem;
   margin: 0rem 1rem 0rem 1rem;
 }
 
