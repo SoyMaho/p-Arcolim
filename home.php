@@ -43,6 +43,7 @@ try {
                 <ul>
                   <li><a href="listadoproducts.php">Listado</a></li>
                   <li><a href="nproducts.php">Registrar</a></li>
+                  <li><a href="entradaproducts.php">Generar Entrada</a> </li>
                 </ul>
             </li>
             <li> <a>Venta</a>
