@@ -27,7 +27,7 @@ try {
   </head>
   <body>
     <header>
-      <a href="home.php"><img src="img/arcolim_Logo.jpg" id="logo_Home" alt=""></a>
+      <a href=""><img src="img/arcolim_Logo.jpg" id="logo_Home" alt=""></a>
       <div class="user">
 
 
@@ -41,8 +41,8 @@ try {
           <ul>
             <li> <a>Productos</a>
                 <ul>
-                  <li><a href="listadoproducts.php">Listado</a></li>
-                  <li><a href="nproducts.php">Registrar</a></li>
+                  <li><a href="listadoproductsUser.php">Listado</a></li>
+                  <li><a href="nproductsUser.php">Registrar</a></li>
                 </ul>
             </li>
             <li> <a>Venta</a>

@@ -5,6 +5,15 @@ include("sesion.php");
 include("funcsql.php");
 $sesion = new sesion ();
 $funcsql = new funcionSQL ();
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
+//Load Composer's autoloader
+require 'C:/Users/Mahonry Santiago/vendor/autoload.php';
+//para aws require 'vendor/autoload.php';
+//Instantiation and passing `true` enables exceptions
+$mail = new PHPMailer(true);
 try {
   if (!isset($_SESSION['user'])){
     header('Location: index.php');
@@ -287,28 +296,53 @@ try {
     if (isset($_POST["btn-deleteVenta"])) {
       $numeroVenta = trim($_POST['numero_Venta']);
 
-      $data=[
-        'numero_Venta'=>$numeroVenta,
-      ];
+      if(empty($id_p))
+      {
+       $error = "Por favor ingresa un ID";
+       $code = 1;
+     }else {
 
-      $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
-      $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-      $query = "UPDATE listado_venta SET estadoRegistroV=3 WHERE numeroVenta= :numero_Venta";
-      $statement = $connect->prepare($query);
-      $statement->execute($data);
+       $data=[
+         'numero_Venta'=>$numeroVenta,
+       ];
 
-      $ultimoIdVenta=$funcionsql ->ultimoId('idventa','listado_venta','numeroVenta');
+           $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
+           $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+           $query = "SELECT numeroVenta FROM listado_venta WHERE numeroVenta = :numero_Venta";
+           $statement = $connect->prepare($query);
+           $statement->execute($data);
 
-      if ($ultimoIdVenta==$numeroVenta) {
-        $funcionsql ->nRegistroVenta();
-      }
+           $count = $statement->rowCount();
+           if($count == 0)
+           {
+             echo '<script language="javascript">';
+             echo 'alert("El folio de la venta no existe")';
+             echo '</script>';
+           }else {
+             $data=[
+               'numero_Venta'=>$numeroVenta,
+             ];
 
-      echo "<script>";
-      echo "alert('La venta fue eliminada');";
-      echo 'window.location.href = "registroventa.php"';
-      echo "</script>";
+             $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
+             $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+             $query = "UPDATE listado_venta SET estadoRegistroV=3 WHERE numeroVenta= :numero_Venta";
+             $statement = $connect->prepare($query);
+             $statement->execute($data);
+
+             $ultimoIdVenta=$funcionsql ->ultimoId('idventa','listado_venta','numeroVenta');
+
+             if ($ultimoIdVenta==$numeroVenta) {
+               $funcionsql ->nRegistroVenta();
+             }
+
+             echo "<script>";
+             echo "alert('La venta fue eliminada');";
+             echo 'window.location.href = "registroventa.php"';
+             echo "</script>";
+           }
 
 
+     }
 
     }
 
@@ -796,7 +830,7 @@ try {
         $precioTotal = "" ;
 
         echo "<script>";
-        echo "alert('EL ID venta no esta registrado');";
+        echo "alert('El Folio no esta registrado');";
         echo 'window.location.href = "registroventa.php"';
         echo "</script>";
 
@@ -870,6 +904,73 @@ try {
     }
 }
 
+if (isset($_POST["btn-sendMail"])) {
+
+  $correo= trim($_POST['correo']);
+  $data1=[
+    'correo'=>$correo,
+  ];
+  $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
+  $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+  $query = "SELECT correo_Usuario FROM users WHERE correo_Usuario = :correo";
+  $statement = $connect->prepare($query);
+  $statement->execute($data1);
+
+  while( $datos = $statement->fetch()){
+  $correo = $datos[0];
+  }
+  $count = $statement->rowCount();
+  if($count > 0)
+  {
+
+       $message = "Notificacion Enviada";
+       $token = bin2hex(random_bytes(50));
+       //Configuraciones del Server
+       $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Habilitar debug
+       $mail->isSMTP();                                            //Usar SMTP
+       $mail->Host       = 'email-smtp.us-west-2.amazonaws.com';                     //Asignar el servidor SMTP
+       $mail->SMTPAuth   = true;                                   //Habilitar Autenticacion SMTP
+       $mail->Username   = 'AKIAUO3SNH5U2JVJPPY5';                     //SMTP username
+       $mail->Password   = 'BJVINKRJJDY8gZH4TCbZDbirca15Zb4xGDiKY6v/KMYG';                               //SMTP password
+       $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         //Habilitar Encriptacion TLS ;
+       $mail->Port       = 587;                                    //Puerto TCP para conectar, usar 465 para `PHPMailer::ENCRYPTION_SMTPS`
+
+       //Recipients
+       $mail->setFrom('mahonry.cordova@gmail.com', 'Mailer');
+          //Agrega un recipiente
+       $mail->addAddress($correo);               //Nombre es opcional
+       $mail->addReplyTo('info@example.com', 'Information');
+
+
+       //Attachments
+       // $mail->addAttachment('/var/tmp/file.tar.gz');         //Ejemplo de adjunto
+       // $mail->addAttachment('/tmp/image.jpg', 'new.jpg');    //Nombre opcional
+
+       //Content
+       $mail->isHTML(true);                                  //Formato Html para el Mail
+       $mail->Subject = 'Recuperacion de contraseña Arcolim App';
+       $mail->Body    = 'Hola, da clic en el siguiente <a href=\'http://arcoapp-env.eba-a4mzfnxd.us-west-2.elasticbeanstalk.com/rpass.php?token=' . $token . '\'>link</a> para cambiar tu contraseña';
+       $mail->AltBody = 'This is the body in plain text for non-HTML mail client';
+
+       $mail->send();
+
+       //Ingreso del token a la tabla de pass_Reset
+       $data1=[
+         'correo'=>$correo,
+         'token'=>$token,
+       ];
+       $query = "INSERT INTO pass_reset (email, token) VALUES (:correo, :token)";
+       $statement = $connect->prepare($query);
+       $statement->execute($data1);
+       echo 'Correo Enviado';
+
+  }
+  else
+  {
+       $message = '<label>Correo no registrado</label>';
+  }
+}
+
   }
  } catch(PDOException $e) {
    echo 'Error: ' . $e->getMessage();
@@ -887,7 +988,7 @@ try {
   </head>
   <body>
     <header>
-      <a href="home.php"><img src="img/arcolim_Logo.jpg" id="logo_Home" alt=""></a>
+      <a href=""><img src="img/arcolim_Logo.jpg" id="logo_Home" alt=""></a>
       <div class="user">
          <a href="logout.php"> Salir</a>
       </div>
@@ -1004,7 +1105,7 @@ try {
             <h3>Cantidad</h3><input class="inputShort"type="text" name="cantidad_Producto" placeholder=" Cantidad" value="<?php if(isset($cantidadP)){echo $cantidadP;} ?>"  <?php if(isset($code) && $code == 7){ echo "autofocus"; }  ?> /></td>
             <h3>Precio</h3><input class="inputShort" type="text" name="precio_Producto" placeholder="Precio" value="<?php if(isset($precioP)){echo $precioP;} ?>"  <?php if(isset($code) && $code == 5){ echo "autofocus"; }  ?> /></td>
             <h3>Precio Total</h3><input class="inputShort" type="text" name="precio_Total" placeholder="Precio Total" value="<?php if(isset($precioTotal)){echo $precioTotal;} ?>"  <?php if(isset($code) && $code == 5){ echo "autofocus"; }  ?> /></td>
-              <button type="submit" name="btn-search">Buscar Producto</button>
+              <button type="submit" name="btn-search">Seleccionar Producto</button>
               <button type="submit" name="btn-agregar" <?php if ($estadoRegistroV==2) {echo "disabled";} ?>>Agregar</button>
           </div>
 
@@ -1081,6 +1182,7 @@ try {
           </p>
           <div class="">
             <button class="boton" type="submit" name="btn-guardar" <?php if ($estadoRegistroV==2) {echo "disabled";} ?>>Guardar </button>
+            <button class="boton" type="submit" name="btn-sendMail" <?php if ($estadoRegistroV!=2) {echo "disabled";} ?>>Enviar Notificacion </button>
           </div>
         </form>
 

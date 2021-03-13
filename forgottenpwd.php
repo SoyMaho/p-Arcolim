@@ -53,7 +53,8 @@ try {
                    $message = "Correo registrado, se enviara un mensaje a la cuenta registrada";
                    $token = bin2hex(random_bytes(50));
                    //Configuraciones del Server
-                   $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Habilitar debug
+                   // $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Habilitar debug
+                   $mail->SMTPDebug = 0;                                        //Debug Off
                    $mail->isSMTP();                                            //Usar SMTP
                    $mail->Host       = 'email-smtp.us-west-2.amazonaws.com';                     //Asignar el servidor SMTP
                    $mail->SMTPAuth   = true;                                   //Habilitar Autenticacion SMTP

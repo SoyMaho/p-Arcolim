@@ -280,7 +280,7 @@ try {
   </head>
   <body>
     <header>
-      <a href="home.php"><img src="img/arcolim_Logo.jpg" id="logo_Home" alt=""></a>
+      <a href=""><img src="img/arcolim_Logo.jpg" id="logo_Home" alt=""></a>
       <div class="user">
 
 
