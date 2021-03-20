@@ -514,14 +514,14 @@ try {
               echo 'alert("Venta Guardada")';
               echo '</script>';
 
-              $data = [
-            'id_Cliente' => $id_Cliente,
-            'subtotal_Venta' => $subtotalVenta,
-            'iva_Venta' => $ivaVenta,
-            'total_Venta' => $totalVenta,
-            'estadoRegistroV' => 1,
-            'fecha_VentaEntrega'=>$fechaVentaEntrega
-            ,];
+                $data = [
+              'id_Cliente' => $id_Cliente,
+              'subtotal_Venta' => $subtotalVenta,
+              'iva_Venta' => $ivaVenta,
+              'total_Venta' => $totalVenta,
+              'estadoRegistroV' => 1,
+              'fecha_VentaEntrega'=>$fechaVentaEntrega
+              ,];
 
                 $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
                 $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -561,7 +561,7 @@ try {
               //Si el estado del producto no es "Eliminado" , actualiza el valor a 2 "Asociado"
               if ($estadoRegistroP !=3) {
                 $data = [
-              'id_p' => $id_p,
+                  'id_p' => $id_p,
                 ];
                 $query="UPDATE cat_producto SET estadoRegistroP =2 WHERE id_Producto =:id_p";
                 $statement = $connect->prepare($query);
@@ -570,12 +570,12 @@ try {
               //Si el estado del cliente no es "Eliminado" , actualiza el valor a 2 "Asociado"
               if ($estadoRegistro!=3) {
                 $data = [
-              'id_Cliente' => $id_Cliente,
+                  'id_Cliente' => $id_Cliente,
                 ];
                 $query = "UPDATE cat_clientes SET estadoRegistroC =2 WHERE id_Cliente =:id_Cliente";
                 $statement = $connect->prepare($query);
                 $statement->execute($data);
-
+              }
                 if (isset($_POST["check_Entregado"])) {
                     $data = [
                   'estadoRegistroV'=> 2,
@@ -614,7 +614,7 @@ try {
                                $statement2->execute($dataSumaExistencia);
                       }
                 }
-              }
+
               else {
                 if (isset($_POST["check_Entregado"])) {
                     $data = [

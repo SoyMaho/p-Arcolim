@@ -77,11 +77,11 @@ try {
       </div>
 
       <div class="Main">
-        <h1>Listado de Servicios</h1>
+        <h1>Listado de Ventas</h1>
         <form class="" action="" method="post">
           <div id="horizontal">
             <input id="" class="inputShort" type="text" name="nombre_Cliente" placeholder="Nombre" value="<?php if(isset($numeroServicio)){echo $numeroServicio;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> />
-            <input id="" class="inputShort" type="text" name="fecha_Servicio" placeholder="Fecha" value="<?php if(isset($fechaServicio)){echo $fechaServicio;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> />
+            <input id="" class="inputShort" type="text" name="fecha_Venta" placeholder="Fecha" value="<?php if(isset($fechaVenta)){echo $fechaVenta;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> />
           </div>
 
           <div id='horizontal'>
@@ -89,7 +89,8 @@ try {
             <button type="submit" class="botonLista"name="btn-searchNF">Filtrar por nombre y fecha</button>
             <button type="submit" class="botonLista"name="btn-searchF">Filtrar por Fecha</button>
             <button type="submit" class="botonLista"name="btn-todos">Mostrar Todos</button>
-            <button type="submit" class="botonLista"name="btn-day">Servicios del dia</button>
+            <button type="submit" class="botonLista"name="btn-day">Entregas del dia</button>
+
           </div>
 
         </form>
@@ -106,34 +107,28 @@ try {
               ];
               $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
               $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-              $query = "SELECT s.id_Servicio, s.nombre_Servicio, s.tipo_Servicio, s.descripcion_Servicio, s.precio_Servicio,c.id_Cliente,c.nombre_Cliente,s.fecha_Realizacion, s.estado_Servicio FROM cat_clientes AS c INNER JOIN listado_servicio AS s ON c.id_Cliente = s.cliente_Servicio WHERE c.nombre_Cliente = :nombreCliente AND s.estado_Servicio!=3";
+              $query = "SELECT s.idVenta, c.nombre_Cliente, s.totalVenta, s.fechaVenta, s.fechaVentaEntrega FROM cat_clientes AS c INNER JOIN listado_venta AS s ON c.id_Cliente = s.id_ClienteVenta WHERE c.nombre_Cliente = :nombreCliente AND s.estadoRegistroV!=3";
 
               $statement = $connect->prepare($query);
               $statement->execute($data);
               echo "<table>
               <tr>
               <td width='150'>Folio</td>
-              <td width='150'>Nombre</td>
-              <td width='150'>Tipo</td>
-              <td width='150'>Descripcion</td>
-              <td width='150'>Precio Servicio</td>
-              <td width='150'>ID Cliente</td>
-              <td width='150'>Nombre Cliente</td>
-              <td width='150'>Fecha de realizacion</td>
+              <td width='150'>Cliente</td>
+              <td width='150'>Total Venta</td>
+              <td width='150'>Fecha</td>
+              <td width='150'>Fecha de Entrega</td>
               <td width='300'></td>
               </tr>";
               while($registro = $statement->fetch())
           {
             echo"
             <tr>
-            <td width='150'>".$registro['id_Servicio']."</td>
-            <td width='150'>".$registro['nombre_Servicio']."</td>
-            <td width='150'>".$registro['tipo_Servicio']."</td>
-            <td width='150'>".$registro['descripcion_Servicio']."</td>
-            <td width='150'>".$registro['precio_Servicio']."</td>
-            <td width='150'>".$registro['id_Cliente']."</td>
+            <td width='150'>".$registro['idVenta']."</td>
             <td width='150'>".$registro['nombre_Cliente']."</td>
-            <td width='150'>".$registro['fecha_Realizacion']."</td>
+            <td width='150'>".$registro['totalVenta']."</td>
+            <td width='150'>".$registro['fechaVenta']."</td>
+            <td width='150'>".$registro['fechaVentaEntrega']."</td>
             </tr>
             ";
           }
@@ -142,83 +137,70 @@ try {
         }
 
         if (isset($_POST['btn-day'])) {
-          $fechaServicio=trim(date('Y-m-d'));
+          $fechaVenta=trim(date('Y-m-d'));
           $data=[
-            'fechaServicio'=>$fechaServicio,
+            'fechaVenta'=>$fechaVenta,
           ];
           $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
           $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-          $query = "SELECT s.id_Servicio, s.nombre_Servicio, s.tipo_Servicio, s.descripcion_Servicio, s.precio_Servicio,c.id_Cliente,c.nombre_Cliente,s.fecha_Realizacion, s.estado_Servicio FROM cat_clientes AS c INNER JOIN listado_servicio AS s ON c.id_Cliente = s.cliente_Servicio WHERE s.fecha_Realizacion =:fechaServicio AND s.estado_Servicio!=3";
+          $query = "SELECT s.idVenta, c.nombre_Cliente, s.totalVenta, s.fechaVenta, s.fechaVentaEntrega FROM cat_clientes AS c INNER JOIN listado_venta AS s ON c.id_Cliente = s.id_ClienteVenta WHERE s.fechaVentaEntrega = :fechaVenta AND s.estadoRegistroV!=3";
 
           $statement = $connect->prepare($query);
           $statement->execute($data);
           echo "<table>
           <tr>
           <td width='150'>Folio</td>
-          <td width='150'>Nombre</td>
-          <td width='150'>Tipo</td>
-          <td width='150'>Descripcion</td>
-          <td width='150'>Precio Servicio</td>
-          <td width='150'>ID Cliente</td>
-          <td width='150'>Nombre Cliente</td>
-          <td width='150'>Fecha de realizacion</td>
+          <td width='150'>Cliente</td>
+          <td width='150'>Total Venta</td>
+          <td width='150'>Fecha</td>
+          <td width='150'>Fecha de Entrega</td>
           <td width='300'></td>
           </tr>";
           while($registro = $statement->fetch())
       {
         echo"
         <tr>
-        <td width='150'>".$registro['id_Servicio']."</td>
-        <td width='150'>".$registro['nombre_Servicio']."</td>
-        <td width='150'>".$registro['tipo_Servicio']."</td>
-        <td width='150'>".$registro['descripcion_Servicio']."</td>
-        <td width='150'>".$registro['precio_Servicio']."</td>
-        <td width='150'>".$registro['id_Cliente']."</td>
+        <td width='150'>".$registro['idVenta']."</td>
         <td width='150'>".$registro['nombre_Cliente']."</td>
-        <td width='150'>".$registro['fecha_Realizacion']."</td>
+        <td width='150'>".$registro['totalVenta']."</td>
+        <td width='150'>".$registro['fechaVenta']."</td>
+        <td width='150'>".$registro['fechaVentaEntrega']."</td>
         </tr>
         ";
       }
 
       echo "</table>";
-
     }
 
         if (isset($_POST['btn-searchF'])) {
-          $fechaServicio=(trim($_POST['fecha_Servicio']));
+          $fechaVenta=(trim($_POST['fecha_Venta']));
           $data=[
-            'fechaServicio'=>$fechaServicio,
+            'fechaVenta'=>$fechaVenta,
           ];
           $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
           $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-          $query = "SELECT s.id_Servicio, s.nombre_Servicio, s.tipo_Servicio, s.descripcion_Servicio, s.precio_Servicio,c.id_Cliente,c.nombre_Cliente,s.fecha_Realizacion, s.estado_Servicio FROM cat_clientes AS c INNER JOIN listado_servicio AS s ON c.id_Cliente = s.cliente_Servicio WHERE s.fecha_Realizacion =:fechaServicio AND s.estado_Servicio!=3";
+          $query = "SELECT s.idVenta, c.nombre_Cliente, s.totalVenta, s.fechaVenta, s.fechaVentaEntrega FROM cat_clientes AS c INNER JOIN listado_venta AS s ON c.id_Cliente = s.id_ClienteVenta WHERE s.fechaVenta = :fechaVenta AND s.estadoRegistroV!=3";
 
           $statement = $connect->prepare($query);
           $statement->execute($data);
           echo "<table>
           <tr>
           <td width='150'>Folio</td>
-          <td width='150'>Nombre</td>
-          <td width='150'>Tipo</td>
-          <td width='150'>Descripcion</td>
-          <td width='150'>Precio Servicio</td>
-          <td width='150'>ID Cliente</td>
-          <td width='150'>Nombre Cliente</td>
-          <td width='150'>Fecha de realizacion</td>
+          <td width='150'>Cliente</td>
+          <td width='150'>Total Venta</td>
+          <td width='150'>Fecha</td>
+          <td width='150'>Fecha de Entrega</td>
           <td width='300'></td>
           </tr>";
           while($registro = $statement->fetch())
       {
         echo"
         <tr>
-        <td width='150'>".$registro['id_Servicio']."</td>
-        <td width='150'>".$registro['nombre_Servicio']."</td>
-        <td width='150'>".$registro['tipo_Servicio']."</td>
-        <td width='150'>".$registro['descripcion_Servicio']."</td>
-        <td width='150'>".$registro['precio_Servicio']."</td>
-        <td width='150'>".$registro['id_Cliente']."</td>
+        <td width='150'>".$registro['idVenta']."</td>
         <td width='150'>".$registro['nombre_Cliente']."</td>
-        <td width='150'>".$registro['fecha_Realizacion']."</td>
+        <td width='150'>".$registro['totalVenta']."</td>
+        <td width='150'>".$registro['fechaVenta']."</td>
+        <td width='150'>".$registro['fechaVentaEntrega']."</td>
         </tr>
         ";
       }
@@ -228,41 +210,35 @@ try {
 
         if (isset($_POST['btn-searchNF'])) {
           $nombreCliente=(trim($_POST['nombre_Cliente']));
-          $fechaServicio=(trim($_POST['fecha_Servicio']));
+          $fechaVenta=(trim($_POST['fecha_Venta']));
           $data=[
             'nombreCliente'=>$nombreCliente,
-            'fechaServicio'=>$fechaServicio,
+            'fechaVenta'=>$fechaVenta,
           ];
           $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
           $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-          $query = "SELECT s.id_Servicio, s.nombre_Servicio, s.tipo_Servicio, s.descripcion_Servicio, s.precio_Servicio,c.id_Cliente,c.nombre_Cliente,s.fecha_Realizacion, s.estado_Servicio FROM cat_clientes AS c INNER JOIN listado_servicio AS s ON c.id_Cliente = s.cliente_Servicio WHERE c.nombre_Cliente = :nombreCliente AND s.fecha_Realizacion =:fechaServicio AND s.estado_Servicio!=3";
+          $query = "SELECT s.idVenta, c.nombre_Cliente, s.totalVenta, s.fechaVenta, s.fechaVentaEntrega FROM cat_clientes AS c INNER JOIN listado_venta AS s ON c.id_Cliente = s.id_ClienteVenta WHERE c.nombre_Cliente=:nombreCliente AND s.fechaVenta = :fechaVenta AND s.estadoRegistroV!=3";
 
           $statement = $connect->prepare($query);
           $statement->execute($data);
           echo "<table>
           <tr>
           <td width='150'>Folio</td>
-          <td width='150'>Nombre</td>
-          <td width='150'>Tipo</td>
-          <td width='150'>Descripcion</td>
-          <td width='150'>Precio Servicio</td>
-          <td width='150'>ID Cliente</td>
-          <td width='150'>Nombre Cliente</td>
-          <td width='150'>Fecha de realizacion</td>
+          <td width='150'>Cliente</td>
+          <td width='150'>Total Venta</td>
+          <td width='150'>Fecha</td>
+          <td width='150'>Fecha de Entrega</td>
           <td width='300'></td>
           </tr>";
           while($registro = $statement->fetch())
       {
         echo"
         <tr>
-        <td width='150'>".$registro['id_Servicio']."</td>
-        <td width='150'>".$registro['nombre_Servicio']."</td>
-        <td width='150'>".$registro['tipo_Servicio']."</td>
-        <td width='150'>".$registro['descripcion_Servicio']."</td>
-        <td width='150'>".$registro['precio_Servicio']."</td>
-        <td width='150'>".$registro['id_Cliente']."</td>
+        <td width='150'>".$registro['idVenta']."</td>
         <td width='150'>".$registro['nombre_Cliente']."</td>
-        <td width='150'>".$registro['fecha_Realizacion']."</td>
+        <td width='150'>".$registro['totalVenta']."</td>
+        <td width='150'>".$registro['fechaVenta']."</td>
+        <td width='150'>".$registro['fechaVentaEntrega']."</td>
         </tr>
         ";
       }
@@ -273,34 +249,28 @@ try {
         if (isset($_POST['btn-todos'])) {
           $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
           $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-          $query = "SELECT s.id_Servicio, s.nombre_Servicio, s.tipo_Servicio, s.descripcion_Servicio, s.precio_Servicio,c.id_Cliente,c.nombre_Cliente,s.fecha_Realizacion, s.estado_Servicio FROM cat_clientes AS c INNER JOIN listado_servicio AS s ON c.id_Cliente = s.cliente_Servicio WHERE s.estado_Servicio!=3";
+          $query = "SELECT s.idVenta, c.nombre_Cliente, s.totalVenta, s.fechaVenta, s.fechaVentaEntrega FROM cat_clientes AS c INNER JOIN listado_venta AS s ON c.id_Cliente = s.id_ClienteVenta WHERE s.estadoRegistroV!=3 ORDER BY s.idVenta";
 
           $statement = $connect->prepare($query);
           $statement->execute();
           echo "<table>
           <tr>
           <td width='150'>Folio</td>
-          <td width='150'>Nombre</td>
-          <td width='150'>Tipo</td>
-          <td width='150'>Descripcion</td>
-          <td width='150'>Precio Servicio</td>
-          <td width='150'>ID Cliente</td>
-          <td width='150'>Nombre Cliente</td>
-          <td width='150'>Fecha de realizacion</td>
+          <td width='150'>Cliente</td>
+          <td width='150'>Total Venta</td>
+          <td width='150'>Fecha</td>
+          <td width='150'>Fecha de Entrega</td>
           <td width='300'></td>
           </tr>";
           while($registro = $statement->fetch())
       {
         echo"
         <tr>
-        <td width='150'>".$registro['id_Servicio']."</td>
-        <td width='150'>".$registro['nombre_Servicio']."</td>
-        <td width='150'>".$registro['tipo_Servicio']."</td>
-        <td width='150'>".$registro['descripcion_Servicio']."</td>
-        <td width='150'>".$registro['precio_Servicio']."</td>
-        <td width='150'>".$registro['id_Cliente']."</td>
+        <td width='150'>".$registro['idVenta']."</td>
         <td width='150'>".$registro['nombre_Cliente']."</td>
-        <td width='150'>".$registro['fecha_Realizacion']."</td>
+        <td width='150'>".$registro['totalVenta']."</td>
+        <td width='150'>".$registro['fechaVenta']."</td>
+        <td width='150'>".$registro['fechaVentaEntrega']."</td>
         </tr>
         ";
       }
