@@ -29,7 +29,7 @@ try {
   </head>
   <body>
     <header>
-      <a href=""><img src="img/arcolim_Logo.jpg" id="logo_Home" alt=""></a>
+      <a href="index.php"><img src="img/arcolim_Logo.jpg" id="logo_Home" alt=""></a>
       <div class="user">
 
 
@@ -43,8 +43,17 @@ try {
           <ul>
             <li> <a>Productos</a>
                 <ul>
-                  <li><a href="listadoproducts.php">Listado</a></li>
-                  <li><a href="nproducts.php">Registrar</a></li>
+                  <?php
+                  if ($_SESSION['tipoUsuario']==2) {
+                    echo "<li><a href='listadoproductsUser.php'>Listado</a></li>";
+                    echo "<li><a href='nproductsUser.php'>Registrar</a></li>";
+
+                  }else{
+                    echo "<li><a href='listadoproducts.php'>Listado</a></li>";
+                    echo "<li><a href='nproducts.php'>Registrar</a></li>";
+                  }
+                  ?>
+                  <li><a href="entradaproducts.php">Generar Entrada</a> </li>
                 </ul>
             </li>
             <li> <a>Venta</a>
@@ -67,8 +76,28 @@ try {
                 <li><a href="ncliente.php">Registrar</a></li>
               </ul>
             </li>
-            <li> <a href="">Reportes</a></li>
-            <li> <a href="usuarios.php">Usuarios</a></li>
+            <li>
+              <a>Reportes</a>
+              <ul>
+                <li><a href="reportventasproduct.php">Ventas por producto</a></li>
+                <li><a href="reportpedidoscliente.php">Pedidos por cliente</a> </li>
+                <li> <a href="reportcostoproducto.php">Costo por producto</a> </li>
+                <li> <a href="reportservicioscliente.php">Servicios por cliente</a> </li>
+                <li><a href="reportservicioservices.php">Servicios por servicio</a></li>
+                <li><a href="reportclientes.php">Reporte de clientes</a></li>
+              </ul>
+            </li>
+            <?php
+            if ($_SESSION['tipoUsuario']==1) {
+              echo "<li> <a href='usuarios.php'>Usuarios</a></li>";
+              echo "<li><a>Utilerias</a>";
+              echo "<ul>";
+              echo "<li><a href='recosteo.php'>Recosteo</a></li>";
+              echo "</ul>";
+              echo "</li>";
+            }
+            ?>
+
           </ul>
         </nav>
       </div>
@@ -77,6 +106,10 @@ try {
         <h1>Reporte de servicios por cliente detallado</h1>
         <h2>Descripcion</h2>
         <p>Este reporte enlista todos los servicios realizados por los clientes y los agrupa segun el cliente</p>
+        <p>Para exportar el listado a excel usa el boton Exportar.</p>
+        <form class="" action="" method="post">
+          <button type="submit" name="btn-export" onclick ="this.form.action = 'reportserviciosclienteExcel.php'" formtarget="_blank" >Exportar</button>
+        </form>
         <div class="report">
           <?php
           $nombreCliente=(trim($_POST['nombre_Cliente']));

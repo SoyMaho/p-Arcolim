@@ -201,10 +201,14 @@ nav li:hover>ul{
   width: 25%;
   padding: 20px;
 }
+/* Fin estilo Venta */
 
+/*Inicio estilo reporte*/
 .report{
   margin: 5rem 1rem 5rem 20rem;
 }
 
-
-/* Fin estilo Venta */
+#tablaLong{
+  margin: 5rem 1rem 5rem 10rem;
+}
+/*Fin estilo reporte*/
