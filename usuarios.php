@@ -27,10 +27,45 @@ try {
            $error = "Por favor ingresa un nombre de usuario";
            $code = 1;
           }
-          else if(strlen($pname)>100)
+          else if(strlen($userName)>100)
           {
            $error = "El nombre del usuario no puede exceder 100 caracteres";
            $code = 1;
+          }
+          else if(empty($userMail))
+          {
+           $error = "Ingresa tu Correo electronico";
+           $code = 2;
+          }
+          else if(!preg_match("/^[_.0-9a-zA-Z-]+@([0-9a-zA-Z][0-9a-zA-Z-]+.)+[a-zA-Z]{2,6}$/i", $userMail))
+          {
+           $error = "La direccion de correo no es valida";
+           $code = 2;
+          }
+          else if(strlen($userPass)>50)
+          {
+           $error = "La contraseña no puede exceder 50 caracteres";
+           $code = 3;
+          }
+          else if(strlen($userPass)<6)
+          {
+           $error = "La contraseña no puede ser menor a 6 caracteres";
+           $code = 3;
+          }
+          else if(!preg_match('`[a-z]`',$userPass))
+          {
+           $error = "La contraseña debe tener al menos una letra minuscula";
+           $code = 3;
+          }
+          else if(!preg_match('`[A-Z]`',$userPass))
+          {
+           $error = "La contraseña debe tener al menos una letra mayuscula";
+           $code = 3;
+          }
+          else if(!preg_match('`[0-9]`',$userPass))
+          {
+           $error = "La contraseña debe tener al menos un numero";
+           $code = 3;
           }
           else {
                $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
@@ -146,13 +181,7 @@ try {
                echo '<script language="javascript">';
                echo 'alert("El usuario no esta registrado")';
                echo '</script>';
-               // $id_p = '';
-               // $pname = '';
-               // $descP = '';
-               // $costoP = '';
-               // $precioP = '';
-               // $unidadP = '';
-               // $existenciaP = '';
+
 
 
              }else {
@@ -180,6 +209,31 @@ try {
       {
        $error = "Por favor ingresa un nombre de usuario";
        $code = 1;
+      }
+      else if(strlen($userName)>100)
+      {
+       $error = "El nombre del usuario no puede exceder 100 caracteres";
+       $code = 1;
+      }
+      else if(empty($userMail))
+      {
+       $error = "Ingresa tu Correo electronico";
+       $code = 2;
+      }
+      else if(!preg_match("/^[_.0-9a-zA-Z-]+@([0-9a-zA-Z][0-9a-zA-Z-]+.)+[a-zA-Z]{2,6}$/i", $userMail))
+      {
+       $error = "La direccion de correo no es valida";
+       $code = 2;
+      }
+      else if(strlen($userPass)>50)
+      {
+       $error = "La contraseña no puede exceder 50 caracteres";
+       $code = 3;
+      }
+      else if(strlen($userPass)<6)
+      {
+       $error = "La contraseña no puede ser menor a 6 caracteres";
+       $code = 3;
       }
       else {
       $data = [

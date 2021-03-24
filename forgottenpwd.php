@@ -11,7 +11,7 @@ use PHPMailer\PHPMailer\Exception;
 //Cargar el Autoload de Composer
 // Para localhost
 require 'C:/Users/Mahonry Santiago/vendor/autoload.php';
-// require 'vendor/autoload.php';
+//para aws require 'vendor/autoload.php';
 //Instancias
 $mail = new PHPMailer(true);
 try {
@@ -64,7 +64,7 @@ try {
                    $mail->Port       = 587;                                    //Puerto TCP para conectar, usar 465 para `PHPMailer::ENCRYPTION_SMTPS`
 
                    //Recipients
-                   $mail->setFrom('mahonry.cordova@gmail.com', 'Mailer');
+                   $mail->setFrom('mahonry.cordova@gmail.com', 'Arcolim');
                       //Agrega un recipiente
                    $mail->addAddress($correo);               //Nombre es opcional
                    $mail->addReplyTo('info@example.com', 'Information');
@@ -76,7 +76,7 @@ try {
 
                    //Content
                    $mail->isHTML(true);                                  //Formato Html para el Mail
-                   $mail->Subject = 'Recuperacion de contraseña Arcolim App';
+                   $mail->Subject = 'Recuperacion de password Arcolim App';
                    $mail->Body    = 'Hola, da clic en el siguiente <a href=\'http://arcoapp-env.eba-a4mzfnxd.us-west-2.elasticbeanstalk.com/rpass.php?token=' . $token . '\'>link</a> para cambiar tu contraseña';
                    $mail->AltBody = 'This is the body in plain text for non-HTML mail client';
 

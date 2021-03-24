@@ -35,7 +35,7 @@ include("sesion.php");
             }
             else
             {
-                 $query = "SELECT * FROM users WHERE nombre_Usuario = :n_Usuario AND password_Usuario = :upass";
+                 $query = "SELECT * FROM users WHERE nombre_Usuario = :n_Usuario AND password_Usuario = BINARY :upass";
                  $statement = $connect->prepare($query);
                  $statement->execute(
                       array(

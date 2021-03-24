@@ -32,7 +32,7 @@ try {
   </head>
   <body>
     <header>
-      <a href="header.php"><img src="img/arcolim_Logo.jpg" id="logo_Home" alt=""></a>
+      <a href="index.php"><img src="img/arcolim_Logo.jpg" id="logo_Home" alt=""></a>
       <div class="user">
 
 
