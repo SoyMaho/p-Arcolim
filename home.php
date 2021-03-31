@@ -27,7 +27,7 @@ try {
   </head>
   <body>
     <header>
-      <a href="home.php"><img src="img/arcolim_Logo.jpg" id="logo_Home" alt=""></a>
+      <a href=""><img src="img/arcolim_Logo.jpg" id="logo_Home" alt=""></a>
       <div class="user">
 
 
@@ -68,6 +68,11 @@ try {
             </li>
             <li> <a href="">Reportes</a></li>
             <li> <a href="usuarios.php">Usuarios</a></li>
+            <li><a href="">Utilerias</a>
+              <ul>
+                <li><a href="recosteo.php">Recosteo</a></li>
+              </ul>
+            </li>
           </ul>
         </nav>
       </div>

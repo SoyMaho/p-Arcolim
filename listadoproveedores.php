@@ -169,7 +169,7 @@ try {
                    // header('Location: listadoclientes.php');
              }else {
                echo '<script language="javascript">';
-               echo 'alert("El cliente tiene documentos asociados y no se puede eliminar, como alternativa se puede optar por inactivarlo")';
+               echo 'alert("El proveedor tiene documentos asociados y no se puede eliminar, como alternativa se puede optar por inactivarlo")';
                echo '</script>';
 
              }
@@ -404,9 +404,10 @@ try {
              $statement = $connect->prepare($query);
              $statement->execute($data1);
 
-             // echo '<script language="javascript">';
-             // echo 'alert("Cliente Modificado Exitosamente")';
-             // echo '</script>';
+             echo "<script>";
+             echo 'alert("Proveedor Modificado Exitosamente")';
+             echo 'window.location.href = "listadoproveedores.php"';
+             echo "</script>";
 
              if (isset($_POST["check_estadoRegistro"])) {
                $data = [
@@ -426,11 +427,18 @@ try {
                $query = "UPDATE cat_clientes SET oculto =1  WHERE id_Cliente = :id_Cliente";
                $statement = $connect->prepare($query);
                $statement->execute($data1);
+
+
              }
 
            }
 
+           echo "<script>";
+           echo 'alert("Proveedor Modificado Exitosamente")';
+           echo "</script>";
+
      }
+
      }
 
 
@@ -466,7 +474,7 @@ try {
   </head>
   <body>
     <header>
-      <a href="home.php"><img src="img/arcolim_Logo.jpg" id="logo_Home" alt=""></a>
+      <a href=""><img src="img/arcolim_Logo.jpg" id="logo_Home" alt=""></a>
       <div class="user">
 
 

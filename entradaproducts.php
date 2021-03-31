@@ -33,13 +33,13 @@ try {
       $cantidadEntrada=$datos[6];
       $costoProducto=$datos[7];
       $estadoRegistroE=$datos[8];
-    };
+    }
 
     if (isset($_POST['btn-nuevaEntrada'])) {
       $fechaEntrada= trim(date('Y-m-d'));
       $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
       $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-      $query = "INSERT INTO listado_entrada (fechaEntrada, idProveedorEntrada, idProductoEntrada, cantidadEntrada, estadoRegistroE) VALUES ('$fechaEntrada',DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT);";
+      $query = "INSERT INTO listado_entrada (fechaEntrada, idProveedorEntrada, idProductoEntrada, cantidadEntrada, estadoRegistroE,costoProducto) VALUES ('$fechaEntrada',DEFAULT,DEFAULT,DEFAULT,DEFAULT,DEFAULT);";
       $statement = $connect->prepare($query);
       $statement->execute();
 
@@ -53,65 +53,65 @@ try {
     if (isset($_POST['btn-searchEntrada'])) {
       $numeroEntrada=(trim($_POST['numero_Entrada']));
 
-    if(empty($numeroEntrada))
-    {
-      $code = 1;
-      $error = "Por favor ingresa un Folio";
-    }
-    else if(!is_numeric($numeroEntrada))
-    {
-     $error = "Solo se admiten numeros";
-      $code = 1;
-    }
-    else if($numeroEntrada>9999)
-    {
-      $error = "El Folio no puede ser mayor a 4 Digitos";
-      $code = 1;
-    }
-    else if($numeroEntrada<1)
-    {
-      $error = "El ID no puede ser menor a 1";
-      $code = 1;
-    }else {
+        if(empty($numeroEntrada))
+        {
+          $code = 1;
+          $error = "Por favor ingresa un Folio";
+        }
+        else if(!is_numeric($numeroEntrada))
+        {
+         $error = "Solo se admiten numeros";
+          $code = 1;
+        }
+        else if($numeroEntrada>9999)
+        {
+          $error = "El Folio no puede ser mayor a 4 Digitos";
+          $code = 1;
+        }
+        else if($numeroEntrada<1)
+        {
+          $error = "El ID no puede ser menor a 1";
+          $code = 1;
+        }else {
 
-      $data=[
-        'numeroEntrada'=>$numeroEntrada,
-      ];
+          $data=[
+            'numeroEntrada'=>$numeroEntrada,
+          ];
 
-      $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
-      $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-      $query = "SELECT estadoRegistroE FROM listado_entrada WHERE idEntrada = :numeroEntrada";
-      $statement = $connect->prepare($query);
-      $statement->execute($data);
-      $count=$statement->rowCount();
+          $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
+          $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+          $query = "SELECT estadoRegistroE FROM listado_entrada WHERE idEntrada = :numeroEntrada";
+          $statement = $connect->prepare($query);
+          $statement->execute($data);
+          $count=$statement->rowCount();
 
-      while( $datos = $statement->fetch()){
-      $estadoRegistroE = $datos[0];
+          while( $datos = $statement->fetch()){
+          $estadoRegistroE = $datos[0];
+          }
+
+          if ($count>0 && $estadoRegistroE!=3 ) {
+            $query = "SELECT e.idEntrada, e.fechaEntrada, c.id_Cliente,c.nombre_Cliente, p.id_Producto,p.nombre_Producto, e.cantidadEntrada,e.costoProducto, e.estadoRegistroE FROM cat_clientes AS c INNER JOIN listado_entrada AS e ON c.id_Cliente = e.idProveedorEntrada INNER JOIN cat_producto AS p ON e.idProductoEntrada=p.id_Producto WHERE e.idEntrada = :numeroEntrada AND e.estadoRegistroE!=3";
+            $statement = $connect->prepare($query);
+            $statement->execute($data);
+            while ($datos= $statement->fetch()){
+              $numeroEntrada=$datos[0];
+              $fechaEntrada=$datos[1];
+              $id_Cliente=$datos[2];
+              $nombreCliente=$datos[3];
+              $idProducto=$datos[4];
+              $nombreProducto=$datos[5];
+              $cantidadEntrada=$datos[6];
+              $costoProducto=$datos[7];
+              $estadoRegistroE=$datos[8];
+            }
+          }else {
+            echo "<script>";
+            echo "alert('El folio del servicio no existe');";
+            echo 'window.location.href = "entradaproducts.php"';
+            echo "</script>";
+          }
+        }
       }
-
-      if ($count>0 && $estadoRegistroE!=3 ) {
-        $query = "SELECT e.idEntrada, e.fechaEntrada, c.id_Cliente,c.nombre_Cliente, p.id_Producto,p.nombre_Producto, e.cantidadEntrada,e.costoProducto, e.estadoRegistroE FROM cat_clientes AS c INNER JOIN listado_entrada AS e ON c.id_Cliente = e.idProveedorEntrada INNER JOIN cat_producto AS p ON e.idProductoEntrada=p.id_Producto WHERE e.idEntrada = :numeroEntrada AND e.estadoRegistroE!=3";
-        $statement = $connect->prepare($query);
-        $statement->execute($data);
-        while ($datos= $statement->fetch()){
-          $numeroEntrada=$datos[0];
-          $fechaEntrada=$datos[1];
-          $id_Cliente=$datos[2];
-          $nombreCliente=$datos[3];
-          $idProducto=$datos[4];
-          $nombreProducto=$datos[5];
-          $cantidadEntrada=$datos[6];
-          $costoProducto=$datos[7];
-          $estadoRegistroE=$datos[8];
-        };
-      }else {
-        echo "<script>";
-        echo "alert('El folio del servicio no existe');";
-        echo 'window.location.href = "servicio.php"';
-        echo "</script>";
-      }
-    }
-  }
 
     if (isset($_POST["btn-guardarEntrada"])) {
       $numeroEntrada= trim($_POST['numero_Entrada']);
@@ -326,7 +326,7 @@ try {
         while ($datos= $statement->fetch()){
           $numeroEntrada=$datos[0];
           $estadoRegistroE=$datos[1];
-        };
+        }
         $data=[
           'numeroEntrada'=>$numeroEntrada,
         ];
@@ -378,7 +378,7 @@ try {
   </head>
   <body>
     <header>
-      <a href="home.php"><img src="img/arcolim_Logo.jpg" id="logo_Home" alt=""></a>
+      <a href=""><img src="img/arcolim_Logo.jpg" id="logo_Home" alt=""></a>
       <div class="user">
          <a href="logout.php"> Salir</a>
       </div>
@@ -420,7 +420,7 @@ try {
         </nav>
       </div>
       <div class="Main">
-        <h1>Registrar servicio al cliente</h1>
+        <h1>Registrar Entrada</h1>
       </div>
       <div class="">
         <form id="regServicio" class="" action="" method="post">

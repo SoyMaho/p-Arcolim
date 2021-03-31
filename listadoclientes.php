@@ -432,10 +432,16 @@ try {
                $query = "UPDATE cat_clientes SET oculto =1  WHERE id_Cliente = :id_Cliente";
                $statement = $connect->prepare($query);
                $statement->execute($data1);
+
              }
 
 
+
            }
+           echo "<script>";
+           echo 'alert("Proveedor Modificado Exitosamente")';
+           echo "</script>";
+
      }
 
 
@@ -473,7 +479,7 @@ try {
   </head>
   <body>
     <header>
-      <a href="home.php"><img src="img/arcolim_Logo.jpg" id="logo_Home" alt=""></a>
+      <a href=""><img src="img/arcolim_Logo.jpg" id="logo_Home" alt=""></a>
       <div class="user">
 
 
@@ -635,13 +641,6 @@ try {
               <option value="30">Veracruz</option>
               <option value="31">Yucatan</option>
               <option value="32">Zacatecas</option>
-            </select>
-          </tr>
-          <tr>
-          <select class="" name="ai_Cliente">
-            <option value="<?php if(isset($id_p)){echo $id_p;}  ?>"><?php if(isset($pname)){echo $pname;}  ?></option>
-            <option value="0">Inactivo</option>
-            <option value="1">Activo</option>
             </select>
           </tr>
           <tr>

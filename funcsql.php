@@ -68,6 +68,23 @@ class funcionSQL{
         return $existenciaProducto;
         }
 
+        public function costoProducto($idProducto){
+          include("conexion.php");
+          $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
+          $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+          $data=[
+            'id_Producto'=>$idProducto,
+          ];
+
+          $query1 = "SELECT costo_Producto FROM cat_producto WHERE id_Producto =:id_Producto";
+          $statement = $connect->prepare($query1);
+          $statement->execute($data);
+          while( $datos = $statement->fetch()){
+          $costoProducto = $datos[0];
+        }
+        return $costoProducto;
+        }
+
         public function nRegistroVenta(){
           include("conexion.php");
           $id_p = '';
@@ -111,6 +128,38 @@ class funcionSQL{
             VALUES (:fecha_Venta, :id_Cliente, :subtotal_Venta, :iva_Venta, :total_Venta, :numero_Venta, :estadoRegistroV)";
             $statement = $connect->prepare($query);
             $statement->execute($data);
+        }
+
+        public function costoPromedio($idProducto){
+          include("conexion.php");
+          $dataSuma = [
+        'idProducto'=>$idProducto
+        ,];
+
+          $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
+          $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+          //Se valida la cantidad de entradas totales del producto
+          $query="SELECT costoProducto FROM listado_entrada WHERE idProductoEntrada=:idProducto AND estadoRegistroE !=3";
+          $statement = $connect->prepare($query);
+          $statement->execute($dataSuma);
+          $count=$statement->rowCount();
+
+          //Se suman los costos de cada entrada para el producto
+          $dataSuma = [
+        'idProducto'=>$idProducto
+        ,];
+          $querySuma= "SELECT SUM(costoProducto) AS SUMA FROM listado_entrada WHERE idProductoEntrada = :idProducto AND estadoRegistroE !=3";
+          $statement = $connect->prepare($querySuma);
+          $statement->execute($dataSuma);
+
+          //Se recorre la consulta y se asigna al string suma, el cual se divide en la cantidad de entradas que no sean eliminadas
+
+          while($datos = $statement->fetch()){
+          $Suma = $datos[0];
+          }
+          $div=($Suma/$count);
+          settype($div,'string');
+          return $div;
         }
 
 

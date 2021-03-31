@@ -11,9 +11,6 @@ try {
   if (!isset($_SESSION['user'])){
     header('Location: index.php');
   }
-  else if ($_SESSION['tipoUsuario']!=1) {
-      header('Location: index.php');
-    }
   else {
     $currentUser = $sesion->getCurrentUser();
     echo '<h2> Bienvenido </h2>' .$currentUser ;
@@ -30,7 +27,6 @@ try {
           $costoP = trim($_POST['costo_Producto']);
           $precioP = trim($_POST['precio_Producto']);
           $unidadP = trim($_POST['unidad_Producto']);
-          $existenciaP = trim($_POST['existencia_Producto']);
 
           if(empty($id_p))
           {
@@ -122,26 +118,6 @@ try {
             $error = "La unidad del producto no puede exceder 10 caracteres";
             $code = 2;
            }
-           else if(empty($existenciaP))
-           {
-            $error = "Ingresa la existencia del producto";
-            $code = 7;
-           }
-           else if(!is_numeric($existenciaP))
-           {
-            $error = "Solo se admiten numeros";
-            $code = 7;
-           }
-           else if($existenciaP>99999)
-           {
-            $error = "La existencia no puede ser mayor a 99,999";
-            $code = 7;
-           }
-           else if($existenciaP<-99999)
-           {
-            $error = "La existencia no puede ser menor a -99,999";
-            $code = 7;
-           }
             else {
                $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
                $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -174,12 +150,11 @@ try {
                    'costo_Producto' => $costoP,
                    'precio_Producto' => $precioP,
                    'unidad_Producto' => $unidadP,
-                   'existencia_Producto' => $existenciaP
-                   ,];
+                   ];
 
                    $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
                    $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                   $query = "INSERT INTO cat_producto (id_Producto, nombre_Producto, descripcion_Producto, costo_Producto, precio_Producto, unidad_Producto, existencia_Producto) VALUES (:id_p, :name_product, :descripcion_Producto, :costo_Producto, :precio_Producto, :unidad_Producto, :existencia_Producto)";
+                   $query = "INSERT INTO cat_producto (id_Producto, nombre_Producto, descripcion_Producto, costo_Producto, precio_Producto, unidad_Producto, existencia_Producto) VALUES (:id_p, :name_product, :descripcion_Producto, :costo_Producto, :precio_Producto, :unidad_Producto, DEFAULT)";
                    $statement = $connect->prepare($query);
                    $statement->execute($data);
 
@@ -245,8 +220,8 @@ try {
           <ul>
             <li> <a>Productos</a>
                 <ul>
-                  <li><a href="listadoproducts.php">Listado</a></li>
-                  <li><a href="nproducts.php">Registrar</a></li>
+                  <li><a href="listadoproductsUser.php">Listado</a></li>
+                  <li><a href="nproductsUser.php">Registrar</a></li>
                 </ul>
             </li>
             <li> <a>Venta</a>
@@ -270,7 +245,6 @@ try {
               </ul>
             </li>
             <li> <a href="">Reportes</a></li>
-            <li> <a href="usuarios.php">Usuarios</a></li>
           </ul>
         </nav>
       </div>
@@ -308,9 +282,6 @@ try {
           </tr>
           <tr>
           <td><h3>Unidad de medida</h3><input type="text" name="unidad_Producto" placeholder="Unidad del producto" value="<?php if(isset($unidadP)){echo $unidadP;} ?>"  <?php if(isset($code) && $code == 6){ echo "autofocus"; }  ?> /></td>
-          </tr>
-          <tr>
-          <td><h3>Existencia</h3><input type="text" name="existencia_Producto" placeholder="Existencia del producto" value="<?php if(isset($existenciaP)){echo $existenciaP;} ?>"  <?php if(isset($code) && $code == 7){ echo "autofocus"; }  ?> /></td>
           </tr>
           <tr>
             <td><button type="submit" name="btn-signup">Registrar Producto</button></td>
