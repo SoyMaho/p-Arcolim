@@ -906,27 +906,51 @@ try {
 
 if (isset($_POST["btn-sendMail"])) {
 
-  $correo= trim($_POST['correo']);
-  $data1=[
-    'correo'=>$correo,
+  $numeroVenta= trim($_POST['numero_Venta']);
+  if(empty($numeroVenta))
+  {
+   $error = "Por favor ingresa un ID";
+   $code = 1;
+  }
+  else if(!is_numeric($numeroVenta))
+  {
+   $error = "Solo se admiten numeros";
+   $code = 1;
+  }
+  else if($numeroVenta>9999)
+  {
+   $error = "El ID no puede ser mayor a 4 Digitos";
+   $code = 1;
+  }
+  else if($numeroVenta<1)
+  {
+   $error = "El ID no puede ser menor a 1";
+   $code = 1;
+  }
+  else {
+    $data1=[
+    'numeroVenta'=>$numeroVenta,
   ];
   $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
   $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-  $query = "SELECT correo_Usuario FROM users WHERE correo_Usuario = :correo";
+  $query = "SELECT s.idVenta, c.nombre_Cliente, c.correo_Cliente, s.totalVenta, s.fechaVenta, s.fechaVentaEntrega FROM cat_clientes AS c INNER JOIN listado_venta AS s ON c.id_Cliente = s.id_ClienteVenta WHERE s.idVenta = :numeroVenta AND s.estadoRegistroV!=3";
   $statement = $connect->prepare($query);
   $statement->execute($data1);
 
   while( $datos = $statement->fetch()){
-  $correo = $datos[0];
+  $numeroVenta = $datos[0];
+  $name_Cliente = $datos[1];
+  $correo = $datos[2];
+  $totalVenta= $datos[3];
+  $fechaVenta = $datos[4];
+  $fechaVentaEntrega = $datos[5];
   }
   $count = $statement->rowCount();
   if($count > 0)
   {
 
-       $message = "Notificacion Enviada";
-       $token = bin2hex(random_bytes(50));
        //Configuraciones del Server
-       $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Habilitar debug
+       $mail->SMTPDebug = 0;                      //Deshabilitar debug
        $mail->isSMTP();                                            //Usar SMTP
        $mail->Host       = 'email-smtp.us-west-2.amazonaws.com';                     //Asignar el servidor SMTP
        $mail->SMTPAuth   = true;                                   //Habilitar Autenticacion SMTP
@@ -936,39 +960,36 @@ if (isset($_POST["btn-sendMail"])) {
        $mail->Port       = 587;                                    //Puerto TCP para conectar, usar 465 para `PHPMailer::ENCRYPTION_SMTPS`
 
        //Recipients
-       $mail->setFrom('mahonry.cordova@gmail.com', 'Mailer');
+       $mail->setFrom('mahonry.cordova@gmail.com', 'Arcolim');
           //Agrega un recipiente
        $mail->addAddress($correo);               //Nombre es opcional
        $mail->addReplyTo('info@example.com', 'Information');
 
-
-       //Attachments
-       // $mail->addAttachment('/var/tmp/file.tar.gz');         //Ejemplo de adjunto
-       // $mail->addAttachment('/tmp/image.jpg', 'new.jpg');    //Nombre opcional
-
        //Content
        $mail->isHTML(true);                                  //Formato Html para el Mail
-       $mail->Subject = 'Recuperacion de contraseña Arcolim App';
-       $mail->Body    = 'Hola, da clic en el siguiente <a href=\'http://arcoapp-env.eba-a4mzfnxd.us-west-2.elasticbeanstalk.com/rpass.php?token=' . $token . '\'>link</a> para cambiar tu contraseña';
+       $mail->Subject = 'Arcolim Venta Folio: '.$numeroVenta;
+       // $mail->Body    = 'Hola '.$name_Cliente.', tu pedido Folio'.$numeroVenta.'Se encuentra registrado y tiene una fecha de entrega aproximada del:'.$fechaVentaEntrega.'Total de la venta:'.$totalVenta;
+       $mail->Body ='<html>
+                     <div>
+                       <p>Hola '.$name_Cliente.', tu pedido Folio: '.$numeroVenta.'</p>
+                       <p>Se encuentra registrado y tiene una fecha de entrega aproximada del :'.$fechaVentaEntrega.'</p>
+                       <p>Total de la venta:$'.$totalVenta.'</p>
+                     </div>
+                     </html>';
        $mail->AltBody = 'This is the body in plain text for non-HTML mail client';
 
        $mail->send();
 
-       //Ingreso del token a la tabla de pass_Reset
-       $data1=[
-         'correo'=>$correo,
-         'token'=>$token,
-       ];
-       $query = "INSERT INTO pass_reset (email, token) VALUES (:correo, :token)";
-       $statement = $connect->prepare($query);
-       $statement->execute($data1);
-       echo 'Correo Enviado';
+
+       $error ='<label><strong>Notificacion Enviada</strong></label>';
 
   }
   else
   {
-       $message = '<label>Correo no registrado</label>';
+       $error = '<label>El Folio de la venta no existe</label>';
   }
+}
+
 }
 
   }
@@ -1182,7 +1203,7 @@ if (isset($_POST["btn-sendMail"])) {
           </p>
           <div class="">
             <button class="boton" type="submit" name="btn-guardar" <?php if ($estadoRegistroV==2) {echo "disabled";} ?>>Guardar </button>
-            <button class="boton" type="submit" name="btn-sendMail" <?php if ($estadoRegistroV!=2) {echo "disabled";} ?>>Enviar Notificacion </button>
+            <button class="boton" type="submit" name="btn-sendMail" <?php if ($estadoRegistroV!=1) {echo "disabled";} ?>>Enviar Notificacion </button>
           </div>
         </form>
 
