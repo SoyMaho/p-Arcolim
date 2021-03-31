@@ -332,17 +332,21 @@ try {
                 <li><a href="ncliente.php">Registrar</a></li>
               </ul>
             </li>
-            <li>
-              <a>Reportes</a>
-              <ul>
-                <li><a href="reportventasproduct.php">Ventas por producto</a></li>
-                <li><a href="reportpedidoscliente.php">Pedidos por cliente</a> </li>
-                <li> <a href="reportcostoproducto.php">Costo por producto</a> </li>
-                <li> <a href="reportservicioscliente.php">Servicios por cliente</a> </li>
-                <li><a href="reportservicioservices.php">Servicios por servicio</a></li>
-                <li><a href="reportclientes.php">Reporte de clientes</a></li>
-              </ul>
-            </li>
+            <?php
+            if ($_SESSION['tipoUsuario']!=2) {
+              echo "<li>";
+                echo "<a>Reportes</a>";
+                echo "<ul>";
+                  echo "<li><a href='reportventasproduct.php'>Ventas por producto</a></li>";
+                  echo "<li><a href='reportpedidoscliente.php'>Pedidos por cliente</a> </li>";
+                  echo "<li> <a href='reportcostoproducto.php'>Costo por producto</a> </li>";
+                  echo "<li> <a href='reportservicioscliente.php'>Servicios por cliente</a> </li>";
+                  echo "<li><a href='reportservicioservices.php'>Servicios por servicio</a></li>";
+                  echo "<li><a href='reportclientes.php'>Reporte de clientes</a></li>";
+                echo "</ul>";
+              echo "</li>";
+            }
+            ?>
             <?php
             if ($_SESSION['tipoUsuario']==1) {
               echo "<li> <a href='usuarios.php'>Usuarios</a></li>";
@@ -353,6 +357,7 @@ try {
               echo "</li>";
             }
             ?>
+
 
           </ul>
         </nav>
