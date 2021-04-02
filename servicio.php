@@ -343,6 +343,11 @@ try {
         }
 
 
+      } else{
+        echo "<script>";
+        echo "alert('El folio del servicio no existe ');";
+        echo 'window.location.href = "servicio.php"';
+        echo "</script>";
       }
 
 

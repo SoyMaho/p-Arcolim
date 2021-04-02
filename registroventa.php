@@ -271,16 +271,16 @@ try {
       $incremento=1;
       $numeroVenta=$id+$incremento;
 
-      $data = [
-    'numero_Venta' => $numeroVenta,
-    'fecha_Venta' => $fechaVenta,
-    'id_Cliente' => '0',
-    'subtotal_Venta' => '0.00',
-    'iva_Venta' => '0.00',
-    'total_Venta' => '0.00',
-    'estadoRegistroV' => '1',
-    'fecha_VentaEntrega'=>$fechaVentaEntrega
-    ,];
+        $data = [
+      'numero_Venta' => $numeroVenta,
+      'fecha_Venta' => $fechaVenta,
+      'id_Cliente' => '0',
+      'subtotal_Venta' => '0.00',
+      'iva_Venta' => '0.00',
+      'total_Venta' => '0.00',
+      'estadoRegistroV' => '1',
+      'fecha_VentaEntrega'=>$fechaVentaEntrega
+      ,];
 
         $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
         $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -767,7 +767,7 @@ try {
               $statement->execute($data);
 
     }
-  }
+      }
 
   if(isset($_POST["btn-searchVenta"])){
 
@@ -795,114 +795,114 @@ try {
       }
       else {
         $data = [
-      'numero_Venta' => $numeroVenta
-      ,];
-
-      $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
-      $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-      $query = "SELECT estadoRegistroV FROM listado_venta WHERE numeroVenta = :numero_Venta";
-      $statement = $connect->prepare($query);
-      $statement->execute($data);
-
-      while( $datos = $statement->fetch()){
-      $estadoRegistroV = $datos[0];
-      }
-
-
-      $count = $statement->rowCount();
-      //Si la el rgistro de venta no existe o tiene estado 3 "Eliminado" se muestra el mensaje: el ID no esta registrado
-      if ($count ==0 || $estadoRegistroV==3) {
-
-        $fechaVenta="";
-        $id_p = "";
-        $pname = "";
-        $descP = "";
-        $costoP = "";
-        $precioP ="";
-        $unidadP = "";
-        $existenciaP = "";
-        $numeroVenta= "";
-        $cantidadP = "";
-        $id_Cliente = "";
-        $nombreCliente = "";
-        $subtotalVenta = "";
-        $ivaVenta = "";
-        $totalVenta = "";
-        $precioTotal = "" ;
-
-        echo "<script>";
-        echo "alert('El Folio no esta registrado');";
-        echo 'window.location.href = "registroventa.php"';
-        echo "</script>";
-
-      }else {
-        $data = [
-      'numero_Venta' => $numeroVenta
-      ,];
-        $query = "SELECT id_ClienteVenta, subtotalVenta, ivaVenta, totalVenta, numeroVenta, fechaVenta, estadoRegistroV,fechaVentaEntrega FROM listado_venta WHERE numeroVenta = :numero_Venta";
-        $statement = $connect->prepare($query);
-        $statement->execute($data);
-
-        while( $datos = $statement->fetch()){
-        $id_Cliente = $datos[0];
-        $subtotalVenta = $datos[1];
-        $ivaVenta = $datos[2];
-        $totalVenta = $datos[3];
-        $numeroVenta = $datos[4];
-        $fechaVenta = $datos[5];
-        $estadoRegistroV = $datos[6];
-        $fechaVentaEntrega = $datos[7];
-      }
-
-          $data = [
         'numero_Venta' => $numeroVenta
-        ,];
-
-      $query = "SELECT SUM(precioTotalProducto) as subtotal FROM listadomovimientos WHERE idDocumentoVenta = :numero_Venta";
-      $statement = $connect->prepare($query);
-      $statement->execute($data);
-      while( $subtotal = $statement->fetch()){
-      $subtotalVenta = $subtotal[0];
-       }
-      $ivaVenta = $subtotalVenta * .16;
-      $totalVenta = $subtotalVenta + $ivaVenta;
-
-      // Movimiento
-      $numeroidMovimiento=$numeroVenta;
-
-          $data = [
-        'numero_idmovimiento' => $numeroidMovimiento
         ,];
 
         $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
         $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $query = "SELECT claveProducto, nombreProducto, cantidadProducto, precioProducto, precioTotalProducto FROM listadomovimientos WHERE idDocumentoVenta = :numero_idmovimiento";
+        $query = "SELECT estadoRegistroV FROM listado_venta WHERE numeroVenta = :numero_Venta";
         $statement = $connect->prepare($query);
         $statement->execute($data);
 
         while( $datos = $statement->fetch()){
-        $id_p = $datos[0];
-        $pname = $datos[1];
-        $cantidadP = $datos[2];
-        $precioP = $datos[3];
-        $precioTotal = $datos[4];
-      }
+        $estadoRegistroV = $datos[0];
+        }
 
-      //Cliente Venta
-      $data = [
-      'id_cliente' => $id_Cliente
-      ,];
-      $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
-      $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-      $query = "SELECT nombre_Cliente FROM cat_clientes WHERE id_Cliente = :id_cliente";
-      $statement = $connect->prepare($query);
-      $statement->execute($data);
 
-      while( $datos = $statement->fetch()){
-      $nombreCliente = $datos[0];
-      }
-      }
-    }
+        $count = $statement->rowCount();
+        //Si la el rgistro de venta no existe o tiene estado 3 "Eliminado" se muestra el mensaje: el ID no esta registrado
+        if ($count ==0 || $estadoRegistroV==3) {
+
+          $fechaVenta="";
+          $id_p = "";
+          $pname = "";
+          $descP = "";
+          $costoP = "";
+          $precioP ="";
+          $unidadP = "";
+          $existenciaP = "";
+          $numeroVenta= "";
+          $cantidadP = "";
+          $id_Cliente = "";
+          $nombreCliente = "";
+          $subtotalVenta = "";
+          $ivaVenta = "";
+          $totalVenta = "";
+          $precioTotal = "" ;
+
+          echo "<script>";
+          echo "alert('El Folio no esta registrado');";
+          echo 'window.location.href = "registroventa.php"';
+          echo "</script>";
+
+        }else {
+            $data = [
+          'numero_Venta' => $numeroVenta
+          ,];
+            $query = "SELECT id_ClienteVenta, subtotalVenta, ivaVenta, totalVenta, numeroVenta, fechaVenta, estadoRegistroV,fechaVentaEntrega FROM listado_venta WHERE numeroVenta = :numero_Venta";
+            $statement = $connect->prepare($query);
+            $statement->execute($data);
+
+            while( $datos = $statement->fetch()){
+            $id_Cliente = $datos[0];
+            $subtotalVenta = $datos[1];
+            $ivaVenta = $datos[2];
+            $totalVenta = $datos[3];
+            $numeroVenta = $datos[4];
+            $fechaVenta = $datos[5];
+            $estadoRegistroV = $datos[6];
+            $fechaVentaEntrega = $datos[7];
+          }
+
+              $data = [
+            'numero_Venta' => $numeroVenta
+            ,];
+
+          $query = "SELECT SUM(precioTotalProducto) as subtotal FROM listadomovimientos WHERE idDocumentoVenta = :numero_Venta";
+          $statement = $connect->prepare($query);
+          $statement->execute($data);
+          while( $subtotal = $statement->fetch()){
+          $subtotalVenta = $subtotal[0];
+           }
+          $ivaVenta = $subtotalVenta * .16;
+          $totalVenta = $subtotalVenta + $ivaVenta;
+
+          // Movimiento
+          $numeroidMovimiento=$numeroVenta;
+
+              $data = [
+            'numero_idmovimiento' => $numeroidMovimiento
+            ,];
+
+            $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
+            $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $query = "SELECT claveProducto, nombreProducto, cantidadProducto, precioProducto, precioTotalProducto FROM listadomovimientos WHERE idDocumentoVenta = :numero_idmovimiento";
+            $statement = $connect->prepare($query);
+            $statement->execute($data);
+
+            while( $datos = $statement->fetch()){
+            $id_p = $datos[0];
+            $pname = $datos[1];
+            $cantidadP = $datos[2];
+            $precioP = $datos[3];
+            $precioTotal = $datos[4];
+          }
+
+          //Cliente Venta
+          $data = [
+          'id_cliente' => $id_Cliente
+          ,];
+          $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
+          $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+          $query = "SELECT nombre_Cliente FROM cat_clientes WHERE id_Cliente = :id_cliente";
+          $statement = $connect->prepare($query);
+          $statement->execute($data);
+
+          while( $datos = $statement->fetch()){
+          $nombreCliente = $datos[0];
+          }
+          }
+        }
 }
 
 if (isset($_POST["btn-sendMail"])) {
@@ -929,66 +929,66 @@ if (isset($_POST["btn-sendMail"])) {
    $code = 1;
   }
   else {
-    $data1=[
-    'numeroVenta'=>$numeroVenta,
-  ];
-  $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
-  $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-  $query = "SELECT s.idVenta, c.nombre_Cliente, c.correo_Cliente, s.totalVenta, s.fechaVenta, s.fechaVentaEntrega FROM cat_clientes AS c INNER JOIN listado_venta AS s ON c.id_Cliente = s.id_ClienteVenta WHERE s.idVenta = :numeroVenta AND s.estadoRegistroV!=3";
-  $statement = $connect->prepare($query);
-  $statement->execute($data1);
+        $data1=[
+        'numeroVenta'=>$numeroVenta,
+      ];
+      $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
+      $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+      $query = "SELECT s.idVenta, c.nombre_Cliente, c.correo_Cliente, s.totalVenta, s.fechaVenta, s.fechaVentaEntrega FROM cat_clientes AS c INNER JOIN listado_venta AS s ON c.id_Cliente = s.id_ClienteVenta WHERE s.idVenta = :numeroVenta AND s.estadoRegistroV!=3";
+      $statement = $connect->prepare($query);
+      $statement->execute($data1);
 
-  while( $datos = $statement->fetch()){
-  $numeroVenta = $datos[0];
-  $name_Cliente = $datos[1];
-  $correo = $datos[2];
-  $totalVenta= $datos[3];
-  $fechaVenta = $datos[4];
-  $fechaVentaEntrega = $datos[5];
-  }
-  $count = $statement->rowCount();
-  if($count > 0)
-  {
+      while( $datos = $statement->fetch()){
+      $numeroVenta = $datos[0];
+      $name_Cliente = $datos[1];
+      $correo = $datos[2];
+      $totalVenta= $datos[3];
+      $fechaVenta = $datos[4];
+      $fechaVentaEntrega = $datos[5];
+      }
+      $count = $statement->rowCount();
+      if($count > 0)
+      {
 
-       //Configuraciones del Server
-       $mail->SMTPDebug = 0;                      //Deshabilitar debug
-       $mail->isSMTP();                                            //Usar SMTP
-       $mail->Host       = 'email-smtp.us-west-2.amazonaws.com';                     //Asignar el servidor SMTP
-       $mail->SMTPAuth   = true;                                   //Habilitar Autenticacion SMTP
-       $mail->Username   = 'AKIAUO3SNH5U2JVJPPY5';                     //SMTP username
-       $mail->Password   = 'BJVINKRJJDY8gZH4TCbZDbirca15Zb4xGDiKY6v/KMYG';                               //SMTP password
-       $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         //Habilitar Encriptacion TLS ;
-       $mail->Port       = 587;                                    //Puerto TCP para conectar, usar 465 para `PHPMailer::ENCRYPTION_SMTPS`
+           //Configuraciones del Server
+           $mail->SMTPDebug = 0;                      //Deshabilitar debug
+           $mail->isSMTP();                                            //Usar SMTP
+           $mail->Host       = 'email-smtp.us-west-2.amazonaws.com';                     //Asignar el servidor SMTP
+           $mail->SMTPAuth   = true;                                   //Habilitar Autenticacion SMTP
+           $mail->Username   = 'AKIAUO3SNH5U2JVJPPY5';                     //SMTP username
+           $mail->Password   = 'BJVINKRJJDY8gZH4TCbZDbirca15Zb4xGDiKY6v/KMYG';                               //SMTP password
+           $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         //Habilitar Encriptacion TLS ;
+           $mail->Port       = 587;                                    //Puerto TCP para conectar, usar 465 para `PHPMailer::ENCRYPTION_SMTPS`
 
-       //Recipients
-       $mail->setFrom('mahonry.cordova@gmail.com', 'Arcolim');
-          //Agrega un recipiente
-       $mail->addAddress($correo);               //Nombre es opcional
-       $mail->addReplyTo('info@example.com', 'Information');
+           //Recipients
+           $mail->setFrom('mahonry.cordova@gmail.com', 'Arcolim');
+              //Agrega un recipiente
+           $mail->addAddress($correo);               //Nombre es opcional
+           $mail->addReplyTo('info@example.com', 'Information');
 
-       //Content
-       $mail->isHTML(true);                                  //Formato Html para el Mail
-       $mail->Subject = 'Arcolim Venta Folio: '.$numeroVenta;
-       // $mail->Body    = 'Hola '.$name_Cliente.', tu pedido Folio'.$numeroVenta.'Se encuentra registrado y tiene una fecha de entrega aproximada del:'.$fechaVentaEntrega.'Total de la venta:'.$totalVenta;
-       $mail->Body ='<html>
-                     <div>
-                       <p>Hola '.$name_Cliente.', tu pedido Folio: '.$numeroVenta.'</p>
-                       <p>Se encuentra registrado y tiene una fecha de entrega aproximada del :'.$fechaVentaEntrega.'</p>
-                       <p>Total de la venta:$'.$totalVenta.'</p>
-                     </div>
-                     </html>';
-       $mail->AltBody = 'This is the body in plain text for non-HTML mail client';
+           //Content
+           $mail->isHTML(true);                                  //Formato Html para el Mail
+           $mail->Subject = 'Arcolim Venta Folio: '.$numeroVenta;
+           // $mail->Body    = 'Hola '.$name_Cliente.', tu pedido Folio'.$numeroVenta.'Se encuentra registrado y tiene una fecha de entrega aproximada del:'.$fechaVentaEntrega.'Total de la venta:'.$totalVenta;
+           $mail->Body ='<html>
+                         <div>
+                           <p>Hola '.$name_Cliente.', tu pedido Folio: '.$numeroVenta.'</p>
+                           <p>Se encuentra registrado y tiene una fecha de entrega aproximada del :'.$fechaVentaEntrega.'</p>
+                           <p>Total de la venta:$'.$totalVenta.'</p>
+                         </div>
+                         </html>';
+           $mail->AltBody = 'This is the body in plain text for non-HTML mail client';
 
-       $mail->send();
+           $mail->send();
 
 
-       $error ='<label><strong>Notificacion Enviada</strong></label>';
+           $error ='<label><strong>Notificacion Enviada</strong></label>';
 
-  }
-  else
-  {
-       $error = '<label>El Folio de la venta no existe</label>';
-  }
+      }
+      else
+      {
+           $error = '<label>El Folio de la venta no existe</label>';
+      }
 }
 
 }
