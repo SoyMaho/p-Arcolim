@@ -183,7 +183,9 @@
   }
 
   #inputFechaVenta{
-      width: 2rem;
+    width: 10rem;
+    margin-left: 1rem;
+    margin-right:  1rem;
   }
 
   #cboxEntregado{
@@ -410,7 +412,9 @@
     }
 
     #inputFechaVenta{
-        width: 2rem;
+        width: 10rem;
+        margin-left: 1rem;
+        margin-right:  1rem;
     }
 
     #cboxEntregado{
@@ -640,7 +644,9 @@
     }
 
     #inputFechaVenta{
-        width: 2rem;
+      width: 10rem;
+      margin-left: 1rem;
+      margin-right:  1rem;
     }
 
     #cboxEntregado{
