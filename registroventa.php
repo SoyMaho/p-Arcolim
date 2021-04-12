@@ -10,9 +10,9 @@ use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
 //Load Composer's autoloader
-//localhost
-require 'C:/Users/Mahonry Santiago/vendor/autoload.php';
-//para aws require 'vendor/autoload.php';
+//localhost require 'C:/Users/Mahonry Santiago/vendor/autoload.php';
+//para aws
+require 'vendor/autoload.php';
 //Instantiation and passing `true` enables exceptions
 $mail = new PHPMailer(true);
 try {
@@ -1115,8 +1115,12 @@ if (isset($_POST["btn-sendMail"])) {
           </div>
 
           <div id="venta">
-            <h3 id="labelFecha">Fecha de Venta</h3> <input class="inputShort" id="" type="text" name="fecha_Venta" placeholder="Fecha" value="<?php if(isset($fechaVenta)){echo $fechaVenta;} ?>"  <?php if(isset($code) && $code == 2){ echo "autofocus"; }  ?> />
-            <h3 id="labelFecha">Fecha de Entrega</h3> <input class="inputShort" id="" type="text" name="fecha_VentaEntrega" placeholder="Fecha" value="<?php if(isset($fechaVentaEntrega)){echo $fechaVentaEntrega;} ?>"  <?php if(isset($code) && $code == 2){ echo "autofocus"; }  ?> />
+            <h3 id="labelFecha">Fecha de Venta</h3>
+            <input type="date" name="fecha_Venta" value="<?php if(isset($fechaVenta)){echo $fechaVenta;}?>">
+            <!-- <input class="inputShort" id="" type="text" name="fecha_Venta" placeholder="Fecha" value="<?php if(isset($fechaVenta)){echo $fechaVenta;} ?>"  <?php if(isset($code) && $code == 2){ echo "autofocus"; }  ?> /> -->
+            <h3 id="labelFecha">Fecha de Entrega</h3>
+            <input type="date" name="fecha_VentaEntrega" value="<?php if(isset($fechaVentaEntrega)){echo $fechaVentaEntrega;}?>">
+            <!-- <input class="inputShort" id="" type="text" name="fecha_VentaEntrega" placeholder="Fecha" value="<?php if(isset($fechaVentaEntrega)){echo $fechaVentaEntrega;} ?>"  <?php if(isset($code) && $code == 2){ echo "autofocus"; }  ?> /> -->
             <h3>Entregado</h3>
             <input class="inputShort"type="checkbox" name="check_Entregado" id="cboxEntregado" value="2"<?php if ($estadoRegistroV==2) {echo "checked";} ?>/>
           </div>

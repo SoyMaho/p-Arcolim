@@ -9,9 +9,9 @@ use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
 //Cargar el Autoload de Composer
-// Para localhost
-require 'C:/Users/Mahonry Santiago/vendor/autoload.php';
-//para aws require 'vendor/autoload.php';
+// Para localhost require 'C:/Users/Mahonry Santiago/vendor/autoload.php';
+//para aws
+require 'vendor/autoload.php';
 //Instancias
 $mail = new PHPMailer(true);
 try {
