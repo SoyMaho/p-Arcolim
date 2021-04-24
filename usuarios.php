@@ -205,6 +205,9 @@ try {
 
     if (isset($_POST["btn-editUser"])) {
       $userName = trim($_POST['nombre_Usuario']);
+      $userMail = trim($_POST['correo_Usuario']);
+      $userPass = trim($_POST['pass_Usuario']);
+      $userType = trim($_POST['tipoUsuario']);
       if(empty($userName))
       {
        $error = "Por favor ingresa un nombre de usuario";
@@ -235,6 +238,21 @@ try {
        $error = "La contraseña no puede ser menor a 6 caracteres";
        $code = 3;
       }
+      else if(!preg_match('`[a-z]`',$userPass))
+      {
+       $error = "La contraseña debe tener al menos una letra minuscula";
+       $code = 3;
+      }
+      else if(!preg_match('`[A-Z]`',$userPass))
+      {
+       $error = "La contraseña debe tener al menos una letra mayuscula";
+       $code = 3;
+      }
+      else if(!preg_match('`[0-9]`',$userPass))
+      {
+       $error = "La contraseña debe tener al menos un numero";
+       $code = 3;
+      }
       else {
       $data = [
       'nombre_Usuario' => $userName
@@ -253,10 +271,7 @@ try {
             echo 'alert("El usuario no esta registrado")';
             echo '</script>';
           }else {
-            $userName = trim($_POST['nombre_Usuario']);
-            $userMail = trim($_POST['correo_Usuario']);
-            $userPass = trim($_POST['pass_Usuario']);
-            $userType = trim($_POST['tipoUsuario']);
+
 
             $data = [
             'nombre_Usuario' => $userName,
@@ -343,17 +358,21 @@ try {
                   <li><a href="ncliente.php">Registrar</a></li>
                 </ul>
               </li>
-              <li>
-                <a>Reportes</a>
-                <ul>
-                  <li><a href="reportventasproduct.php">Ventas por producto</a></li>
-                  <li><a href="reportpedidoscliente.php">Pedidos por cliente</a> </li>
-                  <li> <a href="reportcostoproducto.php">Costo por producto</a> </li>
-                  <li> <a href="reportservicioscliente.php">Servicios por cliente</a> </li>
-                  <li><a href="reportservicioservices.php">Servicios por servicio</a></li>
-                  <li><a href="reportclientes.php">Reporte de clientes</a></li>
-                </ul>
-              </li>
+              <?php
+              if ($_SESSION['tipoUsuario']!=2) {
+                echo "<li>";
+                  echo "<a>Reportes</a>";
+                  echo "<ul>";
+                    echo "<li><a href='reportventasproduct.php'>Ventas por producto</a></li>";
+                    echo "<li><a href='reportpedidoscliente.php'>Pedidos por cliente</a> </li>";
+                    echo "<li> <a href='reportcostoproducto.php'>Costo por producto</a> </li>";
+                    echo "<li> <a href='reportservicioscliente.php'>Servicios por cliente</a> </li>";
+                    echo "<li><a href='reportservicioservices.php'>Servicios por servicio</a></li>";
+                    echo "<li><a href='reportclientes.php'>Reporte de clientes</a></li>";
+                  echo "</ul>";
+                echo "</li>";
+              }
+              ?>
               <?php
               if ($_SESSION['tipoUsuario']==1) {
                 echo "<li> <a href='usuarios.php'>Usuarios</a></li>";
@@ -364,6 +383,7 @@ try {
                 echo "</li>";
               }
               ?>
+
 
             </ul>
           </nav>
@@ -380,7 +400,9 @@ try {
             $query = "SELECT users.nombre_Usuario, users.correo_Usuario, users.password_Usuario, tipo_usuario.tipo_Usuario FROM users INNER JOIN tipo_usuario ON users.tipo_Usuario = tipo_usuario.id_tipoUsuario";
             $statement = $connect->prepare($query);
             $statement->execute();
-            echo "<table>
+            echo "<div id='tablaUser'>
+            <h3>Usuarios Registrados</h3>
+            <table>
             <tr>
             <td width='150'>Nombre</td>
             <td width='150'>Correo Electronico</td>
@@ -401,7 +423,7 @@ try {
           </tr>
           ";
         }
-        echo "</table>";
+        echo "</table></div>>";
          ?>
       </div>
 
@@ -436,12 +458,12 @@ try {
                 <option value="3">Supervisor</option>
                 </select> </td>
           </tr>
-          <tr>
-            <td><button type="submit" name="btn-regUser">Registrar Usuario</button></td>
-            <td><button type="submit" name="btn-searchUser">Seleccionar Usuario</button></td>
-            <td><button type="submit" name="btn-editUser">Editar Usuario</button></td>
-            <td><button type="submit" name="btn-deleteUser">Eliminar Usuario</button></td>
-          </tr>
+          <div id="horizontal">
+            <td><button type="submit" class="boton" name="btn-searchUser">Seleccionar Usuario</button></td>
+            <td><button type="submit" class="boton" name="btn-regUser">Registrar Usuario</button></td>
+            <td><button type="submit" class="boton" name="btn-editUser">Editar Usuario</button></td>
+            <td><button type="submit" class="boton" name="btn-deleteUser">Eliminar Usuario</button></td>
+          </div>
         </form>
 
 
