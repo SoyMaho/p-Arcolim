@@ -152,9 +152,13 @@ try {
                 </td>
             </tr>
             <h3 id="labelFecha">Fecha Inicio</h3>
-            <input id="" class="inputShort" type="text" name="fecha_VentaIni" placeholder="Fecha" value="<?php if(isset($fechaVentaIni)){echo $fechaVentaIni;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> />
+            <input id="inputFechaVenta"type="date" name="fecha_VentaIni" value="<?php if(isset($fechaVentaIni)){echo $fechaVentaIni;}?>"<?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?>/>
+
+            <!-- <input id="" class="inputShort" type="text" name="fecha_VentaIni" placeholder="Fecha" value="<?php if(isset($fechaVentaIni)){echo $fechaVentaIni;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> /> -->
             <h3 id="labelFecha">Fecha Final</h3>
-            <input id="" class="inputShort" type="text" name="fecha_VentaFin" placeholder="Fecha" value="<?php if(isset($fechaVentaFin)){echo $fechaVentaFin;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> />
+            <input id="inputFechaVenta"type="date" name="fecha_VentaFin" value="<?php if(isset($fechaVentaFin)){echo $fechaVentaFin;}?>"<?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?>/>
+
+            <!-- <input id="" class="inputShort" type="text" name="fecha_VentaFin" placeholder="Fecha" value="<?php if(isset($fechaVentaFin)){echo $fechaVentaFin;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> /> -->
 
           </div>
 

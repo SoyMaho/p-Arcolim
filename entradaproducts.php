@@ -477,7 +477,9 @@ try {
           </div>
 
           <div id="venta" class="elementForm">
-            <h3 id="labelFecha">Fecha</h3> <input class="inputShort" id="" type="text" name="fecha_Entrada" placeholder="Fecha" value="<?php if(isset($fechaEntrada)){echo $fechaEntrada;} ?>"  <?php if(isset($code) && $code == 2){ echo "autofocus"; }  ?> />
+            <h3 id="labelFecha">Fecha</h3>
+            <input id="inputFechaVenta"type="date" name="fecha_Entrada" value="<?php if(isset($fechaEntrada)){echo $fechaEntrada;}?>"/>
+            <!-- <input class="inputShort" id="" type="text" name="fecha_Entrada" placeholder="Fecha" value="<?php if(isset($fechaEntrada)){echo $fechaEntrada;} ?>" /> -->
             <h3>Realizado</h3>
             <input class="inputShort"type="checkbox" name="check_Ingresado" id="cboxEntregado"<?php if ($estadoRegistroE==2) {echo "checked";} ?>/>
           </div>

@@ -115,7 +115,9 @@ try {
         <form class="" action="" method="post">
           <div id="horizontal">
             <input id="" class="inputShort" type="text" name="nombre_Cliente" placeholder="Nombre" value="<?php if(isset($numeroServicio)){echo $numeroServicio;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> />
-            <input id="" class="inputShort" type="text" name="fecha_Servicio" placeholder="Fecha" value="<?php if(isset($fechaServicio)){echo $fechaServicio;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> />
+            <input id="inputFechaVenta"type="date" name="fecha_Servicio" value="<?php if(isset($fechaServicio)){echo $fechaServicio;}?>"<?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?>/>
+
+            <!-- <input id="" class="inputShort" type="text" name="fecha_Servicio" placeholder="Fecha" value="<?php if(isset($fechaServicio)){echo $fechaServicio;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> /> -->
           </div>
 
           <div id='horizontal'>
