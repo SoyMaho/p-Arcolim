@@ -6,12 +6,15 @@ $sesion = new sesion ();
 try {
   if (!isset($_SESSION['user'])){
     header('Location: index.php');
-  }else if ($_SESSION['tipoUsuario']==2 ) {
-      header('Location: index.php');
-    }
+  }
   else {
     $currentUser = $sesion->getCurrentUser();
     echo '<h2> Bienvenido </h2>' .$currentUser;
+
+
+
+
+
   }
  } catch(PDOException $e) {
    echo 'Error: ' . $e->getMessage();
@@ -103,7 +106,43 @@ try {
       </div>
 
       <div class="Main">
-        <h1>Main Section</h1>
+        <h1>Reporte Costo por producto</h1>
+        <h2>Descripcion</h2>
+        <p>Este reporte enlista todos los productos y muestra el costo actual de cada uno</p>
+        <p>Para exportar el listado a excel usa el boton Exportar.</p>
+        <form class="" action="" method="post">
+          <button type="submit" name="btn-export" onclick ="this.form.action = 'reportcostoproductoExcel.php'" formtarget="_blank" >Exportar</button>
+        </form>
+        <div class="report">
+          <?php
+          $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
+          $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+          $query = "SELECT id_Producto, nombre_Producto,costo_Producto FROM cat_producto WHERE pOculto =0 ORDER BY id_Producto";
+
+          $statement = $connect->prepare($query);
+          $statement->execute($data);
+          echo "<table>
+          <tr>
+          <td width='150'>ID Producto</td>
+          <td width='150'>Nombre</td>
+          <td width='150'>Costo</td>
+          <td width='300'></td>
+          </tr>";
+          while($registro = $statement->fetch())
+        {
+        echo"
+        <tr>
+        <td width='150'>".$registro['id_Producto']."</td>
+        <td width='150'>".$registro['nombre_Producto']."</td>
+        <td width='150'>$ ".$registro['costo_Producto']."</td>
+        </tr>
+        ";
+        }
+
+        echo "</table>";
+          ?>
+        </div>
+
       </div>
 
     </div>

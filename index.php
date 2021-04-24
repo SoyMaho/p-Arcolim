@@ -8,7 +8,7 @@ include("sesion.php");
 
 
     //Condiciones para ingresar al home que le pertenece al usuario
-     if (isset($_SESSION['user'])&&($_SESSION['tipoUsuario']==1)){
+     if (isset($_SESSION['user'])&&($_SESSION['tipoUsuario']==1 ||$_SESSION['tipoUsuario']==3 )) {
      header('Location: home.php');
       }
    else if (isset($_SESSION['user'])&&($_SESSION['tipoUsuario']==2)) {
@@ -34,8 +34,8 @@ include("sesion.php");
                  $message = '<label>Todos los campos son requeridos</label>';
             }
             else
-            {  
-                 $query = "SELECT * FROM users WHERE nombre_Usuario = :n_Usuario AND password_Usuario = :upass";
+            {
+                 $query = "SELECT * FROM users WHERE nombre_Usuario = :n_Usuario AND password_Usuario = BINARY :upass";
                  $statement = $connect->prepare($query);
                  $statement->execute(
                       array(
@@ -57,7 +57,7 @@ include("sesion.php");
                       // $sesion -> setCurrentUser($_POST["campoUsuario"]);
                       $sesion -> setCurrentUser($nUsuario,$tipoUsuario);
                       //Condicion para mostrar una u otra pagina dependiendo del nivel de usuario
-                      if ($tipoUsuario==1) {
+                      if ($tipoUsuario==1 || $tipoUsuario==3) {
                         header('Location: home.php');
                         die();
                       }

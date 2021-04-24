@@ -6,13 +6,13 @@ $sesion = new sesion ();
 try {
   if (!isset($_SESSION['user'])){
     header('Location: index.php');
-  }else if ($_SESSION['tipoUsuario']==2 ) {
-      header('Location: index.php');
-    }
+  }
   else {
+
     $currentUser = $sesion->getCurrentUser();
     echo '<h2> Bienvenido </h2>' .$currentUser;
   }
+
  } catch(PDOException $e) {
    echo 'Error: ' . $e->getMessage();
  }
@@ -103,7 +103,61 @@ try {
       </div>
 
       <div class="Main">
-        <h1>Main Section</h1>
+        <h1>Reporte de Pedidos por cliente detallado</h1>
+        <h2>Descripcion</h2>
+        <p>Este reporte enlista todos los pedidos realizados por los clientes y los agrupa segun el cliente</p>
+        <p>Para exportar el listado a excel usa el boton Exportar.</p>
+        <form class="" action="" method="post">
+          <button type="submit" name="btn-export" onclick ="this.form.action = 'reportpedidosclienteExcel.php'" formtarget="_blank" >Exportar</button>
+        </form>
+        <div class="report">
+          <?php
+          $nombreCliente=(trim($_POST['nombre_Cliente']));
+
+          $data=[
+            'nombreCliente'=>$nombreCliente,
+          ];
+          $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
+          $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+          $query = "SELECT s.idVenta,c.nombre_Cliente,lm.claveProducto,lm.nombreProducto,lm.cantidadProducto,lm.precioProducto, lm.precioTotalProducto, s.fechaVenta FROM cat_clientes AS c INNER JOIN listado_venta AS s ON c.id_Cliente = s.id_ClienteVenta INNER JOIN listadomovimientos AS lm ON lm.idDocumentoVenta = s.idVenta WHERE s.estadoRegistroV!=3 ORDER BY s.id_ClienteVenta";
+
+          $statement = $connect->prepare($query);
+          $statement->execute($data);
+          echo "<table>
+          <tr>
+          <td width='150'>Folio</td>
+          <td width='150'>Cliente</td>
+          <td width='150'>Clave Producto</td>
+          <td width='150'>Nombre Producto</td>
+          <td width='150'>Cantidad Producto</td>
+          <td width='150'>Precio Producto</td>
+          <td width='150'>Precio Total Producto</td>
+          <td width='150'>Fecha Venta</td>
+          <td width='300'></td>
+          </tr>";
+          while($registro = $statement->fetch())
+        {
+        echo"
+        <tr>
+        <td width='150'>".$registro['idVenta']."</td>
+        <td width='150'>".$registro['nombre_Cliente']."</td>
+        <td width='150'>".$registro['claveProducto']."</td>
+        <td width='150'>".$registro['nombreProducto']."</td>
+        <td width='150'>".$registro['cantidadProducto']."</td>
+        <td width='150'>".$registro['precioProducto']."</td>
+        <td width='150'>".$registro['precioProducto']."</td>
+        <td width='150'>".$registro['fechaVenta']."</td>
+        </tr>
+        ";
+        }
+
+        echo "</table>";
+          ?>
+        </div>
+
+
+
+
       </div>
 
     </div>

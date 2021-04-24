@@ -6,13 +6,13 @@ $sesion = new sesion ();
 try {
   if (!isset($_SESSION['user'])){
     header('Location: index.php');
-  }else if ($_SESSION['tipoUsuario']==2 ) {
-      header('Location: index.php');
-    }
+  }
   else {
+
     $currentUser = $sesion->getCurrentUser();
     echo '<h2> Bienvenido </h2>' .$currentUser;
   }
+
  } catch(PDOException $e) {
    echo 'Error: ' . $e->getMessage();
  }
@@ -103,7 +103,50 @@ try {
       </div>
 
       <div class="Main">
-        <h1>Main Section</h1>
+        <h1>Reporte de servicios por servicios</h1>
+        <h2>Descripcion</h2>
+        <p>Este reporte enlista todos los servicios realizados, agrupados por nombre</p>
+        <p>Para exportar el listado a excel usa el boton Exportar.</p>
+        <form class="" action="" method="post">
+          <button type="submit" name="btn-export" onclick ="this.form.action = 'reportservicioservicesExcel.php'" formtarget="_blank" >Exportar</button>
+        </form>
+        <div class="report">
+          <?php
+          $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
+          $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+          $query = "SELECT id_Servicio,nombre_Servicio,tipo_Servicio, precio_Servicio, fecha_Realizacion FROM listado_servicio WHERE estado_Servicio!=3 ORDER BY nombre_Servicio";
+
+          $statement = $connect->prepare($query);
+          $statement->execute();
+          echo "<table>
+          <tr>
+          <td width='150'>Folio</td>
+          <td width='150'>Nombre del servicio</td>
+          <td width='150'>Tipo</td>
+          <td width='150'>Precio</td>
+          <td width='150'>Fecha Realizacion</td>
+          <td width='300'></td>
+          </tr>";
+          while($registro = $statement->fetch())
+        {
+        echo"
+        <tr>
+        <td width='150'>".$registro['id_Servicio']."</td>
+        <td width='150'>".$registro['nombre_Servicio']."</td>
+        <td width='150'>".$registro['tipo_Servicio']."</td>
+        <td width='150'>".$registro['precio_Servicio']."</td>
+        <td width='150'>".$registro['fecha_Realizacion']."</td>
+        </tr>
+        ";
+        }
+
+        echo "</table>";
+          ?>
+        </div>
+
+
+
+
       </div>
 
     </div>

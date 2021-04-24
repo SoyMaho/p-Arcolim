@@ -22,18 +22,43 @@ try {
               }
 
                 if(isset($_POST["button-Submit"])){
+                  $newPass =  trim($_POST['new_Pass']);
+                  $confirmPass = trim($_POST['confirmPass']);
                   if(empty($newPass))
                   {
                        $message = '<label>Ingresa la contraseña</label>';
-                  } else if (empty($confirmPass)) {
+                  }
+                  else if(strlen($newPass)>50)
+                  {
+                   $message = "La contraseña no puede exceder 50 caracteres";
+                  }
+                  else if(strlen($newPass)<6)
+                  {
+                   $message = "La contraseña no puede ser menor a 6 caracteres";
+                  }
+                  else if(!preg_match('`[a-z]`',$newPass))
+                  {
+                   $message = "La contraseña debe tener al menos una letra minuscula";
+                  }
+                  else if(!preg_match('`[A-Z]`',$newPass))
+                  {
+                   $message = "La contraseña debe tener al menos una letra mayuscula";
+                  }
+                  else if(!preg_match('`[0-9]`',$newPass))
+                  {
+                   $message = "La contraseña debe tener al menos un numero";
+
+                  }
+                  else if (empty($confirmPass)) {
                        $message = '<label>Confirma la contraseña</label>';
-                  }else if ($newPass !== $confirmPass ) {
+                  }
+
+                  else if ($newPass !== $confirmPass ) {
                     $message = '<label>La contraseña y la confirmacion no coincide</label>';
                   }
                   else
                   {
-                    $newPass =  trim($_POST['new_Pass']);
-                    $confirmPass = trim($_POST['confirmPass']);
+
                     //Actualiza Password
                     $data=[
                       'correo'=>$correo,
