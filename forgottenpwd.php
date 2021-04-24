@@ -12,6 +12,7 @@ use PHPMailer\PHPMailer\Exception;
 // Para localhost
 require 'C:/Users/Mahonry Santiago/vendor/autoload.php';
 //para aws require 'vendor/autoload.php';
+
 //Instancias
 $mail = new PHPMailer(true);
 try {
