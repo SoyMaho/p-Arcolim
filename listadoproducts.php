@@ -516,7 +516,10 @@ try {
               </td>
           </tr>
           <tr>
+            <td>
+              <h4>Activo</h4>
             <input class="inputShort"type="checkbox" name="check_estadoRegistro" id="cbox_estadoRegistro" value="2"<?php if ($pOculto==0) {echo "checked";} ?>/>
+            </td>
           </tr>
           <tr>
           <td> <h3>Nombre</h3> <input type="text" name="name_product" placeholder="" value="<?php if(isset($id_p)){echo $pname;}?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> /></td>

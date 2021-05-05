@@ -1149,28 +1149,31 @@ if (isset($_POST["btn-sendMail"])) {
               <?php
           }
           ?>
-          <div id="venta">
-            <h3>ID Venta</h3>
-            <input id="" class="inputShort" type="text" name="numero_Venta" placeholder="No. Venta" value="<?php if(isset($numeroVenta)){echo $numeroVenta;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> />
-            <button type="submit" class="boton" name="btn-searchVenta">Buscar Venta</button>
-            <button type="submit" class="boton"name="btn-nuevo">Nuevo</button>
-            <button type="submit" class="boton"name="btn-deleteVenta" <?php if ($estadoRegistroV==2) {echo "disabled";} ?>>Borrar</button>
+          <div class="seccionBordeDiv">
+            <div id="venta">
+              <h3>ID Venta</h3>
+              <input id="" class="inputShort" type="text" name="numero_Venta" placeholder="No. Venta" value="<?php if(isset($numeroVenta)){echo $numeroVenta;} ?>"  <?php if(isset($code) && $code == 1){ echo "autofocus"; }  ?> />
+              <button type="submit" class="boton" name="btn-searchVenta">Buscar Venta</button>
+              <button type="submit" class="boton"name="btn-nuevo">Nuevo</button>
+              <button type="submit" class="boton"name="btn-deleteVenta" <?php if ($estadoRegistroV==2) {echo "disabled";} ?>>Borrar</button>
+            </div>
+
+            <div id="venta" class="">
+
+            </div>
+
+            <div id="venta">
+              <h3 id="labelFecha">Fecha de Venta</h3>
+              <input id="inputFechaVenta"type="date" name="fecha_Venta" value="<?php if(isset($fechaVenta)){echo $fechaVenta;}?>"<?php if(isset($code) && $code == 2){ echo "autofocus"; }  ?>/>
+              <!-- <input class="inputShort" id="" type="text" name="fecha_Venta" placeholder="Fecha" value=""   /> -->
+              <h3 id="labelFecha">Fecha de Entrega</h3>
+              <input id="inputFechaVenta" type="date" name="fecha_VentaEntrega" value="<?php if(isset($fechaVentaEntrega)){echo $fechaVentaEntrega;}?><?php if(isset($code) && $code == 3){ echo "autofocus"; }  ?>"/>
+              <!-- <input class="inputShort" id="" type="text" name="fecha_VentaEntrega" placeholder="Fecha" value=""   /> -->
+              <h3>Entregado</h3>
+              <input class="inputShort"type="checkbox" name="check_Entregado" id="cboxEntregado" value="2"<?php if ($estadoRegistroV==2) {echo "checked";} ?>/>
+            </div>
           </div>
 
-          <div id="venta" class="">
-
-          </div>
-
-          <div id="venta">
-            <h3 id="labelFecha">Fecha de Venta</h3>
-            <input id="inputFechaVenta"type="date" name="fecha_Venta" value="<?php if(isset($fechaVenta)){echo $fechaVenta;}?>"<?php if(isset($code) && $code == 2){ echo "autofocus"; }  ?>/>
-            <!-- <input class="inputShort" id="" type="text" name="fecha_Venta" placeholder="Fecha" value=""   /> -->
-            <h3 id="labelFecha">Fecha de Entrega</h3>
-            <input id="inputFechaVenta" type="date" name="fecha_VentaEntrega" value="<?php if(isset($fechaVentaEntrega)){echo $fechaVentaEntrega;}?><?php if(isset($code) && $code == 3){ echo "autofocus"; }  ?>"/>
-            <!-- <input class="inputShort" id="" type="text" name="fecha_VentaEntrega" placeholder="Fecha" value=""   /> -->
-            <h3>Entregado</h3>
-            <input class="inputShort"type="checkbox" name="check_Entregado" id="cboxEntregado" value="2"<?php if ($estadoRegistroV==2) {echo "checked";} ?>/>
-          </div>
           <div id="venta">
             <select class="inputShort" name="select_cliente">
               <option value="<?php if(isset($id_Cliente)){echo $id_Cliente;}  ?>"><?php if(isset($nombreCliente)){echo $nombreCliente;}  ?></option>
@@ -1216,73 +1219,75 @@ if (isset($_POST["btn-sendMail"])) {
               <button type="submit" name="btn-agregar" <?php if ($estadoRegistroV==2) {echo "disabled";} ?>>Agregar</button>
           </div>
 
-          <p>
-            <?php
-            //Tabla Sin if para mostrar los ultimos movimientos de la venta
+          <div class="seccionBordeDiv">
+            <p>
+              <?php
+              //Tabla Sin if para mostrar los ultimos movimientos de la venta
 
-            $data = [
-            'numero_Venta' => $numeroVenta
-            ,];
-                $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
-                $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                $query = "SELECT idMovimiento,claveProducto, nombreProducto, cantidadProducto, precioProducto, precioTotalProducto FROM listadomovimientos WHERE idDocumentoVenta= :numero_Venta";
-                $statement = $connect->prepare($query);
-                $statement->execute($data);
-                echo "<table>
+              $data = [
+              'numero_Venta' => $numeroVenta
+              ,];
+                  $connect = new PDO("mysql:host=$hostBD; dbname=$dataBD", $userBD, $passBD);
+                  $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                  $query = "SELECT idMovimiento,claveProducto, nombreProducto, cantidadProducto, precioProducto, precioTotalProducto FROM listadomovimientos WHERE idDocumentoVenta= :numero_Venta";
+                  $statement = $connect->prepare($query);
+                  $statement->execute($data);
+                  echo "<table>
+                  <tr>
+                  <td width='150'>Nombre</td>
+                  <td width='150'>Cantidad</td>
+                  <td width='150'>Precio U</td>
+                  <td width='150'>Precio Total</td>
+                  <td width='300'></td>
+                  </tr>";
+                  while($registro = $statement->fetch())
+              {
+                echo"
                 <tr>
-                <td width='150'>Clave</td>
-                <td width='150'>Nombre</td>
-                <td width='150'>Cantidad</td>
-                <td width='150'>Precio U</td>
-                <td width='150'>Precio Total</td>
-                <td width='300'></td>
-                </tr>";
-                while($registro = $statement->fetch())
-            {
-              echo"
-              <tr>
-              <td width='150'>".$registro['nombreProducto']."</td>
-              <td width='150'>".$registro['cantidadProducto']."</td>
-              <td width='150'>".$registro['precioProducto']."</td>
-              <td width='150'>".$registro['precioTotalProducto']."</td>
-              <td width='150'>
-              <form class='tablaMov' method = 'POST' action=''>
-              <input type='hidden' name='id_Movimiento' value='".$registro['idMovimiento']."'>";
-              if ($estadoRegistroV==2) {echo"<input class='boton' id='btnBorrar' type='submit' name='botonBorrarMov' value='Borrar' disabled>";}
-              else {
-                echo"<input class='boton' id='btnBorrar' type='submit' name='botonBorrarMov' value='Borrar'>";
+                <td width='150'>".$registro['nombreProducto']."</td>
+                <td width='150'>".$registro['cantidadProducto']."</td>
+                <td width='150'>".$registro['precioProducto']."</td>
+                <td width='150'>".$registro['precioTotalProducto']."</td>
+                <td width='150'>
+                <form class='tablaMov' method = 'POST' action=''>
+                <input type='hidden' name='id_Movimiento' value='".$registro['idMovimiento']."'>";
+                if ($estadoRegistroV==2) {echo"<input class='boton' id='btnBorrar' type='submit' name='botonBorrarMov' value='Borrar' disabled>";}
+                else {
+                  echo"<input class='boton' id='btnBorrar' type='submit' name='botonBorrarMov' value='Borrar'>";
+                }
+                echo"
+                </form>
+                </td>
+                </tr>
+                ";
               }
-              echo"
-              </form>
-              </td>
-              </tr>
-              ";
-            }
 
-            echo "</table>";
+              echo "</table>";
 
-            if ($estadoRegistroV==2) {
-              echo "<script>";
-              echo "document.getElementById('btnBorrar').disabled=true;";
-              echo "</script>";
-            }
-             ?>
-             <?php
-             if(isset($_POST["btn-agregar"])){
-                     // Inicio Tabla, se borra para dejar que al actualizar el index se muestre la tabla con el ultimo registro
+              if ($estadoRegistroV==2) {
+                echo "<script>";
+                echo "document.getElementById('btnBorrar').disabled=true;";
+                echo "</script>";
+              }
+               ?>
+               <?php
+               if(isset($_POST["btn-agregar"])){
+                       // Inicio Tabla, se borra para dejar que al actualizar el index se muestre la tabla con el ultimo registro
 
 
-                     $query = "SELECT SUM(precioTotalProducto) as subtotal FROM listadomovimientos WHERE idDocumentoVenta = :numero_Venta";
-                     $statement = $connect->prepare($query);
-                     $statement->execute($data);
-                     while( $subtotal = $statement->fetch()){
-                     $subtotalVenta = $subtotal[0];
-                      }
-                     $ivaVenta = $subtotalVenta * .16;
-                     $totalVenta = $subtotalVenta + $ivaVenta;
-             }
-             ?>
-          </p>
+                       $query = "SELECT SUM(precioTotalProducto) as subtotal FROM listadomovimientos WHERE idDocumentoVenta = :numero_Venta";
+                       $statement = $connect->prepare($query);
+                       $statement->execute($data);
+                       while( $subtotal = $statement->fetch()){
+                       $subtotalVenta = $subtotal[0];
+                        }
+                       $ivaVenta = $subtotalVenta * .16;
+                       $totalVenta = $subtotalVenta + $ivaVenta;
+               }
+               ?>
+            </p>
+          </div>
+
           <p>
             <h3>Subtotal</h3><input  class="inputShort" type="text" name="subtotal_Venta" placeholder="Subtotal" value="<?php if(isset($subtotalVenta)){echo $subtotalVenta;} ?>"  <?php if(isset($code) && $code == 5){ echo "autofocus"; }  ?> />
             <h3>IVA</h3><input  class="inputShort" type="text" name="iva_Venta" placeholder="IVA" value="<?php if(isset($ivaVenta)){echo $ivaVenta;} ?>"  <?php if(isset($code) && $code == 6){ echo "autofocus"; }  ?> />

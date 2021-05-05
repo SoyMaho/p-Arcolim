@@ -108,7 +108,7 @@ try {
       </div>
 
       <div class="Main">
-        <h1>Main Section</h1>
+        <h1>Bienvenido</h1>
       </div>
 
     </div>

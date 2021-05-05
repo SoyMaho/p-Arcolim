@@ -106,7 +106,7 @@ try {
       </div>
 
       <div class="Main">
-        <h1>Main Section</h1>
+        <h1>MBienvenido</h1>
       </div>
 
     </div>
